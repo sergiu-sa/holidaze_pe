@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Holidaze — coordinate mark · H outlined from Bodoni Moda Italic weight 500 · transform pre-baked · zero font dependency -->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 440 300"
+     width="440" height="300"
+     preserveAspectRatio="xMidYMid meet"
+     role="img"
+     aria-label="Holidaze — the coordinate mark">
+  <title>Holidaze°</title>
+  <path d="M91.72 164.8V158.56H206.92000000000002V164.8ZM156.04 46.24000000000001H127.88L76.36 273.76H103.24V280.0H12.04V273.76H40.68L92.2 46.24000000000001H64.84V40.0H156.04ZM290.92 40.0V46.24000000000001H262.28L210.76 273.76H238.12V280.0H146.76V273.76H175.08L226.6 46.24000000000001H199.56V40.0Z" fill="#F5EEDD" />
+  <circle cx="365" cy="62" r="20"
+          fill="none"
+          stroke="#D4A130"
+          stroke-width="12" />
+</svg>

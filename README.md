@@ -11,3 +11,12 @@ A modern front end for **Holidaze**, an accommodation booking site built against
 ## Stack
 
 React + TypeScript + Tailwind, talking to `https://v2.api.noroff.dev/holidaze`.
+
+## Design
+
+[Figma – Holidaze°](https://www.figma.com/design/6b7xOMQl4yOkBZMJXQ9kNo/Holidaze%C2%B0?node-id=0-1&t=p3dzslViAIxekmkm-1)
+
+## Links
+
+- [GitHub repo](https://github.com/sergiu-sa/holidaze_pe.git)
+- [GitHub project board](https://github.com/users/sergiu-sa/projects/14)
