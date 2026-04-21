@@ -21,6 +21,7 @@ Holidaze is an accommodation booking site built against the **Noroff v2 API**. T
 | Bundler | Vite |
 | Server state | Hand-rolled hooks on top of `fetch` (or TanStack Query if scope allows) |
 | Forms | Native `<form>` + small validation helpers (no form lib) |
+| Validation | **Zod** — deferred until the API layer lands. Scope: parse Noroff responses at the fetch boundary + back form validators via `safeParse` (types via `z.infer`). Not a form library. |
 | Lint / format | ESLint + Prettier (`npm run lint` must exit clean) |
 | Hosting | Netlify / Vercel / GitHub Pages |
 | API | `https://v2.api.noroff.dev/holidaze` + `/auth/*` |
@@ -237,7 +238,7 @@ Namespaced so they don't collide with core primitives. Port 1:1 from the prototy
 
 - `fetch` wrapper; injects `BASE`, `Authorization: Bearer <token>`, `X-Noroff-API-Key: <key>` when present.
 - Normalises errors to `{ status, message, details }`.
-- `isUsable(venue)` filter carried over from the prototype (Noroff public data has `"string"` names, `lat:0,lng:0`, 0-price rows).
+- `isUsable(venue)` filter carried over from the prototype (Noroff public data has `"string"` names, `lat:0,lng:0`, 0-price rows). **Planned:** fold into a Zod schema (see §2) so the parse step and the usability check are one pass.
 - Curated **FALLBACK** list (6 entries) kept verbatim from prototype for offline / API-down paths.
 
 ### 6.2 Feature modules (`src/api/<feature>.ts`)
@@ -255,6 +256,8 @@ Namespaced so they don't collide with core primitives. Port 1:1 from the prototy
 - `Booking` — `id`, `dateFrom`, `dateTo`, `guests`, `created`, `updated`, optional `venue`, `customer`.
 - `Profile` — `name`, `email`, `avatar{url,alt}`, `banner?`, `bio?`, `venueManager`, `_count?`.
 - `ApiError` — `{ status, message, details? }`.
+
+> **Deferred:** once Zod is introduced (see §2), these types will be derived from schemas (`z.infer<typeof VenueSchema>` etc.) rather than hand-kept — one source of truth for the runtime parse and the compile-time type.
 
 ### 6.4 Noroff auth flow
 
