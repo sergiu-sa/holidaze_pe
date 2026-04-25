@@ -8,10 +8,13 @@ import type { Config } from "tailwindcss"
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
 
-  /* Three screens only: base (mobile, 360+), md (tablet, 768+), lg (desktop, 1440+). */
+  /* Screens — base (mobile, 360+), sm (640+), md (tablet, 768+), nav (topbar collapse,
+     960+, mirrors the prototype's hamburger gate), lg (desktop, 1440+). */
   theme: {
     screens: {
+      sm: "640px",
       md: "768px",
+      nav: "960px",
       lg: "1440px",
     },
 
@@ -142,6 +145,28 @@ export default {
       },
       outlineOffset: {
         focus: "3px",
+      },
+
+      /* Z-index scale — named layers, no magic numbers in component code.
+         Mirrors prototype usage (grain=200, topbar=90, modal-backdrop=80, intro=9999). */
+      zIndex: {
+        base: "0",
+        raised: "1",
+        sticky: "40",
+        modal: "95",
+        "modal-backdrop": "80",
+        topbar: "90",
+        grain: "200",
+        toast: "999",
+        intro: "9999",
+      },
+
+      /* Aspect ratios used in venue cards, hero plates, atlas plates. */
+      aspectRatio: {
+        card: "3 / 2",
+        cover: "4 / 3",
+        atlas: "2 / 1",
+        "atlas-wide": "2.2 / 1",
       },
     },
   },
