@@ -6,6 +6,8 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import jsxA11y from 'eslint-plugin-jsx-a11y'
 import importPlugin from 'eslint-plugin-import'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import testingLibrary from 'eslint-plugin-testing-library'
+import jestDom from 'eslint-plugin-jest-dom'
 import prettier from 'eslint-config-prettier'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
@@ -19,9 +21,8 @@ export default defineConfig([
     'node_modules',
     'public',
     'src/assets',
-    // Vite scaffold placeholders — replaced when shell + routing land.
-    'src/App.tsx',
-    'src/main.tsx',
+    'playwright-report',
+    'test-results',
   ]),
 
   // App source: React + TS, type-aware, strict.
@@ -99,6 +100,33 @@ export default defineConfig([
   // Pages and routes need default exports for React Router lazy loading.
   {
     files: ['src/pages/**/*.{ts,tsx}', 'src/routes/**/*.{ts,tsx}'],
+    rules: {
+      'import/no-default-export': 'off',
+    },
+  },
+
+  // Vitest unit/component tests.
+  {
+    files: ['src/**/*.{test,spec}.{ts,tsx}', 'src/test/**/*.{ts,tsx}'],
+    extends: [
+      testingLibrary.configs['flat/react'],
+      jestDom.configs['flat/recommended'],
+    ],
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+    },
+  },
+
+  // Playwright e2e tests live outside `src/` and don't run under tsconfig.app.json.
+  {
+    files: ['e2e/**/*.{ts,tsx}', 'playwright.config.ts'],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended, prettier],
+    languageOptions: {
+      ecmaVersion: 2023,
+      sourceType: 'module',
+      globals: { ...globals.node, ...globals.es2023 },
+    },
     rules: {
       'import/no-default-export': 'off',
     },

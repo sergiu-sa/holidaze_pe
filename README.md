@@ -1,5 +1,7 @@
 # Holidaze
 
+[![CI](https://github.com/sergiu-sa/holidaze_pe/actions/workflows/ci.yml/badge.svg)](https://github.com/sergiu-sa/holidaze_pe/actions/workflows/ci.yml)
+
 A modern front end for **Holidaze**, an accommodation booking site built against the Noroff API v2.
 
 ## What it does
