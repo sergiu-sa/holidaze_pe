@@ -21,7 +21,7 @@ Holidaze is an accommodation booking site built against the **Noroff v2 API**. T
 | Bundler | Vite |
 | Server state | Hand-rolled hooks on top of `fetch` (or TanStack Query if scope allows) |
 | Forms | Native `<form>` + small validation helpers (no form lib) |
-| Validation | **Zod** — deferred until the API layer lands. Scope: parse Noroff responses at the fetch boundary + back form validators via `safeParse` (types via `z.infer`). Not a form library. |
+| Validation | **Zod** — installed with the API client slice. Scope: parse Noroff responses at the fetch boundary (`NoroffErrorEnvelopeSchema` lives in `src/api/schemas.ts`; resource schemas land with slice 2) + back form validators via `safeParse` (types via `z.infer`). Not a form library. |
 | Lint / format | ESLint + Prettier (`npm run lint` must exit clean) |
 | Hosting | Netlify / Vercel / GitHub Pages |
 | API | `https://v2.api.noroff.dev/holidaze` + `/auth/*` |
@@ -236,10 +236,13 @@ Namespaced so they don't collide with core primitives. Port 1:1 from the prototy
 
 ### 6.1 API client (`src/api/client.ts`)
 
-- `fetch` wrapper; injects `BASE`, `Authorization: Bearer <token>`, `X-Noroff-API-Key: <key>` when present.
-- Normalises errors to `{ status, message, details }`.
-- `isUsable(venue)` filter carried over from the prototype (Noroff public data has `"string"` names, `lat:0,lng:0`, 0-price rows). **Planned:** fold into a Zod schema (see §2) so the parse step and the usability check are one pass.
-- Curated **FALLBACK** list (6 entries) kept verbatim from prototype for offline / API-down paths.
+- `apiFetch<T>(path, options)` wrapper; joins `BASE`, sets `Accept: application/json`, JSON-parses the body, unwraps Noroff's `{ data, meta }` envelope when present (returns the raw body otherwise — covers `/auth/login`'s flat response).
+- Auth header injection is controlled by `options.auth`:
+  - `"optional"` (default) — attaches `Authorization: Bearer <token>` + `X-Noroff-API-Key: <key>` only when both are present in the session store.
+  - `"required"` — throws `ApiError(401, …)` synchronously before fetch when either credential is missing.
+- Session store at `src/api/session.ts` — in-memory mirror of `localStorage` key `holidaze:v1:session`; exports `getSession`, `setSession`, `clearSession`, `getAccessToken`, `getApiKey`. Hydrates once on module load.
+- Errors normalised via Zod (`NoroffErrorEnvelopeSchema` in `src/api/schemas.ts`): non-OK responses with a parseable Noroff envelope → `ApiError(status, errors[0].message, errors[])`; malformed body → `ApiError(status, statusText)`; network / abort → `ApiError(0, message)`.
+- `isUsable(venue)` filter and curated **FALLBACK** list (6 entries) — **deferred to slice 4** (venues read). The prototype encodes the rules; we re-derive in TypeScript at `src/lib/isUsable.ts` and `src/lib/fallback.ts` rather than copy-paste.
 
 ### 6.2 Feature modules (`src/api/<feature>.ts`)
 
@@ -255,9 +258,9 @@ Namespaced so they don't collide with core primitives. Port 1:1 from the prototy
 - `Venue` — mirrors Noroff v2 shape: `id`, `name`, `description`, `media[]`, `price`, `rating`, `maxGuests`, `meta{wifi,parking,breakfast,pets}`, `location{...}`, `owner?`, `bookings?`.
 - `Booking` — `id`, `dateFrom`, `dateTo`, `guests`, `created`, `updated`, optional `venue`, `customer`.
 - `Profile` — `name`, `email`, `avatar{url,alt}`, `banner?`, `bio?`, `venueManager`, `_count?`.
-- `ApiError` — `{ status, message, details? }`.
+- `ApiError` — class extending `Error` (so `instanceof` works in `catch` blocks). Fields: `status: number` (HTTP status, or `0` for network errors), `message: string`, `details?: unknown` (raw `errors` array if present). Lives at `src/types/api.ts`.
 
-> **Deferred:** once Zod is introduced (see §2), these types will be derived from schemas (`z.infer<typeof VenueSchema>` etc.) rather than hand-kept — one source of truth for the runtime parse and the compile-time type.
+> **Plan:** resource types (`Venue`, `Booking`, `Profile`) land in slice 2 derived from Zod schemas (`z.infer<typeof VenueSchema>` etc.) — one source of truth for runtime parse and compile-time type.
 
 ### 6.4 Noroff auth flow
 
