@@ -84,22 +84,23 @@ Every graded story maps to a file + component in the build.
 
 `src/components/shell/`
 
-- **AppLayout** — Topbar + `<Outlet/>` + Footer; applied to every route except 404.
-- **Topbar** — wordmark + primary nav + account slot + hairline ruler with ticks.
-- **Footer** — 4-col (brand / Explore / Account / Colophon) with live/fallback pulse.
-- **Breadcrumbs** — on venue detail, booking receipt, venues, hosts, all profile sub-pages.
-- **ProfileShell** — two-column sidebar + main; sidebar is role-aware (host gets extra links).
-- **SkipLink** — skip to `#main` on every page.
-- **Ruler** — hairline band with ticks, meta labels left + right; used in topbar and inside pages.
+- **AppLayout** ✓ — `SkipLink → Topbar → <Outlet/> → Footer`; applied via a parent route to every path except 404 (sibling 404 renders standalone).
+- **Topbar** ✓ — wordmark SVG + `<PrimaryNav>` + auth slot (`[data-auth-slot]`) + hairline `<Ruler>` with ticks + ISSUE chip. Sticky with backdrop blur.
+- **Footer** ✓ — 4-col (Brand / Explore / Account / Colophon) with hairline rules + live pulse dot (square — brand reading).
+- **SkipLink** ✓ — skip to `#main`; visually hidden until focused, then 2px cinnabar outline.
+- **Ruler** ✓ — hairline band with ticks, left / right meta labels.
+- **RouteErrorBoundary** ✓ — small class component wrapping each Outlet; renders cinnabar fallback with "Try again" reset.
+- **Breadcrumbs** — on venue detail, booking receipt, venues, hosts, all profile sub-pages. *(deferred to first-use slice)*
+- **ProfileShell** — two-column sidebar + main; sidebar is role-aware. *(slice 5.3)*
 
 ### 5.2 Navigation
 
 `src/components/nav/`
 
-- **PrimaryNav** — Home / Venues / Hosts / Identity links, collapses to `<NavToggle>` ≤ 960px.
-- **NavToggle** — mobile hamburger, `aria-controls` + `aria-expanded`.
-- **AvatarMenu** — account chip dropdown; Profile / My bookings / Avatar / (My venues) / Sign out. `aria-haspopup`, Esc + outside-click close.
-- **CommandBar** *(editorial)* — `⌘K` / `Ctrl+K` / `/` site-wide dialog; listbox semantics, arrow-key nav, enter-to-open.
+- **PrimaryNav** ✓ — Home / Venues / Hosts / Atlas / Identity links via React Router `<NavLink>`; `aria-current="page"` on active. Collapses to `<NavToggle>` below `nav: 960px` breakpoint.
+- **NavToggle** ✓ — mobile hamburger; `aria-controls` + `aria-expanded`, focus-trap inside open menu, Esc closes, body-scroll lock while open, focus returns to toggle on close.
+- **AvatarMenu** — account chip dropdown; Profile / My bookings / Avatar / (My venues) / Sign out. `aria-haspopup`, Esc + outside-click close. *(slice 5.1 — replaces the auth-slot link)*
+- **CommandBar** *(editorial)* — `⌘K` / `Ctrl+K` / `/` site-wide dialog; listbox semantics, arrow-key nav, enter-to-open. *(slice 5.6)*
 
 ### 5.3 Auth
 
