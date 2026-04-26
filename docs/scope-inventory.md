@@ -255,12 +255,19 @@ Namespaced so they don't collide with core primitives. Port 1:1 from the prototy
 
 ### 6.3 Typed models (`src/types/`)
 
-- `Venue` — mirrors Noroff v2 shape: `id`, `name`, `description`, `media[]`, `price`, `rating`, `maxGuests`, `meta{wifi,parking,breakfast,pets}`, `location{...}`, `owner?`, `bookings?`.
-- `Booking` — `id`, `dateFrom`, `dateTo`, `guests`, `created`, `updated`, optional `venue`, `customer`.
-- `Profile` — `name`, `email`, `avatar{url,alt}`, `banner?`, `bio?`, `venueManager`, `_count?`.
+Resource types and their Zod schemas shipped in slice 2. The schema is the single source of truth — types are derived via `z.infer<typeof XSchema>`. All resource schemas live in `src/api/schemas.ts`; the type files re-export for a clean consumer import surface.
+
+- `Venue` (`src/types/venue.ts`) — mirrors Noroff v2 shape: `id`, `name`, `description`, `media[]`, `price`, `rating`, `maxGuests`, `meta{wifi,parking,breakfast,pets}`, `location{...}`, `owner?`, `bookings?`, `_count?`. Also exports `Media`, `Location`, `VenueMeta`, `Owner`.
+- `Booking` (`src/types/booking.ts`) — `id`, `dateFrom`, `dateTo`, `guests`, `created`, `updated`, optional `venue`, `customer`.
+- `Profile` (`src/types/profile.ts`) — extends `Owner` with optional `venueManager: boolean` and `_count: { venues, bookings }`. Also exports `PaginationMeta`.
 - `ApiError` — class extending `Error` (so `instanceof` works in `catch` blocks). Fields: `status: number` (HTTP status, or `0` for network errors), `message: string`, `details?: unknown` (raw `errors` array if present). Lives at `src/types/api.ts`.
 
-> **Plan:** resource types (`Venue`, `Booking`, `Profile`) land in slice 2 derived from Zod schemas (`z.infer<typeof VenueSchema>` etc.) — one source of truth for runtime parse and compile-time type.
+Key schema decisions (slice 2):
+
+- Location fields use `.nullable()` (not `.optional()`) — the API sends `null` explicitly for unset coords/address, not absent keys.
+- `owner` and `bookings` on `VenueSchema` are `.optional()` — only present when `?_owner=true` / `?_bookings=true` is passed.
+- `VenueSchema` ↔ `BookingSchema` are mutually recursive; both use `z.lazy()` to break the cycle. Forward `interface` declarations carry the types across the cycle boundary.
+- Zod 4 preferred forms used throughout: `z.url()`, `z.email()`, `z.iso.datetime()`.
 
 ### 6.4 Noroff auth flow
 

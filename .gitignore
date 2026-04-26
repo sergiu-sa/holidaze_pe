@@ -28,9 +28,7 @@ test-results
 *.sln
 *.sw?
 
-# Personal Notes 
-docs/NOTES.md
-docs/PE2_Submission_Checklist.md
-docs/Project Exam 2 Brief _ Noroff.pdf
-docs/design-concept.md
-docs/workflow-trail.md
+
+docs/
+!docs/brand.md
+!docs/scope-inventory.md
