@@ -7,14 +7,15 @@ export const BASE = 'https://v2.api.noroff.dev/holidaze'
 export interface ApiFetchOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
   body?: unknown
-  // "optional" — attach auth headers only if both token and key are present.
-  // "required" — throw immediately (before fetch) if either is missing.
+  /** "optional" attaches auth iff both creds present; "required" throws if either missing. */
   auth?: 'optional' | 'required'
   signal?: AbortSignal
+  /** Default true. Set false on list endpoints to keep the `{ data, meta }` envelope. */
+  unwrap?: boolean
 }
 
 export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
-  const { method = 'GET', body, auth = 'optional', signal } = options
+  const { method = 'GET', body, auth = 'optional', signal, unwrap = true } = options
 
   const token = getAccessToken()
   const apiKey = getApiKey()
@@ -31,8 +32,6 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
     headers['Content-Type'] = 'application/json'
   }
 
-  // Attach auth headers when both credentials are present (auth: "optional")
-  // or always when auth: "required" (we would have thrown above if missing).
   if (token && apiKey) {
     headers.Authorization = `Bearer ${token}`
     headers['X-Noroff-API-Key'] = apiKey
@@ -47,6 +46,10 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
       signal,
     })
   } catch (err) {
+    // AbortError propagates untouched so callers distinguish cancellation from network failure.
+    // Detected by name (jsdom + browsers disagree on the class).
+    if (err instanceof Error && err.name === 'AbortError') throw err
+    if (signal?.aborted) throw new DOMException('Aborted', 'AbortError')
     const message = err instanceof Error ? err.message : 'Network error'
     throw new ApiError(0, message)
   }
@@ -70,10 +73,9 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
 
   const data = (await res.json()) as unknown
 
-  // Noroff wraps successful payloads in { data, meta }. When the response
-  // has a `data` property we return it; otherwise return the body as-is
-  // (e.g. /auth/login returns a flat object without wrapping).
-  if (data !== null && typeof data === 'object' && 'data' in data) {
+  // Noroff wraps in { data, meta } for resources but not auth (e.g. /auth/login).
+  // Unwrap by default; pass `unwrap: false` to keep the envelope.
+  if (unwrap && data !== null && typeof data === 'object' && 'data' in data) {
     return (data as { data: T }).data
   }
 
