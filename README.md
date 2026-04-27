@@ -1,10 +1,9 @@
 # Holidaze
 
 [![CI](https://github.com/sergiu-sa/holidaze_pe/actions/workflows/ci.yml/badge.svg)](https://github.com/sergiu-sa/holidaze_pe/actions/workflows/ci.yml)
+[![Vercel](https://img.shields.io/badge/vercel-deployed-000?logo=vercel)](https://holidaze-black.vercel.app/)
 
 A modern front end for **Holidaze**, an accommodation booking site built against the Noroff API v2.
-
-## Live
 
 ## What it does
 
@@ -35,8 +34,6 @@ npm run e2e          # playwright
 
 ## Links
 
-See [`docs/links.md`](docs/links.md) for the full list. Highlights:
-
 - [GitHub repo](https://github.com/sergiu-sa/holidaze_pe)
 - [GitHub project board](https://github.com/users/sergiu-sa/projects/14)
-- [Noroff v2 API docs](https://docs.noroff.dev/docs/v2/holidaze/venues)
+- [Production](https://holidaze-black.vercel.app/)
