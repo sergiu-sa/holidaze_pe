@@ -191,21 +191,28 @@ Every graded story maps to a file + component in the build.
 
 ### 5.10 Base primitives
 
-`src/components/ui/`
+`src/components/ui/` — built lazily; primitives land with the first slice that needs them. Shipped set is exported through the `ui/` barrel.
 
-- **Button** — primary / ghost / danger + `loading` + `disabled` states.
-- **IconButton** — square icon-only variant.
-- **LetterpressCTA** *(editorial)* — block submit button with offset cinnabar shadow, used on auth.
-- **Input** (TextField)
-- **PasswordField** — input + reveal button (wires the `data-reveal` pattern).
-- **Textarea**
-- **Select**
-- **Checkbox**
-- **Chip**
-- **Badge** (`RoleBadge` specialisation for Host / Guest)
-- **Avatar** — image or initials fallback.
-- **Icon** — inline-SVG registry, `size` prop.
-- **VisuallyHidden** — a11y helper.
+**Shipped (slice 3.16, Apr 28 2026):**
+
+- **Button** ✓ — `variant: "primary" | "ghost" | "cobalt" | "link"`, `loading`, polymorphic `as: "button" | "a"`, `forwardRef`. Native `<button>`/`<a>` underneath.
+- **Field** ✓ — label + control + optional `hint` / `error`. Auto-wires `htmlFor` + `aria-describedby` + `aria-invalid`. Accepts custom `<textarea>` / `<select>` children for control swap. Error span sits outside the `<label>` so the accessible name stays clean.
+- **Chip** ✓ — `variant: "index" | "amenity"`. Index = cinnabar fill (e.g. "N°04"); amenity = hairline-bordered `icon + label`.
+- **Eyebrow** ✓ — optional `num` (cinnabar) + `label` (hairline-prefixed) slots.
+- **Pulse** ✓ — `variant: "live" | "fallback"`, optional accessible `label`. Square via the global `border-radius: 0` reset (brand rule).
+- **Mono** ✓ — polymorphic `as: "span" | "p" | "code"`. Single-class wrapper over `.mono`.
+- **Icon** ✓ — typed `name` allowlist (44 glyphs in `icon-registry.ts`) over **`lucide-react`**, `size: xs | sm | md | lg | xl`, `label` toggles `role="img"` ↔ `aria-hidden`.
+- **SkipLink** ✓ — file lives in `shell/` (consumed by `AppLayout`); re-exported through the `ui/` barrel.
+
+**Deferred (lazy — land with their first consumer):**
+
+- **VenueCard** / **SearchInput** / **Pagination** / **EmptyState** / **ErrorState** / **BentoGrid** → slice 4.1 (browse)
+- **VenueGallery** / **AvailabilityCalendar** → slice 4.2
+- **BookingPanel** / **GuestStepper** / **Receipt** → slice 5.2
+- **VenueForm** / **AmenityToggle** / **ImageUrlList** → slice 5.4
+- **PasswordField** (icon-leading + reveal) — `Field` extension that lands with slice 5.1 (auth)
+- **Toast** / **ConfirmDialog** / **Tabs** / **CommandBar** / **Avatar** / **Badge** / **VisuallyHidden** — first slice that needs each
+- **IconButton** / **LetterpressCTA** — auth slice if still needed; otherwise drop (the canonical CTA pattern is `Button variant="primary"`)
 
 ### 5.11 Editorial primitives (Reader Access spread)
 

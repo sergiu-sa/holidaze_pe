@@ -195,7 +195,9 @@
       transform 900ms theme(transitionTimingFunction.out-quint);
   }
 
-  /* Pulse — live status dot (sage default, ochre fallback). */
+  /* Pulse — live status dot (sage default, ochre fallback).
+     Renders as a square because the global * { border-radius: 0 !important } overrides
+     the radius below — confirmed brutalist treatment (build-log 2026-04-26). */
   .pulse {
     display: inline-block;
     width: 7px;
@@ -211,6 +213,190 @@
   .pulse--fallback {
     background: theme(colors.saffron.deep);
     box-shadow: 0 0 0 0 color-mix(in oklab, theme(colors.saffron.deep) 60%, transparent);
+  }
+
+  /* ─── Button (primitive) ───
+     Loading state animates a 1px hairline bar across the bottom edge; reduced-motion collapses it. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.3rem;
+    min-height: 44px;
+    border: 1px solid theme(colors.ink.DEFAULT);
+    background: transparent;
+    color: theme(colors.ink.DEFAULT);
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    transition:
+      background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      transform theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn--primary {
+    background: theme(colors.ink.DEFAULT);
+    color: theme(colors.ivory.DEFAULT);
+  }
+  .btn--primary:not(:disabled):not([aria-disabled="true"]):hover {
+    background: theme(colors.cinnabar.DEFAULT);
+    border-color: theme(colors.cinnabar.DEFAULT);
+    transform: translateY(-2px);
+  }
+  .btn--ghost {
+    background: transparent;
+    color: theme(colors.ink.DEFAULT);
+  }
+  .btn--ghost:not(:disabled):not([aria-disabled="true"]):hover {
+    background: theme(colors.ink.DEFAULT);
+    color: theme(colors.ivory.DEFAULT);
+  }
+  .btn--cobalt {
+    background: theme(colors.lapis.DEFAULT);
+    color: theme(colors.ivory.DEFAULT);
+    border-color: theme(colors.lapis.DEFAULT);
+  }
+  .btn--cobalt:not(:disabled):not([aria-disabled="true"]):hover {
+    background: theme(colors.lapis.deep);
+    border-color: theme(colors.lapis.deep);
+  }
+  .btn--link {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: theme(colors.ink.DEFAULT);
+    border: 0;
+    border-bottom: 1px solid theme(colors.cinnabar.DEFAULT);
+    padding: 0 0 0.15rem;
+    min-height: 0;
+    background: none;
+  }
+  .btn--link:not(:disabled):not([aria-disabled="true"]):hover {
+    color: theme(colors.cinnabar.DEFAULT);
+  }
+  .btn--loading {
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .btn--loading::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 35%;
+    background: currentColor;
+    animation: btnLoading 1.1s theme(transitionTimingFunction.inout-quint) infinite;
+  }
+  @keyframes btnLoading {
+    0%   { left: -35%; }
+    100% { left: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; }
+    .btn--loading::after { animation: none; left: 0; width: 100%; opacity: 0.4; }
+    .btn--primary:hover { transform: none; }
+  }
+
+  /* ─── Field (primitive) ───
+     Ported from prototype page.css §.field. Single composition: label + control + optional hint/error.
+     Underline-only border collapses to cinnabar on focus; error swaps to cinnabar permanently. */
+  .field {
+    display: grid;
+    gap: 0.35rem;
+    position: relative;
+  }
+  .field__label {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: theme(colors.lapis.DEFAULT);
+  }
+  .field__control,
+  .field input,
+  .field textarea,
+  .field select {
+    font: inherit;
+    font-family: theme(fontFamily.serif);
+    font-size: 1.15rem;
+    color: theme(colors.ink.DEFAULT);
+    background: transparent;
+    padding: 0.65rem 0.25rem 0.75rem;
+    min-height: 44px;
+    border: 0;
+    border-bottom: 1px solid theme(colors.ink.DEFAULT);
+    transition:
+      border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .field input:focus-visible,
+  .field textarea:focus-visible,
+  .field select:focus-visible {
+    border-color: theme(colors.cinnabar.DEFAULT);
+    background: color-mix(in oklab, theme(colors.cinnabar.DEFAULT) 8%, transparent);
+    outline: 0;
+  }
+  .field__hint {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: theme(colors.ink.mute);
+    text-transform: uppercase;
+  }
+  .field--error input,
+  .field--error textarea,
+  .field--error select {
+    border-bottom-color: theme(colors.cinnabar.DEFAULT);
+  }
+  .field__error {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: theme(colors.cinnabar.DEFAULT);
+  }
+
+  /* ─── Chip (primitive) ───
+     Two variants: index (cinnabar fill, ivory text — venue/issue numbers) and amenity (icon + label, hairline outline). */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: theme(fontFamily.mono);
+    font-size: theme(fontSize.step--2);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .chip--index {
+    background: theme(colors.cinnabar.DEFAULT);
+    color: theme(colors.ivory.DEFAULT);
+    padding: 0.25rem 0.55rem;
+    letter-spacing: 0.2em;
+    font-size: 0.72rem;
+  }
+  .chip--amenity {
+    color: theme(colors.ink.soft);
+    padding: 0.35rem 0.6rem;
+    border: 1px solid theme(colors.rule-strong);
+    background: theme(colors.ivory.soft);
+  }
+  .chip--amenity:where(:hover) {
+    color: theme(colors.cinnabar.DEFAULT);
+    border-color: theme(colors.cinnabar.DEFAULT);
   }
 
   /* H° easter egg — cinnabar ° ghosts at upper-right of select capital H letters.
