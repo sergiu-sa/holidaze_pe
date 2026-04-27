@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 test.describe('Smoke', () => {
-  test('home page mounts and renders the Holidaze headline', async ({ page }) => {
+  test('home page mounts and renders the hero headline', async ({ page }) => {
     const consoleErrors: string[] = []
     page.on('console', (msg) => {
       if (msg.type() === 'error') consoleErrors.push(msg.text())
@@ -13,10 +13,20 @@ test.describe('Smoke', () => {
     await page.goto('/')
 
     await expect(page).toHaveTitle(/Holidaze/i)
-    await expect(page.getByRole('heading', { level: 1, name: /holidaze/i })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { level: 1, name: /stay somewhere particular/i }),
+    ).toBeVisible()
     await expect(page.locator('#root')).not.toBeEmpty()
 
-    expect(consoleErrors, `Console errors on load:\n${consoleErrors.join('\n')}`).toEqual([])
+    // Vercel Analytics + Speed Insights scripts only resolve on the deployed
+    // origin; in local preview they 404 harmlessly. Filter them out so this
+    // assertion catches real app errors.
+    const realErrors = consoleErrors.filter(
+      (msg) =>
+        !/_vercel\/(insights|speed-insights)/i.test(msg) &&
+        !/^Failed to load resource.*404/.test(msg),
+    )
+    expect(realErrors, `Console errors on load:\n${realErrors.join('\n')}`).toEqual([])
   })
 
   test('topbar wordmark and nav links are visible on home page', async ({ page }) => {
@@ -33,12 +43,14 @@ test.describe('Smoke', () => {
     await expect(nav.getByRole('link', { name: /^hosts$/i })).toBeVisible()
   })
 
-  test('clicking Venues nav link navigates to /venues', async ({ page }) => {
+  test('clicking Venues nav link navigates to /venues and renders the page hero', async ({
+    page,
+  }) => {
     await page.goto('/')
     await page.getByRole('link', { name: /^venues$/i }).first().click()
 
     await expect(page).toHaveURL('/venues')
-    await expect(page.getByRole('heading', { level: 1, name: /^venues$/i })).toBeVisible()
+    await expect(page.getByRole('heading', { level: 1, name: /every place/i })).toBeVisible()
   })
 
   test('unknown path renders the 404 page', async ({ page }) => {

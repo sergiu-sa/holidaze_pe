@@ -13,9 +13,11 @@ function renderAt(path: string) {
 }
 
 describe('App (smoke)', () => {
-  it('renders the Home h1 at /', async () => {
+  it('renders the Home hero h1 at /', async () => {
     renderAt('/')
-    expect(await screen.findByRole('heading', { level: 1, name: /holidaze/i })).toBeInTheDocument()
+    expect(
+      await screen.findByRole('heading', { level: 1, name: /stay somewhere particular/i }),
+    ).toBeInTheDocument()
   })
 
   it('exposes a skip link to #main at /', async () => {

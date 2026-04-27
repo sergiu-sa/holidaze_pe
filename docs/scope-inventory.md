@@ -196,7 +196,7 @@ Every graded story maps to a file + component in the build.
 **Shipped (slice 3.16, Apr 28 2026):**
 
 - **Button** ✓ — `variant: "primary" | "ghost" | "cobalt" | "link"`, `loading`, polymorphic `as: "button" | "a"`, `forwardRef`. Native `<button>`/`<a>` underneath.
-- **Field** ✓ — label + control + optional `hint` / `error`. Auto-wires `htmlFor` + `aria-describedby` + `aria-invalid`. Accepts custom `<textarea>` / `<select>` children for control swap. Error span sits outside the `<label>` so the accessible name stays clean.
+- **Field** ✓ — label + control + optional `hint` / `error`. Auto-wires `htmlFor` + `aria-describedby` + `aria-invalid`. Accepts custom `<textarea>` / `<select>` children. Error span sits outside the `<label>` so the accessible name stays clean.
 - **Chip** ✓ — `variant: "index" | "amenity"`. Index = cinnabar fill (e.g. "N°04"); amenity = hairline-bordered `icon + label`.
 - **Eyebrow** ✓ — optional `num` (cinnabar) + `label` (hairline-prefixed) slots.
 - **Pulse** ✓ — `variant: "live" | "fallback"`, optional accessible `label`. Square via the global `border-radius: 0` reset (brand rule).
@@ -204,15 +204,27 @@ Every graded story maps to a file + component in the build.
 - **Icon** ✓ — typed `name` allowlist (44 glyphs in `icon-registry.ts`) over **`lucide-react`**, `size: xs | sm | md | lg | xl`, `label` toggles `role="img"` ↔ `aria-hidden`.
 - **SkipLink** ✓ — file lives in `shell/` (consumed by `AppLayout`); re-exported through the `ui/` barrel.
 
+### 5.10a Browse composites
+
+`src/components/browse/` — slice 4.1 components. These render the prototype's editorial markup directly (`.venue`, `.hero__plate`, `.pager`) instead of going through generic primitives — the prototype-faithful approach beat the generic-wrapper approach during 4.1's iteration.
+
+- **VenueCard** ✓ — magazine plate that links to `/venues/:id`. Renders `.venue → .venue__img → .venue__scrim → .venue__ticks → .venue__meta-top (.venue__index) → .venue__body (name, where, desc, row, amenities)`. Bento + venues-grid CSS overrides reshape this same markup per cell variant.
+- **VenueCardSkeleton** ✓ — same `.venue` outer shape with `.venue--skeleton` shimmer. Accepts a `className` so skeletons occupy the right grid span during loading.
+- **HeroPlate** ✓ — static cover plate for the Home hero (cinnabar-tagged figure with caption). API-driven hero was attempted three times during 4.1; rejected — Noroff dataset is too unreliable to drive the masthead. Live data shows in the bento + stats below.
+- **Pager** ✓ — prototype's `.pager` markup (Prev / numbered list with `.pager__gap` ellipses / Next / `Page X / Y` meta). Mobile (≤640px): list collapses, layout becomes `[Prev] [meta] [Next]`.
+
+### 5.10b Notable cleanup decision (slice 4.1 post-ship, Apr 27 2026)
+
+Generic UI primitives originally built for slice 4.1 — `Pagination`, `EmptyState`, `ErrorState`, `BentoGrid`, `SearchInput` — were **deleted** after the prototype-faithful rewrite. The prototype renders these patterns inline (`.v-empty`, `.v-errstate`, `.bento` direct children, `.v-search input`, `.pager` instead of generic Pagination), so the wrappers had zero consumers. Per CLAUDE.md §3.5 (don't keep code with no caller). They can return if a future page genuinely needs the abstraction.
+
 **Deferred (lazy — land with their first consumer):**
 
-- **VenueCard** / **SearchInput** / **Pagination** / **EmptyState** / **ErrorState** / **BentoGrid** → slice 4.1 (browse)
-- **VenueGallery** / **AvailabilityCalendar** → slice 4.2
+- **VenueGallery** / **AvailabilityCalendar** / **HostStrip** / **AmenityList** / **VenueSpecs** / **RatingStars** / **ReadMoreToggle** → slice 4.2
 - **BookingPanel** / **GuestStepper** / **Receipt** → slice 5.2
 - **VenueForm** / **AmenityToggle** / **ImageUrlList** → slice 5.4
 - **PasswordField** (icon-leading + reveal) — `Field` extension that lands with slice 5.1 (auth)
 - **Toast** / **ConfirmDialog** / **Tabs** / **CommandBar** / **Avatar** / **Badge** / **VisuallyHidden** — first slice that needs each
-- **IconButton** / **LetterpressCTA** — auth slice if still needed; otherwise drop (the canonical CTA pattern is `Button variant="primary"`)
+- **IconButton** / **LetterpressCTA** — auth slice if still needed; otherwise drop
 
 ### 5.11 Editorial primitives (Reader Access spread)
 
