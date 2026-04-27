@@ -4,6 +4,8 @@
 
 A modern front end for **Holidaze**, an accommodation booking site built against the Noroff API v2.
 
+## Live
+
 ## What it does
 
 - **Guests** browse and search venues, view details and availability calendars, and register an account.
@@ -12,7 +14,20 @@ A modern front end for **Holidaze**, an accommodation booking site built against
 
 ## Stack
 
-React + TypeScript + Tailwind, talking to `https://v2.api.noroff.dev/holidaze`.
+React + TypeScript + Tailwind, talking to `https://v2.api.noroff.dev/holidaze`. Hosted on Vercel.
+
+## Local development
+
+```bash
+npm install
+npm run dev          # vite dev server, localhost:5173
+npm run build        # production bundle into dist/
+npm run preview      # serve the production bundle locally, localhost:4173
+npm run lint         # eslint, zero-warning gate
+npm run typecheck    # tsc --noEmit
+npm run test         # vitest
+npm run e2e          # playwright
+```
 
 ## Design
 
@@ -20,5 +35,8 @@ React + TypeScript + Tailwind, talking to `https://v2.api.noroff.dev/holidaze`.
 
 ## Links
 
-- [GitHub repo](https://github.com/sergiu-sa/holidaze_pe.git)
+See [`docs/links.md`](docs/links.md) for the full list. Highlights:
+
+- [GitHub repo](https://github.com/sergiu-sa/holidaze_pe)
 - [GitHub project board](https://github.com/users/sergiu-sa/projects/14)
+- [Noroff v2 API docs](https://docs.noroff.dev/docs/v2/holidaze/venues)
