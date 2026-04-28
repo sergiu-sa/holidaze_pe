@@ -2,6 +2,7 @@ import {
   AlignLeft,
   ArrowLeft,
   ArrowRight,
+  Banknote,
   Calendar,
   Check,
   ChevronDown,
@@ -82,6 +83,9 @@ export const ICON_REGISTRY = {
   // calendar / time
   calendar: Calendar,
   clock: Clock,
+
+  // currency
+  euro: Banknote,
 
   // auth / status
   mail: Mail,

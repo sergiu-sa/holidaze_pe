@@ -1,11 +1,13 @@
 import { FALLBACK_VENUES } from '../lib/fallback'
 import { isUsable } from '../lib/isUsable'
+import { ApiError } from '../types/api'
 import type { Venue } from '../types/venue'
 import { readCache, writeCache } from './cache'
 import { apiFetch } from './client'
 import { type PaginationMeta, PaginationMetaSchema, VenueSchema } from './schemas'
 
 const VENUES_NAMESPACE = 'venues'
+const VENUE_NAMESPACE = 'venue'
 
 export type VenueListSource = 'live' | 'cache' | 'fallback'
 
@@ -115,4 +117,28 @@ export async function searchVenues(opts: SearchVenuesOptions): Promise<VenueList
   const raw = await apiFetch<unknown>(path, { signal: opts.signal, unwrap: false })
   const { venues, meta } = parseAndFilter(raw)
   return { venues, meta, source: 'live' }
+}
+
+export interface GetVenueOptions {
+  signal?: AbortSignal
+}
+
+// No fallback on detail — a 404 stays a 404. `isUsable` is not applied either:
+// a direct-link visitor gets the real response and the page renders best-effort.
+export async function getVenue(id: string, opts: GetVenueOptions = {}): Promise<Venue> {
+  const cacheKey = { namespace: VENUE_NAMESPACE, params: { id } }
+
+  const cached = readCache(cacheKey) as Venue | null
+  if (cached) return cached
+
+  const path = `/venues/${encodeURIComponent(id)}?_owner=true&_bookings=true`
+  const raw = await apiFetch<unknown>(path, { signal: opts.signal })
+
+  const parsed = VenueSchema.safeParse(raw)
+  if (!parsed.success) {
+    throw new ApiError(0, 'Venue response failed validation', parsed.error.issues)
+  }
+
+  writeCache(cacheKey, parsed.data)
+  return parsed.data
 }
