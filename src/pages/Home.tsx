@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { HeroPlate } from '../components/browse/HeroPlate'
 import { VenueCard } from '../components/browse/VenueCard'
 import { VenueCardSkeleton } from '../components/browse/VenueCardSkeleton'
+import { VenuePeekModal } from '../components/browse/VenuePeekModal'
 import { useVenues } from '../hooks/useVenues'
+import type { Venue } from '../types/venue'
 
 const FEATURED_LIMIT = 6
 const BENTO_CELLS = ['bento__cell--1', 'bento__cell--2', 'bento__cell--3', 'bento__cell--4', 'bento__cell--5', 'bento__cell--6']
@@ -20,6 +22,8 @@ const SVG_REG = (
 
 export default function Home() {
   const navigate = useNavigate()
+  const [peekVenue, setPeekVenue] = useState<Venue | null>(null)
+  const [peekIndex, setPeekIndex] = useState<number | undefined>(undefined)
 
   const featured = useVenues({ page: 1, limit: 50, sort: 'rating', sortOrder: 'desc' })
   // Bigger sample so the stats bar has meaningful unique-city/country/continent counts.
@@ -226,6 +230,10 @@ export default function Home() {
                   venue={venue}
                   index={i + 1}
                   className={BENTO_CELLS[i] ?? ''}
+                  onPeek={(v) => {
+                    setPeekVenue(v)
+                    setPeekIndex(i)
+                  }}
                 />
               ))}
         </div>
@@ -318,6 +326,15 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <VenuePeekModal
+        venue={peekVenue}
+        index={peekIndex}
+        onClose={() => {
+          setPeekVenue(null)
+          setPeekIndex(undefined)
+        }}
+      />
     </main>
   )
 }

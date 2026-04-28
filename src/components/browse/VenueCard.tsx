@@ -8,6 +8,11 @@ export interface VenueCardProps {
   index?: number
   /** Variant class — `bento__cell--N` on Home, `venue--feature` on /venues. */
   className?: string
+  /**
+   * When set, a plain click opens the peek modal instead of navigating.
+   * Modifier-clicks still follow the link so open-in-new-tab works.
+   */
+  onPeek?: (venue: Venue) => void
 }
 
 const RATING_DOTS = ['●', '●', '●', '●', '●']
@@ -35,7 +40,7 @@ function ratingDots(rating: number): string {
   return RATING_DOTS.slice(0, filled).join(' ')
 }
 
-export function VenueCard({ venue, index, className }: VenueCardProps) {
+export function VenueCard({ venue, index, className, onPeek }: VenueCardProps) {
   const cover = venue.media.length > 0 ? venue.media[0] : null
   const where = formatLocation(venue)
   const composed = ['venue', className].filter(Boolean).join(' ')
@@ -46,8 +51,29 @@ export function VenueCard({ venue, index, className }: VenueCardProps) {
   if (venue.meta.breakfast) amenityLabels.push('Breakfast')
   if (venue.meta.pets) amenityLabels.push('Pets')
 
+  function handleClick(event: React.MouseEvent<HTMLAnchorElement>) {
+    if (!onPeek) return
+    // Modifier + middle clicks signal "open in new tab" — let the browser handle them.
+    if (
+      event.metaKey ||
+      event.ctrlKey ||
+      event.shiftKey ||
+      event.altKey ||
+      event.button === 1
+    ) {
+      return
+    }
+    event.preventDefault()
+    onPeek(venue)
+  }
+
   return (
-    <Link to={`/venues/${venue.id}`} className={composed} aria-label={venue.name}>
+    <Link
+      to={`/venues/${venue.id}`}
+      className={composed}
+      aria-label={venue.name}
+      onClick={handleClick}
+    >
       {cover && (
         <img
           className="venue__img"

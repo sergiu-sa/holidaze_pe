@@ -5,6 +5,7 @@ import heroVenuesUrl from '../assets/hero/hero-venues.png'
 import { Pager } from '../components/browse/Pager'
 import { VenueCard } from '../components/browse/VenueCard'
 import { VenueCardSkeleton } from '../components/browse/VenueCardSkeleton'
+import { VenuePeekModal } from '../components/browse/VenuePeekModal'
 import { useVenues } from '../hooks/useVenues'
 import { useVenueSearch } from '../hooks/useVenueSearch'
 import type { Venue } from '../types/venue'
@@ -85,6 +86,9 @@ export default function Venues() {
   const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS)
 
   const [searchInput, setSearchInput] = useState(q)
+
+  const [peekVenue, setPeekVenue] = useState<Venue | null>(null)
+  const [peekIndex, setPeekIndex] = useState<number | undefined>(undefined)
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sync URL `q` into the controlled input on back/forward + deep-link load.
     setSearchInput(q)
@@ -368,15 +372,23 @@ export default function Venues() {
               <VenueCardSkeleton key={i} className={variantClassFor(i)} />
             ))}
           {showResults &&
-            visible.map((venue, i) => (
-              <VenueCard
-                key={venue.id}
-                venue={venue}
-                // Running count across pages, not page-relative.
-                index={(page - 1) * API_PAGE_SIZE + i + 1}
-                className={variantClassFor(i)}
-              />
-            ))}
+            visible.map((venue, i) => {
+              const runningIndex = (page - 1) * API_PAGE_SIZE + i + 1
+              return (
+                <VenueCard
+                  key={venue.id}
+                  venue={venue}
+                  // Running count across pages, not page-relative.
+                  index={runningIndex}
+                  className={variantClassFor(i)}
+                  onPeek={(v) => {
+                    setPeekVenue(v)
+                    // Pass 0-based index for the modal eyebrow.
+                    setPeekIndex(runningIndex - 1)
+                  }}
+                />
+              )
+            })}
         </div>
 
         {showEmpty && (
@@ -417,6 +429,15 @@ export default function Venues() {
           />
         )}
       </section>
+
+      <VenuePeekModal
+        venue={peekVenue}
+        index={peekIndex}
+        onClose={() => {
+          setPeekVenue(null)
+          setPeekIndex(undefined)
+        }}
+      />
     </main>
   )
 }
