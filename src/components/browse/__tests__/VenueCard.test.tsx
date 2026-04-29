@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import type { Venue } from '../../../types/venue'
 import { VenueCard } from '../VenueCard'
@@ -77,6 +78,49 @@ describe('VenueCard (prototype port)', () => {
   it('does not render an <img> when media is empty', () => {
     renderInRouter(<VenueCard venue={makeVenue({ media: [] })} index={1} />)
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
+  })
+
+  it('falls back to default link navigation when onPeek is omitted', async () => {
+    const user = userEvent.setup()
+    renderInRouter(<VenueCard venue={makeVenue()} index={1} />)
+    const link = screen.getByRole('link', { name: 'Casa del Viento' })
+    // Without onPeek, click is not preventDefault'd. We can't navigate in tests
+    // but we can confirm the click event isn't prevented.
+    let prevented = false
+    link.addEventListener('click', (e) => {
+      prevented = e.defaultPrevented
+      e.preventDefault() // suppress jsdom navigation warning
+    })
+    await user.click(link)
+    expect(prevented).toBe(false)
+  })
+
+  it('intercepts a normal click and calls onPeek with the venue', async () => {
+    const onPeek = vi.fn()
+    const user = userEvent.setup()
+    renderInRouter(<VenueCard venue={makeVenue()} index={1} onPeek={onPeek} />)
+    await user.click(screen.getByRole('link', { name: 'Casa del Viento' }))
+    expect(onPeek).toHaveBeenCalledTimes(1)
+    expect(onPeek).toHaveBeenCalledWith(expect.objectContaining({ id: 'v1' }))
+  })
+
+  it('lets meta+click bypass onPeek so the user can open in a new tab', () => {
+    const onPeek = vi.fn()
+    renderInRouter(<VenueCard venue={makeVenue()} index={1} onPeek={onPeek} />)
+    const link = screen.getByRole('link', { name: 'Casa del Viento' })
+    // Use fireEvent so we can pass `metaKey` precisely; userEvent's click doesn't
+    // expose modifier-key-on-click ergonomics.
+    fireEvent.click(link, { metaKey: true })
+    expect(onPeek).not.toHaveBeenCalled()
+  })
+
+  it('lets ctrl+click bypass onPeek (Windows/Linux open-in-new-tab idiom)', () => {
+    const onPeek = vi.fn()
+    renderInRouter(<VenueCard venue={makeVenue()} index={1} onPeek={onPeek} />)
+    fireEvent.click(screen.getByRole('link', { name: 'Casa del Viento' }), {
+      ctrlKey: true,
+    })
+    expect(onPeek).not.toHaveBeenCalled()
   })
 })
 

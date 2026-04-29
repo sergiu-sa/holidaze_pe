@@ -5,7 +5,7 @@ import { FALLBACK_VENUES } from '../lib/fallback'
 import { server } from '../test/msw/server'
 import type { Venue } from '../types/venue'
 import { BASE } from './client'
-import { listVenues, searchVenues } from './venues'
+import { getVenue, listVenues, searchVenues } from './venues'
 
 const SAMPLE_VENUE: Venue = {
   id: 'real-1',
@@ -170,5 +170,86 @@ describe('searchVenues', () => {
     )
 
     await expect(searchVenues({ q: 'norway' })).rejects.toThrow()
+  })
+})
+
+describe('getVenue', () => {
+  const VENUE_WITH_BOOKINGS: Venue = {
+    ...SAMPLE_VENUE,
+    id: 'real-detail',
+    bookings: [
+      {
+        id: 'b1',
+        dateFrom: '2026-06-15T00:00:00.000Z',
+        dateTo: '2026-06-18T00:00:00.000Z',
+        guests: 2,
+        created: '2026-01-01T00:00:00.000Z',
+        updated: '2026-01-01T00:00:00.000Z',
+      },
+    ],
+    owner: {
+      name: 'Lina',
+      email: 'lina@stud.noroff.no',
+      bio: null,
+      avatar: { url: 'https://images.unsplash.com/photo-2?w=400', alt: '' },
+      banner: { url: 'https://images.unsplash.com/photo-3?w=1400', alt: '' },
+    },
+  }
+
+  it('fetches a single venue with owner + bookings included', async () => {
+    server.use(
+      http.get(`${BASE}/venues/real-detail`, ({ request }) => {
+        const url = new URL(request.url)
+        expect(url.searchParams.get('_owner')).toBe('true')
+        expect(url.searchParams.get('_bookings')).toBe('true')
+        return HttpResponse.json({ data: VENUE_WITH_BOOKINGS, meta: {} })
+      }),
+    )
+
+    const venue = await getVenue('real-detail')
+    expect(venue.id).toBe('real-detail')
+    expect(venue.bookings).toHaveLength(1)
+    expect(venue.owner?.name).toBe('Lina')
+  })
+
+  it('throws ApiError on 404', async () => {
+    server.use(
+      http.get(`${BASE}/venues/missing`, () =>
+        HttpResponse.json({ errors: [{ message: 'Not Found' }] }, { status: 404 }),
+      ),
+    )
+
+    await expect(getVenue('missing')).rejects.toMatchObject({
+      name: 'ApiError',
+      status: 404,
+    })
+  })
+
+  it('serves from cache on second call within TTL', async () => {
+    let calls = 0
+    server.use(
+      http.get(`${BASE}/venues/cached-id`, () => {
+        calls++
+        return HttpResponse.json({ data: VENUE_WITH_BOOKINGS, meta: {} })
+      }),
+    )
+
+    await getVenue('cached-id')
+    await getVenue('cached-id')
+    expect(calls).toBe(1)
+  })
+
+  it('propagates AbortError when the caller aborts', async () => {
+    server.use(
+      http.get(`${BASE}/venues/slow`, async () => {
+        await new Promise((r) => setTimeout(r, 50))
+        return HttpResponse.json({ data: VENUE_WITH_BOOKINGS, meta: {} })
+      }),
+    )
+
+    const controller = new AbortController()
+    const promise = getVenue('slow', { signal: controller.signal })
+    controller.abort()
+    await expect(promise).rejects.toThrow()
   })
 })
