@@ -12,10 +12,26 @@ export interface ApiFetchOptions {
   signal?: AbortSignal
   /** Default true. Set false on list endpoints to keep the `{ data, meta }` envelope. */
   unwrap?: boolean
+  /**
+   * When true, the `path` argument is treated as an absolute URL — the BASE prefix is NOT prepended.
+   * Used by /auth endpoints, which live on noroff.dev/auth (not /holidaze).
+   * Session-derived auth headers are skipped in this mode; pass explicit `headers` instead.
+   */
+  absoluteUrl?: boolean
+  /** Explicit headers to merge with the default Accept/Content-Type (used by createApiKey). */
+  headers?: Record<string, string>
 }
 
 export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): Promise<T> {
-  const { method = 'GET', body, auth = 'optional', signal, unwrap = true } = options
+  const {
+    method = 'GET',
+    body,
+    auth = 'optional',
+    signal,
+    unwrap = true,
+    absoluteUrl = false,
+    headers: extraHeaders,
+  } = options
 
   const token = getAccessToken()
   const apiKey = getApiKey()
@@ -32,14 +48,23 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
     headers['Content-Type'] = 'application/json'
   }
 
-  if (token && apiKey) {
+  // Session-derived auth headers only apply to /holidaze requests.
+  // /auth requests use absoluteUrl + explicit headers (chicken-and-egg with the API key).
+  if (!absoluteUrl && token && apiKey) {
     headers.Authorization = `Bearer ${token}`
     headers['X-Noroff-API-Key'] = apiKey
   }
 
+  // Caller-supplied headers (e.g. createApiKey's Authorization) take precedence.
+  if (extraHeaders) {
+    Object.assign(headers, extraHeaders)
+  }
+
+  const url = absoluteUrl ? path : `${BASE}${path}`
+
   let res: Response
   try {
-    res = await fetch(`${BASE}${path}`, {
+    res = await fetch(url, {
       method,
       headers,
       body: body !== undefined ? JSON.stringify(body) : undefined,

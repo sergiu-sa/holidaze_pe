@@ -140,3 +140,51 @@ describe('apiFetch — error handling', () => {
     } satisfies Partial<ApiError>)
   })
 })
+
+describe('apiFetch — absoluteUrl option (auth endpoints)', () => {
+  it('skips the BASE prefix when absoluteUrl is true', async () => {
+    server.use(
+      http.post('https://v2.api.noroff.dev/auth/login', () =>
+        HttpResponse.json({ data: { name: 'x', email: 'a@b.c', venueManager: false, accessToken: 't' } }),
+      ),
+    )
+
+    const result = await apiFetch<{ data: { accessToken: string } }>(
+      'https://v2.api.noroff.dev/auth/login',
+      { method: 'POST', body: { email: 'a@b.c', password: '12345678' }, absoluteUrl: true, unwrap: false },
+    )
+    expect(result.data.accessToken).toBe('t')
+  })
+
+  it('omits X-Noroff-API-Key when absoluteUrl is true and only Authorization is provided in headers', async () => {
+    let captured: Headers | null = null
+    server.use(
+      http.post('https://v2.api.noroff.dev/auth/create-api-key', ({ request }) => {
+        captured = request.headers
+        return HttpResponse.json({ data: { name: 'k', status: 'ACTIVE', key: 'uuid' } })
+      }),
+    )
+
+    await apiFetch('https://v2.api.noroff.dev/auth/create-api-key', {
+      method: 'POST',
+      body: { name: 'Holidaze session' },
+      absoluteUrl: true,
+      headers: { Authorization: 'Bearer tok_test' },
+      unwrap: false,
+    })
+
+    expect(captured).not.toBeNull()
+    expect(captured!.get('authorization')).toBe('Bearer tok_test')
+    expect(captured!.has('x-noroff-api-key')).toBe(false)
+  })
+
+  it('still includes session-derived Authorization + API-key on /holidaze paths after the extension', async () => {
+    setSession(TEST_SESSION)
+    server.use(captureHandler('/venues', { data: [] }))
+
+    await apiFetch('/venues')
+
+    expect(lastRequestHeaders?.get('authorization')).toBe('Bearer tok_test')
+    expect(lastRequestHeaders?.get('x-noroff-api-key')).toBe('key_test')
+  })
+})
