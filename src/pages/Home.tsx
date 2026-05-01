@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+import { Atlas as AtlasComposite } from '../components/atlas/Atlas'
 import { HeroPlate } from '../components/browse/HeroPlate'
 import { VenueCard } from '../components/browse/VenueCard'
 import { VenueCardSkeleton } from '../components/browse/VenueCardSkeleton'
@@ -239,25 +240,9 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="section section--strip" id="recent" aria-labelledby="recent-title">
-        <div className="section__head">
-          <p className="eyebrow">
-            <span className="eyebrow__num">§ 03</span>
-            <span className="eyebrow__label">Your Atlas</span>
-          </p>
-          <h2 className="section__title" id="recent-title">
-            Where <em>you</em> left off.
-          </h2>
-        </div>
-        <div className="strip" aria-live="polite">
-          <div className="strip__empty">
-            <p className="strip__empty-text">Your atlas is blank.</p>
-            <a href="#featured" className="strip__empty-cta">
-              Start exploring <span aria-hidden="true">→</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      {/* §03 — embedded Atlas. Replaces the "Your Atlas" strip — the editorial
+          plate doubles as a navigation surface (slice 4.3). */}
+      <AtlasComposite variant="compact" />
 
       <section className="section" aria-labelledby="ednote-title">
         <div className="section__head">

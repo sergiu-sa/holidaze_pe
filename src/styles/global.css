@@ -1358,6 +1358,7 @@
   .bento__cell--1 .venue__desc {
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     font-size: clamp(0.88rem, 0.82rem + 0.3vw, 1.05rem);
     margin-top: 0.4rem;
@@ -1383,6 +1384,7 @@
   .bento__cell--3 .venue__desc {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     font-style: italic;
     font-size: 0.85rem;
@@ -1398,6 +1400,7 @@
   .bento__cell--4 .venue__desc {
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     font-family: theme(fontFamily.serif);
     font-style: italic;
@@ -2051,6 +2054,7 @@
   .venues-grid .venue--feature .venue__desc {
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -3271,6 +3275,7 @@
     text-transform: none;
     padding: 0.55em 0 !important;
     -moz-appearance: textfield;
+    appearance: textfield;
   }
   .stepper input[type="number"]::-webkit-outer-spin-button,
   .stepper input[type="number"]::-webkit-inner-spin-button {
@@ -3460,6 +3465,2052 @@
     .book__cta { font-size: theme(fontSize.step--1); padding: 0.95em 1em; }
     .book__price strong { font-size: theme(fontSize.step-2); }
   }
+
+  /* ─── Atlas — typographic world map (slice 4.3) ─── */
+  /* Embedded `.atlas` (Home compact) and standalone `.atp` (full /atlas page).
+     Plate is a static SVG in viewBox 0 0 360 180 (equirectangular).
+     Country labels + graticule + continents are decorative; the gazetteer
+     below is the screen-reader-friendly index. */
+
+  .atlas {
+    padding: theme(spacing.shelf) theme(spacing.gutter);
+    border-top: 1px solid var(--rule-strong);
+    background: var(--bone);
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+  }
+  .atlas--compact {
+    padding: clamp(2rem, 1.5rem + 2.5vw, 3.5rem) theme(spacing.gutter);
+  }
+  /* Mobile: clip the plate so far-east marker labels can't push horizontal
+     overflow up to <html>, which makes the topbar / hero / footer appear
+     "pushed off" of the viewport. */
+  @media (max-width: 880px) {
+    .atlas__plate { overflow: hidden; }
+  }
+
+  .atlas__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: clamp(1rem, 0.5rem + 2vw, 3rem);
+    margin-bottom: clamp(1.5rem, 1rem + 2vw, 3rem);
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .atlas__head .eyebrow { align-self: end; }
+  .atlas__title {
+    font-family: theme(fontFamily.serif);
+    font-weight: 400;
+    font-size: clamp(2.5rem, 1.75rem + 3.5vw, 5.5rem);
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    justify-self: start;
+    text-wrap: balance;
+  }
+  .atlas__title em { font-style: italic; color: var(--terracotta); }
+  .atlas__bounds {
+    justify-self: end;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+    max-width: 28ch;
+  }
+  .atlas--compact .atlas__title { font-size: clamp(1.75rem, 1.25rem + 2vw, 3rem); }
+  @media (max-width: 880px) {
+    .atlas__head { grid-template-columns: 1fr; gap: 1rem; }
+    .atlas__bounds { justify-self: start; text-align: left; }
+  }
+
+  /* Plate tokens — direct hex/rgba so SVG fills can't fall back to black. */
+  .atlas, .atlas__world {
+    --atlas-sea:        #EEE7D3;
+    --atlas-land:       #D8C9A1;
+    --atlas-land-focus: #BAC4DA;
+    --atlas-biome:      rgb(15 14 11 / 0.55);
+    --atlas-grid:       rgb(15 14 11 / 0.10);
+    --atlas-guide:      rgb(15 14 11 / 0.28);
+    --atlas-land-edge:  rgb(15 14 11 / 0.35);
+  }
+
+  .atlas__plate {
+    position: relative;
+    aspect-ratio: 2 / 1;
+    min-height: 14rem;
+    width: 100%;
+    background: var(--bone);
+    border: 1px solid var(--rule-strong);
+    overflow: visible;
+  }
+  .atlas--compact .atlas__plate { aspect-ratio: 2.2 / 1; }
+
+  /* Full-page plate — taller. Without this the plate looks puny on a
+     14" laptop where the side-margin rail eats horizontal space. */
+  .atp .atlas__plate {
+    aspect-ratio: 2 / 1;
+    min-height: clamp(28rem, 65vh, 48rem);
+  }
+
+  .atlas__world {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    display: block;
+  }
+
+  .atlas__ocean__base { fill: var(--atlas-sea); }
+
+  .atlas__grid {
+    stroke: var(--atlas-grid);
+    stroke-width: 0.25;
+    fill: none;
+    vector-effect: non-scaling-stroke;
+  }
+  .atlas__guide { fill: none; stroke-width: 0.4; vector-effect: non-scaling-stroke; }
+  .atlas__guide--equator  { stroke: var(--atlas-guide); stroke-dasharray: 2 2; }
+  .atlas__guide--tropic   { stroke: var(--atlas-guide); stroke-dasharray: 0.6 1.6; opacity: 0.6; }
+  .atlas__guide--meridian { stroke: var(--atlas-guide); stroke-dasharray: 2 2; }
+
+  .atlas__land {
+    fill: var(--atlas-land);
+    fill-rule: evenodd;
+    stroke: var(--atlas-land-edge);
+    stroke-width: 0.35;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+    transition: fill theme(transitionDuration.med) theme(transitionTimingFunction.out-quint),
+                opacity theme(transitionDuration.med) theme(transitionTimingFunction.out-quint);
+  }
+  .atlas__land.is-focus { fill: var(--atlas-land-focus); opacity: 1; }
+  .atlas__land.is-dim   { opacity: 0.35; }
+
+  .atlas__place {
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-weight: 400;
+    fill: var(--atlas-biome);
+    opacity: 0.78;
+    letter-spacing: 0.22em;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    pointer-events: none;
+    paint-order: stroke fill;
+    stroke: rgb(245 238 221 / 0.65);
+    stroke-width: 0.6;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .atlas__markers {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .atlas__markers > * { pointer-events: auto; }
+
+  /* City marker — an absolutely-positioned button. The flip-x / flip-y classes
+     reverse the dot/label order so labels never spill off the right or bottom
+     edge of the plate. The visible dot is small but the entire button has a
+     wider tap target (mobile padding); brand says square dots, no radius. */
+  .atlas__city {
+    position: absolute;
+    z-index: 4;
+    padding: 0.35rem;
+    margin: -0.35rem 0 0 -0.35rem;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transform: translate(0, -50%);
+    transition: color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                transform theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atlas__city--flip-x {
+    transform: translate(-100%, -50%);
+    flex-direction: row-reverse;
+  }
+  .atlas__city--flip-y {
+    transform: translate(0, calc(-50% - 1.15em));
+  }
+  .atlas__city--flip-x.atlas__city--flip-y {
+    transform: translate(-100%, calc(-50% - 1.15em));
+  }
+
+  .atlas__dot {
+    flex: 0 0 auto;
+    width: 5px;
+    height: 5px;
+    background: var(--terracotta);
+    box-shadow: 0 0 0 2px var(--bone);
+    transition: transform theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                box-shadow theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atlas__city--md .atlas__dot { width: 7px; height: 7px; }
+  .atlas__city--lg .atlas__dot {
+    width: 9px;
+    height: 9px;
+    box-shadow: 0 0 0 2px var(--bone), 0 0 0 3px var(--terracotta-soft);
+  }
+
+  .atlas__name {
+    font-family: theme(fontFamily.mono);
+    font-weight: 400;
+    font-size: clamp(0.62rem, 0.58rem + 0.15vw, 0.72rem);
+    line-height: 1;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--ink-soft);
+    background: color-mix(in oklab, var(--bone) 92%, transparent);
+    padding: 0.15rem 0.35rem;
+    transition: color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atlas__count {
+    font-family: theme(fontFamily.mono);
+    font-style: normal;
+    font-size: 0.75em;
+    letter-spacing: 0.05em;
+    color: var(--terracotta);
+    margin-left: 0.25em;
+    vertical-align: super;
+  }
+
+  /* Price ribbon — replaces the count superscript on the full atlas. Reads
+     "from €280" in a hairline-bordered chip, ink type with a cinnabar
+     leading rule. Lives inside the marker name pill so the whole marker
+     stays one button. */
+  .atlas__price {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3em;
+    margin-left: 0.5em;
+    padding-left: 0.45em;
+    border-left: 1px solid var(--rule-strong);
+    font-family: theme(fontFamily.mono);
+    font-weight: 500;
+    font-size: 0.78em;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    text-transform: none;
+  }
+  .atlas__price__from {
+    color: var(--ink-mute);
+    font-weight: 400;
+    font-size: 0.78em;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .atlas__price__val { color: var(--terracotta); }
+  .atlas__city:hover .atlas__price,
+  .atlas__city:focus-visible .atlas__price,
+  .atlas__city.is-hovered-ext .atlas__price {
+    border-left-color: color-mix(in oklab, var(--bone) 50%, transparent);
+  }
+  .atlas__city:hover .atlas__price__from,
+  .atlas__city:focus-visible .atlas__price__from,
+  .atlas__city.is-hovered-ext .atlas__price__from {
+    color: color-mix(in oklab, var(--bone) 65%, transparent);
+  }
+  .atlas__city:hover .atlas__price__val,
+  .atlas__city:focus-visible .atlas__price__val,
+  .atlas__city.is-hovered-ext .atlas__price__val {
+    color: var(--bone);
+  }
+  .atlas__city.is-selected .atlas__price__val { color: var(--bone); }
+  .atlas__city.is-selected .atlas__price__from { color: color-mix(in oklab, var(--bone) 70%, transparent); }
+  .atlas__city.is-selected .atlas__price { border-left-color: color-mix(in oklab, var(--bone) 50%, transparent); }
+
+  .atlas__city:hover,
+  .atlas__city:focus-visible {
+    z-index: 20;
+    outline: 0;
+  }
+  .atlas__city:hover .atlas__name,
+  .atlas__city:focus-visible .atlas__name {
+    color: var(--bone);
+    background: var(--ink);
+  }
+  .atlas__city:hover .atlas__dot,
+  .atlas__city:focus-visible .atlas__dot {
+    transform: scale(1.5);
+    background: var(--ink);
+    box-shadow: 0 0 0 2px var(--bone), 0 0 0 3px var(--ink);
+  }
+  .atlas__city:focus-visible {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 2px;
+  }
+
+  /* Marker filtered out by chip / search — kept in the DOM so layout stays
+     stable but greyed out and removed from the focus order. */
+  .atlas__city.is-filtered-out {
+    opacity: 0.08;
+    filter: grayscale(1);
+    pointer-events: none;
+  }
+  /* Marker is outside the active SVG viewBox (e.g. zoomed to one continent)
+     — hide entirely so labels can't bleed into neighbouring landmasses. */
+  .atlas__city.is-out-of-view { display: none; }
+
+  /* "↩ World" button — appears top-left of the plate when the user has
+     zoomed into a continent. Returns to the world view in one click. */
+  .atp__zoom-reset {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    z-index: 6;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.65rem;
+    background: var(--ink);
+    color: var(--bone);
+    border: 1px solid var(--ink);
+    cursor: pointer;
+    font: inherit;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__zoom-reset__glyph {
+    color: var(--terracotta-soft);
+    font-size: 0.85rem;
+    line-height: 1;
+  }
+  .atp__zoom-reset__label { color: var(--bone); font-weight: 500; }
+  .atp__zoom-reset:hover { background: var(--terracotta); border-color: var(--terracotta); }
+  @media (max-width: 640px) {
+    .atp__zoom-reset { top: 0.55rem; left: 0.55rem; padding: 0.35rem 0.5rem; font-size: 0.55rem; }
+  }
+  /* Selected (after click) — terracotta name pill, larger pulse. */
+  .atlas__city.is-selected .atlas__name {
+    background: var(--terracotta);
+    color: var(--bone);
+  }
+  .atlas__city.is-selected .atlas__dot {
+    transform: scale(1.8);
+    background: var(--ink);
+    box-shadow: 0 0 0 2px var(--bone), 0 0 0 5px var(--terracotta);
+  }
+
+  /* Hovered from outside (gazetteer row / reading-list card) — pulse without
+     the colour swap so the user can still see which marker matches. */
+  .atlas__city.is-hovered-ext { z-index: 18; }
+  .atlas__city.is-hovered-ext .atlas__name {
+    color: var(--bone);
+    background: var(--ink);
+  }
+  .atlas__city.is-hovered-ext .atlas__dot {
+    transform: scale(1.7);
+    background: var(--terracotta);
+    box-shadow: 0 0 0 2px var(--bone), 0 0 0 4px var(--terracotta);
+    animation: atlasMarkerPulse 1200ms ease-out infinite;
+  }
+  @keyframes atlasMarkerPulse {
+    0%, 100% { box-shadow: 0 0 0 2px var(--bone), 0 0 0 4px var(--terracotta); }
+    50%      { box-shadow: 0 0 0 2px var(--bone), 0 0 0 9px color-mix(in oklab, var(--terracotta) 35%, transparent); }
+  }
+
+  /* Pull-card on hover/focus */
+  .atlas__card {
+    position: absolute;
+    z-index: 30;
+    pointer-events: none;
+    background: var(--bone-soft);
+    color: var(--ink);
+    padding: 0.85rem 1rem;
+    min-width: 16rem;
+    max-width: 22rem;
+    opacity: 0;
+    transform: translate(-50%, calc(-100% - 1.25rem));
+    transition: opacity theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+    box-shadow: 0 16px 40px -12px rgb(20 19 15 / 0.2);
+    border: 1px solid var(--rule-strong);
+    border-top: 3px solid var(--terracotta);
+  }
+  .atlas__card::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -0.45rem;
+    transform: translateX(-50%) rotate(45deg);
+    width: 0.8rem;
+    height: 0.8rem;
+    background: var(--bone-soft);
+    border-right: 1px solid var(--rule-strong);
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .atlas__card.atlas__card--below {
+    transform: translate(-50%, calc(0% + 1.25rem));
+  }
+  .atlas__card.atlas__card--below::after {
+    bottom: auto;
+    top: -0.45rem;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 1px solid var(--rule-strong);
+    border-top: 1px solid var(--rule-strong);
+  }
+  .atlas__card.atlas__card--right {
+    transform: translate(0%, calc(-100% - 1.25rem));
+  }
+  .atlas__card.atlas__card--right::after { left: 1rem; transform: rotate(45deg); }
+  .atlas__card.atlas__card--right.atlas__card--below {
+    transform: translate(0%, calc(0% + 1.25rem));
+  }
+  .atlas__card.is-shown { opacity: 1; }
+
+  .atlas__card__head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 0.55rem;
+    font-family: theme(fontFamily.serif);
+    font-weight: 400;
+    font-size: 1.05rem;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .atlas__card__head .mono {
+    font-family: theme(fontFamily.mono);
+    font-style: normal;
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    color: var(--ink-mute);
+    align-self: center;
+  }
+  .atlas__card__list {
+    list-style: none;
+    display: grid;
+    gap: 0.3rem;
+    font-family: theme(fontFamily.sans);
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  .atlas__card__list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .atlas__card__list li em {
+    font-family: theme(fontFamily.mono);
+    font-style: normal;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--terracotta);
+    align-self: center;
+  }
+  .atlas__card__more {
+    color: var(--ink-mute);
+    font-style: italic;
+    justify-content: center !important;
+  }
+  .atlas__card__foot {
+    margin-top: 0.55rem;
+    padding-top: 0.55rem;
+    border-top: 1px solid var(--rule);
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  /* Gazetteer — A–Z list of cities, the screen-reader-friendly index. */
+  .atlas__gazetteer {
+    list-style: none;
+    columns: 2;
+    column-gap: clamp(1.5rem, 1rem + 2vw, 3.5rem);
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule-strong);
+  }
+  .atlas__gazetteer li {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto auto;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.45rem 0;
+    border-bottom: 1px dotted var(--rule);
+    break-inside: avoid;
+    font-family: theme(fontFamily.serif);
+    font-weight: 300;
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+  .atlas__gazetteer li.is-hidden { display: none; }
+  .atlas__gazetteer li.is-selected {
+    background: var(--bone-soft);
+    padding-left: 0.5rem;
+    border-left: 3px solid var(--terracotta);
+  }
+  /* Bidirectional hover tint — softer than is-selected so the two states
+     are visually distinct when both happen at once. */
+  .atlas__gazetteer li.is-hovered-ext {
+    background: color-mix(in oklab, var(--bone-soft) 65%, var(--terracotta) 12%);
+  }
+  .atlas__gazetteer li.is-hovered-ext .atlas__gaz-link {
+    color: var(--terracotta);
+    border-color: var(--terracotta);
+  }
+  .atlas__gaz-num {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    color: var(--cobalt);
+  }
+  .atlas__gaz-link {
+    font-family: theme(fontFamily.serif);
+    font-size: 1rem;
+    color: var(--ink);
+    text-decoration: none;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    transition: color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atlas__gaz-link:hover,
+  .atlas__gazetteer li.is-selected .atlas__gaz-link {
+    color: var(--terracotta);
+    border-color: var(--terracotta);
+  }
+  .atlas__gaz-dots {
+    border-bottom: 1px dotted var(--rule-strong);
+    align-self: end;
+    margin-bottom: 0.4em;
+  }
+  .atlas__gaz-meta {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  .atlas__gaz-count {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--terracotta);
+    min-width: 1.5rem;
+    text-align: right;
+  }
+  .atlas__gaz__empty {
+    padding: 1.5rem 0;
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    color: var(--ink-mute);
+    border-top: 1px dotted var(--rule);
+  }
+  @media (max-width: 640px) {
+    .atlas__gazetteer { columns: 1; }
+    .atlas__gazetteer li { grid-template-columns: auto auto 1fr auto; }
+    .atlas__gaz-meta { display: none; }
+  }
+  /* Touch — guarantee a 44px tap target on the gazetteer row link
+     (WCAG 2.5.5). The row itself stays compact; the inline-flex link
+     just owns the vertical space. */
+  @media (hover: none) and (pointer: coarse) {
+    .atlas__gaz-link {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+
+  .atlas__city {
+    opacity: 0;
+    animation: atlasIn theme(transitionDuration.med) theme(transitionTimingFunction.out-quint) forwards;
+    animation-delay: calc(var(--i, 0) * 40ms + 100ms);
+  }
+
+  /* WCAG 2.5.5 — guarantee a 44×44 tap target around each marker on touch
+     devices, where the dot+label can otherwise be sub-44px tall. */
+  @media (hover: none) and (pointer: coarse) {
+    .atlas__city {
+      padding: 0.6rem;
+      margin: -0.6rem 0 0 -0.6rem;
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+  .atlas__city--flip-x { animation-name: atlasInFlipX; }
+  .atlas__city--flip-y { animation-name: atlasInFlipY; }
+  .atlas__city--flip-x.atlas__city--flip-y { animation-name: atlasInFlipXY; }
+
+  /* Full-atlas CTA card (under the embedded variant). */
+  .atlas__full {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: clamp(0.75rem, 0.5rem + 1vw, 1.5rem);
+    margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+    padding: 1.25rem 1.35rem;
+    background: var(--ink);
+    color: var(--bone);
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+    transition: background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atlas__full::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+    background: var(--terracotta);
+  }
+  .atlas__full__eyebrow {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--bone) 65%, transparent);
+  }
+  .atlas__full__title {
+    font-family: theme(fontFamily.serif);
+    font-weight: 400;
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.8rem);
+    line-height: 1.05;
+    color: var(--bone);
+  }
+  .atlas__full__title em { font-style: italic; color: var(--terracotta-soft); }
+  .atlas__full__meta {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--bone) 65%, transparent);
+    text-align: right;
+    max-width: 28ch;
+    justify-self: end;
+  }
+  .atlas__full:hover { background: color-mix(in oklab, var(--ink) 92%, var(--terracotta)); }
+  .atlas__full:hover .atlas__full__title em { color: var(--bone); }
+  @media (max-width: 720px) {
+    .atlas__full { grid-template-columns: 1fr; gap: 0.45rem; }
+    .atlas__full__meta { justify-self: start; text-align: left; max-width: none; }
+  }
+
+  /* ── Compass dial — two variants ──
+     "hero" (default): big, lives in page-hero with caption.
+     "overlay": small, anchors top-right of the plate, ink-on-bone, no caption. */
+  .compass {
+    position: relative;
+    width: clamp(11rem, 9rem + 6vw, 15rem);
+    aspect-ratio: 1 / 1;
+    margin: 0;
+    color: var(--bone);
+    justify-self: end;
+  }
+  @media (max-width: 880px) {
+    .compass { justify-self: start; width: 9rem; }
+  }
+
+  .compass--overlay {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    z-index: 6;
+    width: clamp(5rem, 4rem + 4vw, 6.5rem);
+    pointer-events: none;
+    color: var(--ink);
+    background: color-mix(in oklab, var(--bone) 92%, transparent);
+    border: 1px solid var(--rule-strong);
+    padding: 0.4rem;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+  .compass--overlay .compass__ring { stroke: var(--rule-strong); }
+  .compass--overlay .compass__tick { stroke: var(--rule); }
+  .compass--overlay .compass__tick--major { stroke: var(--ink); }
+  .compass--overlay .compass__cardinal { fill: var(--ink); font-size: 11px; }
+  .compass--overlay .compass__needle__tail { fill: var(--ink-mute); }
+  .compass--overlay .compass__needle__pivot {
+    fill: var(--bone);
+    stroke: var(--terracotta);
+  }
+  @media (max-width: 640px) {
+    .compass--overlay { top: 0.55rem; right: 0.55rem; width: 4.25rem; padding: 0.3rem; }
+  }
+  .compass__svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+  .compass__ring {
+    fill: none;
+    stroke: color-mix(in oklab, var(--bone) 65%, transparent);
+    stroke-width: 0.7;
+  }
+  .compass__tick {
+    stroke: color-mix(in oklab, var(--bone) 45%, transparent);
+    stroke-width: 0.6;
+  }
+  .compass__tick--major {
+    stroke: var(--bone);
+    stroke-width: 1.1;
+  }
+  .compass__cardinal {
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-size: 9px;
+    fill: var(--bone);
+    text-anchor: middle;
+    dominant-baseline: middle;
+    letter-spacing: 0.06em;
+  }
+  .compass__needle {
+    transform-origin: 0 0;
+    transition: transform theme(transitionDuration.slow) theme(transitionTimingFunction.out-quint);
+  }
+  .compass__needle__point { fill: var(--terracotta); }
+  .compass__needle__tail { fill: color-mix(in oklab, var(--bone) 70%, transparent); }
+  .compass__needle__pivot {
+    fill: var(--bone);
+    stroke: var(--terracotta);
+    stroke-width: 1;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .compass__needle { transition: none; }
+  }
+
+  /* ─── Atlas hero — typographic spread (replaces the photo hero) ─────────
+     Lapis ground · giant ivory wordmark · saffron compass rose · cinnabar
+     postal-stamp tag · asymmetric editorial composition. */
+  .atlas-hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    background: var(--cobalt-deep);
+    color: var(--bone);
+    padding:
+      clamp(2.25rem, 1.5rem + 3vw, 5rem) theme(spacing.gutter)
+      clamp(2rem, 1.5rem + 2.5vw, 4.5rem);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      'lead'
+      'stats';
+    row-gap: clamp(1.25rem, 0.75rem + 1.5vw, 2.25rem);
+  }
+
+  /* Subtle paper grain — lifts the lapis from "flat dark blue" to "printed
+     plate." The .grain reset class only sets pointer-events; we add the
+     atmospheric SVG noise here. */
+  .atlas-hero__grain {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.18;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.7 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* The TERRA wordmark — visually balances the lead block on the left.
+     Sits roughly centered between the right edge of the title and the right
+     edge of the hero, with breathing room from the page gutter. Hairline-
+     outlined italic at large scale, painted in ivory at very low alpha as
+     a watermark. */
+  .atlas-hero__wordmark {
+    position: absolute;
+    right: clamp(2rem, 4vw, 7rem);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(5.5rem, 3rem + 11vw, 16rem);
+    line-height: 0.78;
+    letter-spacing: -0.04em;
+    color: transparent;
+    -webkit-text-stroke: 1px color-mix(in oklab, var(--bone) 20%, transparent);
+    user-select: none;
+    pointer-events: none;
+    white-space: nowrap;
+    animation: atlasHeroWord 1400ms cubic-bezier(0.19, 1, 0.22, 1) both;
+  }
+  @media (max-width: 1100px) {
+    .atlas-hero__wordmark {
+      right: clamp(1.25rem, 2.5vw, 4rem);
+      -webkit-text-stroke-width: 0.7px;
+    }
+  }
+  /* On mobile the watermark fights every other element on a tight column.
+     Drop it — the editorial weight comes from the title + stats tape. */
+  @media (max-width: 640px) {
+    .atlas-hero__wordmark { display: none; }
+  }
+
+  /* Postal-stamp tag — diagonal, saffron-ink, top-right of the hero. The
+     issue mark; signs this plate. */
+  .atlas-hero__stamp {
+    position: absolute;
+    z-index: 4;
+    top: clamp(1.1rem, 0.75rem + 1.25vw, 2rem);
+    right: clamp(0.85rem, 0.5rem + 1.5vw, 2.5rem);
+    transform: rotate(-3deg);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid var(--saffron);
+    color: var(--saffron);
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    background: color-mix(in oklab, var(--cobalt-deep) 65%, transparent);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    pointer-events: none;
+    animation: atlasHeroStamp 700ms cubic-bezier(0.19, 1, 0.22, 1) 600ms both;
+  }
+  .atlas-hero__stamp__bullet { color: var(--ochre-deep); }
+  /* Stamp also drops on mobile — the §05 eyebrow already serves as the
+     issue mark, and the stamp fights the topbar at narrow widths. */
+  @media (max-width: 640px) {
+    .atlas-hero__stamp { display: none; }
+  }
+
+  /* Lead block — eyebrow + title + lede + bounds, left-anchored. Capped
+     short so it doesn't run under the TERRA wordmark on the right. */
+  .atlas-hero__lead {
+    grid-area: lead;
+    position: relative;
+    z-index: 3;
+    align-self: center;
+    max-width: min(34rem, 60%);
+  }
+  @media (max-width: 880px) {
+    .atlas-hero__lead { max-width: 30rem; }
+  }
+  @media (max-width: 640px) {
+    .atlas-hero__lead { max-width: none; }
+  }
+  .atlas-hero__eyebrow {
+    color: color-mix(in oklab, var(--bone) 70%, transparent);
+    margin-bottom: clamp(0.75rem, 0.5rem + 0.8vw, 1.5rem);
+  }
+  .atlas-hero__eyebrow .eyebrow__num { color: var(--terracotta-soft); }
+  .atlas-hero__eyebrow .eyebrow__label { color: color-mix(in oklab, var(--bone) 78%, transparent); }
+  .atlas-hero__title {
+    font-family: theme(fontFamily.serif);
+    font-weight: 400;
+    font-size: clamp(2.5rem, 1.6rem + 4vw, 5.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: var(--bone);
+    text-wrap: balance;
+    margin-bottom: clamp(0.7rem, 0.5rem + 0.6vw, 1.25rem);
+  }
+  .atlas-hero__title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+  .atlas-hero__lede {
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1rem, 0.9rem + 0.35vw, 1.2rem);
+    line-height: 1.45;
+    color: color-mix(in oklab, var(--bone) 88%, transparent);
+    max-width: 28ch;
+    text-wrap: balance;
+    margin-bottom: clamp(0.7rem, 0.5rem + 0.6vw, 1.25rem);
+  }
+  .atlas-hero__bounds {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.7rem;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--bone) 75%, transparent);
+  }
+  .atlas-hero__bounds::before {
+    content: '';
+    display: inline-block;
+    width: 2rem;
+    height: 1px;
+    background: var(--terracotta);
+    transform: translateY(-2px);
+  }
+
+  /* Stats tape spans the full hero width across the bottom — typographic
+     letterpress feel: hairline rules above and below, bistre cells.
+     Stays on a single row of 4 cells right down to mobile (just compresses)
+     so the TERRA wordmark doesn't bleed through the open space. */
+  .atlas-hero__stats {
+    grid-area: stats;
+    position: relative;
+    z-index: 2;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    background: color-mix(in oklab, var(--cobalt-deep) 88%, transparent);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    border-top: 1px solid color-mix(in oklab, var(--bone) 22%, transparent);
+    border-bottom: 1px solid color-mix(in oklab, var(--bone) 22%, transparent);
+  }
+  .atlas-hero__stat {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.8rem 0.85rem 0.9rem;
+    border-right: 1px dotted color-mix(in oklab, var(--bone) 18%, transparent);
+    min-width: 0;
+  }
+  .atlas-hero__stat:last-child { border-right: 0; }
+  .atlas-hero__stat dt {
+    font-family: theme(fontFamily.mono);
+    font-size: clamp(0.5rem, 0.45rem + 0.15vw, 0.6rem);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    /* WCAG AA — 78% bone over cobalt-deep clears 4.5:1 contrast for body
+       text, 60% did not. */
+    color: color-mix(in oklab, var(--bone) 78%, transparent);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .atlas-hero__stat dd {
+    margin: 0;
+    font-family: theme(fontFamily.serif);
+    font-style: normal;
+    font-weight: 400;
+    font-size: clamp(1.4rem, 1rem + 1.2vw, 2.5rem);
+    line-height: 0.95;
+    color: var(--bone);
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 480px) {
+    .atlas-hero__stat { padding: 0.6rem 0.55rem 0.7rem; gap: 0.15rem; }
+  }
+  /* Long stat labels collapse to a short alternative on mobile so they
+     don't truncate. */
+  .atlas-hero__stat__full { display: inline; }
+  .atlas-hero__stat__short { display: none; }
+  @media (max-width: 640px) {
+    .atlas-hero__stat__full { display: none; }
+    .atlas-hero__stat__short { display: inline; }
+  }
+
+  /* Entry choreography — wordmark slides + fades in, rose spins in,
+     stamp drops down and rotates into place. */
+  @keyframes atlasHeroWord {
+    0% { opacity: 0; transform: translate(8%, -50%); letter-spacing: 0.06em; }
+    100% { opacity: 1; transform: translate(0, -50%); letter-spacing: -0.04em; }
+  }
+  @media (max-width: 880px) {
+    @keyframes atlasHeroWord {
+      0% { opacity: 0; transform: translate(8%, 0); }
+      100% { opacity: 1; transform: translate(0, 0); }
+    }
+  }
+  @keyframes atlasHeroStamp {
+    0% { opacity: 0; transform: rotate(2deg) translateY(-0.8rem); }
+    100% { opacity: 1; transform: rotate(-3deg) translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .atlas-hero__wordmark,
+    .atlas-hero__stamp { animation: none; }
+  }
+
+  /* ── Standalone Atlas page (`/atlas`) — `.atp__*` ── */
+  .atp {
+    width: 100%;
+    max-width: 100%;
+    padding: clamp(0.5rem, 0.35rem + 0.5vw, 1rem) theme(spacing.gutter) theme(spacing.shelf);   
+    border-top: 1px solid var(--rule-strong);
+    background: var(--bone);
+    position: relative;
+    overflow: hidden;
+  }
+  /* Clip the world plate on the full page so far-east marker labels can't
+     spill past 100% and force horizontal page-overflow on mobile. */
+  .atp .atlas__plate { overflow: hidden; }
+  /* Inside the /atlas page the atlas section is just plate + reading list
+     + gazetteer — the page-level head supplies the vertical breathing room,
+     so we drop the shelf-scale top/bottom padding here. */
+  .atp .atlas { padding: 0; border-top: 0; }
+
+  .atp__bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem 1rem;
+    align-items: stretch;
+  }
+  @media (max-width: 880px) {
+    .atp__bar { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .atp__controls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem 1.5rem;
+    align-items: center;
+    padding: 0.85rem 0.95rem;
+    background: var(--bone-soft);
+    border: 1px solid var(--rule-strong);
+    margin-bottom: 0;
+    min-width: 0;
+  }
+  @media (max-width: 880px) {
+    .atp__controls {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.6rem;
+    }
+  }
+
+  /* Sort dropdown — typographic mono select with a custom chevron, lives in
+     the bar to the right of the search/chips controls. */
+  .atp__sort {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.6rem 0.85rem;
+    background: var(--ink);
+    color: var(--bone);
+    border: 1px solid var(--ink);
+    cursor: pointer;
+    min-height: 2.5rem;
+  }
+  .atp__sort__label {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--bone) 65%, transparent);
+  }
+  .atp__sort__select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: transparent;
+    border: 0;
+    color: var(--bone);
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    line-height: 1.1;
+    padding: 0 1.4em 0 0;
+    cursor: pointer;
+    width: 100%;
+    min-width: 9rem;
+  }
+  /* Native focus ring on the control itself (the global :focus-visible rule
+     covers it). Wrapper-level focus ring is dropped — it didn't read on every
+     browser and the native ring is the AA-correct surface. */
+  .atp__sort__select:focus-visible {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 2px;
+  }
+  .atp__sort__select option {
+    color: var(--ink);
+    font-style: normal;
+    font-family: theme(fontFamily.serif);
+    background: var(--bone);
+  }
+  .atp__sort__chev {
+    position: absolute;
+    right: 0.85rem;
+    color: var(--terracotta-soft);
+    font-family: theme(fontFamily.mono);
+    font-size: 0.75rem;
+    pointer-events: none;
+  }
+  @media (max-width: 880px) {
+    .atp__sort { justify-self: stretch; }
+  }
+
+  .atp__search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--rule-strong);
+    background: var(--bone);
+    padding: 0.55rem 0.75rem;
+    gap: 0.55rem;
+    min-width: 0;
+  }
+  .atp__search::before {
+    content: "§";
+    font-family: theme(fontFamily.mono);
+    font-size: 0.7rem;
+    color: var(--terracotta);
+    font-weight: 500;
+  }
+  .atp__search input {
+    flex: 1;
+    font-family: theme(fontFamily.sans);
+    font-size: 0.92rem;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    min-width: 0;
+  }
+  .atp__search input::placeholder { color: var(--ink-mute); font-style: italic; }
+  /* Real focus ring on the input itself — the wrapper border colour shift
+     alone doesn't reach the WCAG 2.4.11 3:1 indicator contrast. */
+  .atp__search input:focus-visible {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 2px;
+  }
+  .atp__search:focus-within { border-color: var(--ink); }
+  .atp__search__clear {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding: 0.18rem 0.42rem;
+    border: 1px solid var(--rule);
+    background: transparent;
+    cursor: pointer;
+    transition: color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__search__clear:hover { color: var(--terracotta); border-color: var(--terracotta); }
+
+  .atp__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    justify-content: flex-end;
+    min-width: 0;
+  }
+  @media (max-width: 880px) {
+    .atp__chips { justify-content: flex-start; }
+  }
+  .atp__chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.42rem 0.65rem;
+    border: 1px solid var(--rule-strong);
+    background: var(--bone);
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    cursor: pointer;
+    min-height: 2.5rem;
+    transition: background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__chip__count { font-size: 0.85em; color: var(--terracotta); font-weight: 500; }
+  .atp__chip:hover {
+    background: var(--bone-soft);
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+  .atp__chip.is-active {
+    background: var(--ink);
+    color: var(--bone);
+    border-color: var(--ink);
+  }
+  .atp__chip.is-active .atp__chip__count { color: var(--bone); }
+  .atp__chip.is-disabled { opacity: 0.55; cursor: not-allowed; pointer-events: none; }
+
+  /* Page-level atlas head — eyebrow + title + bounds, full layout width.
+     Lifted out of the AtlasComposite so the side-margin rail starts at the
+     plate row rather than fighting with the headline. */
+  .atp__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: clamp(1rem, 0.5rem + 2vw, 3rem);
+    margin: clamp(1rem, 0.75rem + 1vw, 1.5rem) 0 0;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  @media (max-width: 880px) {
+    .atp__head { grid-template-columns: 1fr; gap: 0.75rem; }
+    .atp__head .atlas__bounds { justify-self: start; text-align: left; }
+  }
+
+  /* Page-level title flows in one line on wide viewports; balances naturally
+     when the available width tightens. No hardcoded line break. */
+  .atlas__title--page {
+    text-wrap: balance;
+    /* Keep on one line until the column genuinely can't hold it. */
+    white-space: nowrap;
+  }
+  @media (max-width: 1100px) {
+    .atlas__title--page { white-space: normal; }
+  }
+
+  .atp__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(1.25rem, 1rem + 1vw, 2rem);
+    align-items: start;
+    margin-top: clamp(1rem, 0.75rem + 1vw, 1.5rem);
+    min-width: 0;
+  }
+  .atp__main { display: contents; min-width: 0; }
+
+  /* 2-column desktop: plate + sidebar share row 1; the reading list,
+     selection dock, and gazetteer span the full width below. The sidebar
+     only sits next to the plate, not next to the longer-form content,
+     so the reading list's snap-scroll strip can show more cards. */
+  @media (min-width: 1100px) {
+    .atp__layout {
+      grid-template-columns: minmax(0, 1fr) 14rem;
+      column-gap: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+    }
+    .atp__main { display: block; min-width: 0; }
+    /* Anything else inside the layout grid spans both columns. */
+    .atp__layout > .atp__reading,
+    .atp__layout > .atp__selection,
+    .atp__layout > .atlas__gazetteer,
+    .atp__layout > .atlas__gaz__empty {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (min-width: 1300px) {
+    .atp__layout {
+      grid-template-columns: minmax(0, 1fr) 15rem;
+    }
+  }
+
+  /* Right-side sidebar — sticky stack of rail + note. */
+  .atp__sidebar { display: none; }
+  @media (min-width: 1100px) {
+    .atp__sidebar {
+      display: grid;
+      grid-template-rows: auto auto;
+      gap: 1.25rem;
+      position: sticky;
+      top: 6.5rem;
+      align-self: start;
+      max-height: calc(100vh - 7rem);
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+    .atp__sidebar::-webkit-scrollbar { width: 4px; }
+    .atp__sidebar::-webkit-scrollbar-thumb { background: var(--rule-strong); }
+  }
+
+  /* Running note — sits under the scope rail in the right sidebar. Editorial
+     copy keyed off the active continent. Pure type, hairline rules. */
+  .atp__note {
+    padding: 1.25rem 0.5rem 0.5rem;
+    border-top: 1px solid var(--rule-strong);
+    color: var(--ink-soft);
+  }
+  .atp__note__head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.65rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .atp__note__num {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+  }
+  .atp__note__rubric {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .atp__note__body {
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.45;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .atp__note__foot {
+    margin-top: 1rem;
+    padding-top: 0.85rem;
+    border-top: 1px dotted var(--rule);
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .atp__note__count { color: var(--terracotta); font-weight: 500; }
+
+  /* Scope rail — top of the right sidebar, primary action + sort list. */
+  .atp__rail {
+    padding: 1rem 0.5rem 0.25rem;
+  }
+  .atp__rail__head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.65rem;
+    padding-left: 0.5rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+  .atp__rail__num {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    font-weight: 500;
+  }
+  .atp__rail__rubric {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  /* "All venues" — primary rail action. When filters are active it reads
+     as a reset chip (cinnabar fill); otherwise it reads as a neutral
+     "see everything" surface. */
+  .atp__rail__all {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    align-items: center;
+    column-gap: 0.65rem;
+    padding: 0.7rem 0.7rem 0.75rem;
+    margin: 0 0 1rem;
+    border: 1px solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    transition:
+      background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__rail__all__glyph {
+    grid-row: 1 / 3;
+    font-family: theme(fontFamily.mono);
+    font-size: 1.4rem;
+    line-height: 1;
+    color: var(--terracotta);
+  }
+  .atp__rail__all__label {
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+  .atp__rail__all__hint {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .atp__rail__all:hover {
+    background: var(--ink);
+    color: var(--bone);
+  }
+  .atp__rail__all:focus-visible {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 3px;
+  }
+  .atp__rail__all:hover .atp__rail__all__label,
+  .atp__rail__all:hover .atp__rail__all__hint { color: var(--bone); }
+  .atp__rail__all:hover .atp__rail__all__glyph { color: var(--terracotta-soft); }
+  .atp__rail__all.is-active {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: var(--bone);
+  }
+  .atp__rail__all.is-active .atp__rail__all__label,
+  .atp__rail__all.is-active .atp__rail__all__hint { color: var(--bone); }
+  .atp__rail__all.is-active .atp__rail__all__glyph { color: var(--bone); }
+
+  .atp__rail__sublabel {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.45rem;
+    padding-left: 0.5rem;
+  }
+  .atp__rail__sublabel .atp__rail__num,
+  .atp__rail__sublabel .atp__rail__rubric {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .atp__rail__sublabel .atp__rail__num { color: var(--terracotta); font-weight: 500; }
+  .atp__rail__sublabel .atp__rail__rubric { color: var(--ink-mute); }
+
+  .atp__rail__list { display: grid; gap: 0; }
+  .atp__rail__btn {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.55rem 0.5rem;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    font-family: theme(fontFamily.serif);
+    font-size: 0.92rem;
+    color: var(--ink-soft);
+    transition: color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__rail__btn:hover { color: var(--terracotta); }
+  .atp__rail__btn:focus-visible {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 2px;
+  }
+  .atp__rail__btn .atp__rail__rule {
+    width: 1.1rem;
+    height: 1px;
+    background: var(--rule-strong);
+    transition: width theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__rail__btn.is-active {
+    color: var(--ink);
+    font-style: italic;
+  }
+  .atp__rail__btn.is-active .atp__rail__rule {
+    width: 2.4rem;
+    background: var(--terracotta);
+  }
+
+  /* Crosshair overlay — fades in when the cursor is over the plate. Pure
+     decoration; coords are reported via the HUD chip below. */
+  .atp__crosshair {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__crosshair.is-shown { opacity: 1; }
+  .atp__crosshair__v,
+  .atp__crosshair__h {
+    position: absolute;
+    background: var(--terracotta);
+    opacity: 0.35;
+  }
+  .atp__crosshair__v { top: 0; bottom: 0; width: 1px; }
+  .atp__crosshair__h { left: 0; right: 0; height: 1px; }
+  .atp__crosshair__pin {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    margin: -4px 0 0 -4px;
+    border: 1px solid var(--terracotta);
+    background: color-mix(in oklab, var(--bone) 60%, transparent);
+  }
+
+  /* Live-coords HUD — bottom-left chip with the inverse-projected lat/lng. */
+  .atp__hud {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    z-index: 6;
+    display: inline-grid;
+    grid-auto-flow: column;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.6rem 0.4rem 0.55rem;
+    background: color-mix(in oklab, var(--ink) 92%, transparent);
+    color: var(--bone);
+    font-family: theme(fontFamily.mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 6px 18px -10px rgb(20 19 15 / 0.45);
+    pointer-events: none;
+  }
+  .atp__hud__pill {
+    display: inline-block;
+    padding: 0.1rem 0.38rem;
+    background: var(--terracotta);
+    color: var(--bone);
+    font-size: 0.52rem;
+    letter-spacing: 0.22em;
+    font-weight: 500;
+  }
+  .atp__hud__row { display: inline-flex; align-items: baseline; gap: 0.35rem; }
+  .atp__hud__key { color: color-mix(in oklab, var(--bone) 55%, transparent); }
+  .atp__hud__val {
+    color: var(--bone);
+    font-weight: 500;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    min-width: 4.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 640px) {
+    .atp__hud { bottom: 0.5rem; left: 0.5rem; gap: 0.35rem; padding: 0.3rem 0.45rem; }
+    .atp__hud__val { min-width: 3.5rem; font-size: 0.65rem; }
+  }
+  /* Hide overlays on touch devices — crosshair following finger reads as buggy. */
+  @media (hover: none) and (pointer: coarse) {
+    .atp__crosshair { display: none; }
+  }
+
+  /* ── Status blocks (loading / empty / error) ── */
+  .atp__status {
+    display: grid;
+    gap: 0.7rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+    margin-top: clamp(1.25rem, 1rem + 1vw, 2rem);
+    background: var(--bone-soft);
+    border: 1px solid var(--rule-strong);
+    border-left: 4px solid var(--terracotta);
+  }
+  .atp__status__title {
+    font-family: theme(fontFamily.serif);
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .atp__status__title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+  .atp__status__actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Loading — typewriter pill that pulses while the cartography "renders." */
+  .atp__status--loading {
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    background: var(--ink);
+    color: var(--bone);
+    border-color: var(--ink);
+    border-left-color: var(--terracotta);
+  }
+  .atp__status__pill {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--bone);
+    padding: 0.35rem 0.55rem;
+    background: var(--terracotta);
+  }
+  .atp__status__cursor {
+    width: 0.55rem;
+    height: 1.05rem;
+    background: var(--bone);
+    animation: atpCaret 900ms steps(1, end) infinite;
+  }
+  @keyframes atpCaret {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  .atp__status__meta {
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: color-mix(in oklab, var(--bone) 75%, transparent);
+  }
+
+  @media (max-width: 640px) {
+    .atp__status--loading { grid-template-columns: auto 1fr; }
+    .atp__status__cursor { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .atp__status__cursor { animation: none; opacity: 1; }
+  }
+
+  /* Typographic scale bar — bottom-right of the plate. */
+  .atp__scale {
+    position: absolute;
+    bottom: 0.85rem;
+    right: 0.85rem;
+    z-index: 6;
+    display: grid;
+    gap: 0.25rem;
+    pointer-events: none;
+    color: var(--ink);
+  }
+  .atp__scale__rule {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    height: 7px;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    background:
+      linear-gradient(to right, var(--ink) 0 50%, transparent 50% 100%),
+      linear-gradient(to right, transparent 0 50%, var(--ink) 50% 100%);
+    background-size: 50% 100%, 50% 100%;
+    background-position: 0 0, 100% 0;
+    background-repeat: no-repeat;
+    width: 7rem;
+  }
+  .atp__scale__tick {
+    height: 100%;
+    border-left: 1px solid var(--ink);
+  }
+  .atp__scale__labels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) auto;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .atp__scale__label { font-variant-numeric: tabular-nums; }
+  .atp__scale__label:nth-child(2) { justify-self: center; }
+  .atp__scale__label:nth-child(3) { justify-self: end; }
+  .atp__scale__unit { color: var(--terracotta); }
+  @media (max-width: 640px) {
+    .atp__scale { display: none; }
+  }
+
+  .atp__stage {
+    position: relative;
+    background: var(--bone);
+    border: 1px solid var(--rule-strong);
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  /* ── Reading list — venue carousel below the plate, bidirectionally
+        synced with markers. Editorial framing: numbered "specimens." ── */
+  .atp__reading {
+    margin-top: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule-strong);
+  }
+  .atp__reading__head {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: end;
+    gap: clamp(0.75rem, 0.5rem + 1vw, 2rem);
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--rule-strong);
+    margin-bottom: 1.25rem;
+  }
+  .atp__reading__eyebrow {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .atp__reading__eyebrow strong { color: var(--terracotta); font-weight: 500; margin-right: 0.5em; }
+  .atp__reading__title {
+    font-family: theme(fontFamily.serif);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.5rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .atp__reading__title em { font-style: italic; color: var(--terracotta); }
+  .atp__reading__meta {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+    justify-self: end;
+  }
+  @media (max-width: 720px) {
+    .atp__reading__head {
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+    }
+    .atp__reading__meta { text-align: left; justify-self: start; }
+  }
+
+  .atp__reading__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(15rem, 17rem);
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 1rem;
+    padding-bottom: 0.85rem;
+    /* Hide the Webkit scrollbar; keep keyboard accessibility. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule-strong) transparent;
+  }
+  .atp__reading__track::-webkit-scrollbar { height: 4px; }
+  .atp__reading__track::-webkit-scrollbar-thumb { background: var(--rule-strong); }
+
+  .atp__reading__card {
+    display: grid;
+    grid-template-rows: auto 9rem auto;
+    background: var(--bone);
+    border: 1px solid var(--rule-strong);
+    scroll-snap-align: start;
+    transition:
+      transform theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      box-shadow theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__reading__card.is-hovered-ext {
+    transform: translateY(-3px);
+    border-color: var(--terracotta);
+    box-shadow: 0 12px 28px -16px rgb(20 19 15 / 0.4);
+  }
+  .atp__reading__card.is-selected {
+    border-color: var(--ink);
+    box-shadow: inset 0 0 0 2px var(--terracotta);
+  }
+
+  .atp__reading__dock {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.6rem 0.7rem;
+    background: var(--ink);
+    color: var(--bone);
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+  }
+  .atp__reading__num {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    color: var(--terracotta-soft);
+  }
+  .atp__reading__city {
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--bone);
+  }
+  .atp__reading__count {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--bone) 65%, transparent);
+  }
+
+  .atp__reading__media {
+    position: relative;
+    display: block;
+    background: var(--bone-deep);
+    overflow: hidden;
+  }
+  .atp__reading__media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .atp__reading__media__alt {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .atp__reading__price {
+    position: absolute;
+    bottom: 0.55rem;
+    right: 0.55rem;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--bone);
+    border: 1px solid var(--ink);
+    font-family: theme(fontFamily.mono);
+  }
+  .atp__reading__price__from {
+    font-size: 0.5rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .atp__reading__price__val { font-size: 0.85rem; color: var(--terracotta); font-weight: 500; }
+
+  .atp__reading__body { padding: 0.7rem 0.8rem 0.85rem; display: grid; gap: 0.35rem; }
+  .atp__reading__name {
+    font-family: theme(fontFamily.serif);
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+  .atp__reading__name a {
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__reading__name a:hover { color: var(--terracotta); border-color: var(--terracotta); }
+  .atp__reading__row {
+    display: flex;
+    justify-content: space-between;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+
+  .atp__reading__overflow {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    justify-items: start;
+    padding: 0.85rem 1rem;
+    background: var(--bone-soft);
+    border: 1px dashed var(--rule-strong);
+    color: var(--ink);
+    text-decoration: none;
+    scroll-snap-align: start;
+    min-width: 12rem;
+  }
+  .atp__reading__overflow__num {
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-size: clamp(2rem, 1.5rem + 1vw, 2.75rem);
+    color: var(--terracotta);
+    line-height: 1;
+  }
+  .atp__reading__overflow__label {
+    font-family: theme(fontFamily.serif);
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+  }
+  .atp__reading__overflow__label em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+  .atp__reading__overflow:hover {
+    background: var(--bone);
+    border-color: var(--ink);
+  }
+
+  /* Selection dock — appears below the plate when a marker is clicked. */
+  .atp__selection {
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+    background: var(--bone-soft);
+    border: 1px solid var(--rule-strong);
+    border-top: 4px solid var(--terracotta);
+    position: relative;
+  }
+  .atp__selection__head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: end;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  .atp__selection__eyebrow {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cobalt);
+    margin-bottom: 0.35rem;
+  }
+  .atp__selection__eyebrow strong { color: var(--terracotta); font-weight: 500; }
+  .atp__selection__title {
+    font-family: theme(fontFamily.serif);
+    font-weight: 400;
+    font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.75rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .atp__selection__title em { font-style: italic; color: var(--terracotta); }
+  .atp__selection__coords {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    text-align: right;
+  }
+  .atp__selection__close {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--rule-strong);
+    background: transparent;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+    cursor: pointer;
+    min-height: 2.5rem;
+    transition: background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__selection__close:hover { background: var(--ink); color: var(--bone); }
+
+  .atp__selection__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 1rem;
+  }
+  .atp__selection__card {
+    display: grid;
+    grid-template-rows: 9rem auto;
+    background: var(--bone);
+    border: 1px solid var(--rule-strong);
+    text-decoration: none;
+    color: inherit;
+    transition: transform theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                box-shadow theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__selection__card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px -14px rgb(20 19 15 / 0.35);
+  }
+  .atp__selection__card__img {
+    position: relative;
+    overflow: hidden;
+    background: var(--bone-deep);
+  }
+  .atp__selection__card__img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .atp__selection__card__num {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.16em;
+    padding: 0.18rem 0.4rem;
+    background: var(--ink);
+    color: var(--bone);
+  }
+  .atp__selection__card__body {
+    padding: 0.85rem 0.9rem 0.95rem;
+    display: grid;
+    gap: 0.3rem;
+  }
+  .atp__selection__card__name {
+    font-family: theme(fontFamily.serif);
+    font-weight: 400;
+    font-size: 1.05rem;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .atp__selection__card__row {
+    display: flex;
+    justify-content: space-between;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+    padding-top: 0.3rem;
+    border-top: 1px dotted var(--rule);
+    text-transform: uppercase;
+  }
+  .atp__selection__card__row strong { color: var(--terracotta); font-weight: 500; }
+
+  .atp__selection__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-top: 0.85rem;
+    border-top: 1px dotted var(--rule);
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .atp__selection__foot__meta {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .atp__selection__cta {
+    font-family: theme(fontFamily.sans);
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding-bottom: 2px;
+    transition: color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+                border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .atp__selection__cta:hover { color: var(--terracotta); border-color: var(--terracotta); }
+}
+
+@keyframes atlasIn {
+  from { opacity: 0; transform: translate(0, -50%) scale(0.7); filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+@keyframes atlasInFlipX {
+  from { opacity: 0; transform: translate(-100%, -50%) scale(0.7); filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+@keyframes atlasInFlipY {
+  from { opacity: 0; transform: translate(0, calc(-50% - 1.15em)) scale(0.7); filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+@keyframes atlasInFlipXY {
+  from { opacity: 0; transform: translate(-100%, calc(-50% - 1.15em)) scale(0.7); filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
 }
 
 @keyframes pulse {
@@ -3480,4 +5531,16 @@
     transform: scale(0.9);
     transition: none;
   }
+  .atlas__city {
+    opacity: 1;
+    animation: none;
+    filter: none;
+  }
+  .atlas__city.is-hovered-ext .atlas__dot { animation: none; }
+  .atlas__land { transition: none; }
+  .atp__selection__card { transition: none; }
+  .atp__selection__card:hover { transform: none; }
+  .atp__reading__card { transition: none; }
+  .atp__reading__card.is-hovered-ext { transform: none; }
+  .atp__reading__track { scroll-behavior: auto; }
 }
