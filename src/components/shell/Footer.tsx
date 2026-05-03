@@ -1,10 +1,20 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import wordmarkSvg from '../../assets/logo/holidaze-wordmark.svg'
+import { useAuth } from '../../hooks/useAuth'
+import { useToast } from '../ui/ToastProvider'
 
-// Footer — 4-column editorial footer (brand · explore · account · colophon).
 export function Footer() {
   const year = new Date().getFullYear()
+  const { state, logout } = useAuth()
+  const toast = useToast()
+  const navigate = useNavigate()
+
+  function handleSignOut() {
+    logout()
+    toast('Signed out.')
+    navigate('/', { replace: true })
+  }
 
   return (
     <footer className="footer" role="contentinfo">
@@ -47,15 +57,37 @@ export function Footer() {
         <div className="footer__col" data-footer-account-col>
           <h4 className="footer__h">Account</h4>
           <ul className="footer__list">
-            <li>
-              <Link to="/login">Sign in</Link>
-            </li>
-            <li>
-              <Link to="/register">Register</Link>
-            </li>
-            <li>
-              <Link to="/hosts">Become a host</Link>
-            </li>
+            {state.status === 'authenticated' ? (
+              <>
+                <li>
+                  <Link to="/profile">Profile</Link>
+                </li>
+                <li>
+                  <Link to="/profile/bookings">My bookings</Link>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="footer__signout"
+                  >
+                    Sign out
+                  </button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login">Sign in</Link>
+                </li>
+                <li>
+                  <Link to="/register">Register</Link>
+                </li>
+                <li>
+                  <Link to="/register?role=host">Become a host</Link>
+                </li>
+              </>
+            )}
           </ul>
         </div>
 

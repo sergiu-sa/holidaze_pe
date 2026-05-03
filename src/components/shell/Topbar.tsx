@@ -1,14 +1,17 @@
 import { useCallback, useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import wordmarkSvg from '../../assets/logo/holidaze-wordmark.svg'
+import { useAuth } from '../../hooks/useAuth'
+import { AvatarMenu } from '../nav/AvatarMenu'
 import { NavToggle } from '../nav/NavToggle'
 import { PrimaryNav } from '../nav/PrimaryNav'
+import { SignedOutLinks } from '../nav/SignedOutLinks'
 import { Ruler } from './Ruler'
 
-// Topbar — sticky editorial header (wordmark, nav, account slot, ruler).
 export function Topbar() {
   const [navOpen, setNavOpen] = useState(false)
+  const { state } = useAuth()
 
   const handleNavToggle = useCallback(() => {
     setNavOpen((prev) => !prev)
@@ -37,20 +40,11 @@ export function Topbar() {
 
         <div className="topbar__account">
           <div data-auth-slot>
-            <NavLink
-              to="/login"
-              className="account__link"
-              onClick={handleNavLinkClick}
-            >
-              Sign in
-            </NavLink>
-            <NavLink
-              to="/register"
-              className="account__link account__link--cta"
-              onClick={handleNavLinkClick}
-            >
-              Register<span aria-hidden="true"> →</span>
-            </NavLink>
+            {state.status === 'loading' ? null : state.status === 'anonymous' ? (
+              <SignedOutLinks onLinkClick={handleNavLinkClick} />
+            ) : (
+              <AvatarMenu />
+            )}
           </div>
 
           <NavToggle isOpen={navOpen} onToggle={handleNavToggle} />
