@@ -1,9 +1,10 @@
 import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
 
+import { AuthGuard } from '../components/auth/AuthGuard'
+import { RoleGuard } from '../components/auth/RoleGuard'
 import { AppLayout } from '../components/shell/AppLayout'
 
-// Route-level code splitting — every page is lazy-loaded.
 const Home = lazy(() => import('../pages/Home'))
 const Venues = lazy(() => import('../pages/Venues'))
 const VenueDetail = lazy(() => import('../pages/VenueDetail'))
@@ -21,7 +22,6 @@ const ProfileVenuesBookings = lazy(() => import('../pages/ProfileVenuesBookings'
 const BookingReceipt = lazy(() => import('../pages/BookingReceipt'))
 const NotFound = lazy(() => import('../pages/NotFound'))
 
-// PageFallback — single hairline progress hint shown while a route chunk loads.
 function PageFallback() {
   return (
     <div
@@ -34,8 +34,7 @@ function PageFallback() {
   )
 }
 
-// AppRoutes — React Router v6 tree. The 404 route lives as a sibling of the
-// layout route so it renders without the Topbar/Footer chrome.
+// The 404 route is a sibling of the layout route so it renders without chrome.
 export function AppRoutes() {
   return (
     <Suspense fallback={<PageFallback />}>
@@ -48,14 +47,82 @@ export function AppRoutes() {
           <Route path="/atlas" element={<Atlas />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile/bookings" element={<ProfileBookings />} />
-          <Route path="/profile/avatar" element={<ProfileAvatar />} />
-          <Route path="/profile/venues" element={<ProfileVenues />} />
-          <Route path="/profile/venues/new" element={<ProfileVenuesNew />} />
-          <Route path="/profile/venues/:id/edit" element={<ProfileVenuesEdit />} />
-          <Route path="/profile/venues/:id/bookings" element={<ProfileVenuesBookings />} />
-          <Route path="/bookings/:id" element={<BookingReceipt />} />
+          <Route
+            path="/profile"
+            element={
+              <AuthGuard>
+                <Profile />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/profile/bookings"
+            element={
+              <AuthGuard>
+                <ProfileBookings />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/profile/avatar"
+            element={
+              <AuthGuard>
+                <ProfileAvatar />
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/profile/venues"
+            element={
+              <AuthGuard>
+                {/* eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute */}
+                <RoleGuard role="manager">
+                  <ProfileVenues />
+                </RoleGuard>
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/profile/venues/new"
+            element={
+              <AuthGuard>
+                {/* eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute */}
+                <RoleGuard role="manager">
+                  <ProfileVenuesNew />
+                </RoleGuard>
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/profile/venues/:id/edit"
+            element={
+              <AuthGuard>
+                {/* eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute */}
+                <RoleGuard role="manager">
+                  <ProfileVenuesEdit />
+                </RoleGuard>
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/profile/venues/:id/bookings"
+            element={
+              <AuthGuard>
+                {/* eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute */}
+                <RoleGuard role="manager">
+                  <ProfileVenuesBookings />
+                </RoleGuard>
+              </AuthGuard>
+            }
+          />
+          <Route
+            path="/bookings/:id"
+            element={
+              <AuthGuard>
+                <BookingReceipt />
+              </AuthGuard>
+            }
+          />
         </Route>
 
         <Route path="*" element={<NotFound />} />
