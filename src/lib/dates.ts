@@ -92,8 +92,23 @@ export function rangeHasBookedDay(
   return false
 }
 
+// Alias kept in step with the slice spec's `rangeHasBooked` naming.
+export const rangeHasBooked = rangeHasBookedDay
+
 const MONTH_TITLE = new Intl.DateTimeFormat('en-GB', { month: 'long', year: 'numeric' })
 
 export function formatMonthTitle(date: Date): string {
   return MONTH_TITLE.format(date)
+}
+
+const LONG_DATE = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+})
+
+// Receipt-style long form ("4 June 2026"). Accepts an ISO string or Date.
+export function formatLongDate(input: string | Date): string {
+  const date = typeof input === 'string' ? new Date(input) : input
+  return LONG_DATE.format(date)
 }

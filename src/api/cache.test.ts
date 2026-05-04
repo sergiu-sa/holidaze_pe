@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
   __test__buildKey,
+  bustVenueCache,
   clearCacheNamespace,
   readCache,
   writeCache,
@@ -84,5 +85,30 @@ describe('cache — clearCacheNamespace', () => {
     expect(readCache({ namespace: 'venues', params: { page: 1 } })).toBeNull()
     expect(readCache({ namespace: 'venues', params: { page: 2 } })).toBeNull()
     expect(readCache({ namespace: 'profiles' })).toEqual(['p1'])
+  })
+})
+
+describe('bustVenueCache', () => {
+  beforeEach(() => {
+    sessionStorage.clear()
+  })
+
+  it('removes the cached entry for the given venue id', () => {
+    writeCache({ namespace: 'venue', params: { id: 'v-1' } }, { id: 'v-1', name: 'Test' })
+    expect(readCache({ namespace: 'venue', params: { id: 'v-1' } })).not.toBeNull()
+
+    bustVenueCache('v-1')
+
+    expect(readCache({ namespace: 'venue', params: { id: 'v-1' } })).toBeNull()
+  })
+
+  it('does not affect other venue cache entries', () => {
+    writeCache({ namespace: 'venue', params: { id: 'v-1' } }, { id: 'v-1' })
+    writeCache({ namespace: 'venue', params: { id: 'v-2' } }, { id: 'v-2' })
+
+    bustVenueCache('v-1')
+
+    expect(readCache({ namespace: 'venue', params: { id: 'v-1' } })).toBeNull()
+    expect(readCache({ namespace: 'venue', params: { id: 'v-2' } })).not.toBeNull()
   })
 })
