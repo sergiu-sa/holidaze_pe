@@ -99,18 +99,32 @@ Every graded story maps to a file + component in the build.
 
 - **PrimaryNav** ✓ — Home / Venues / Hosts / Atlas / Identity links via React Router `<NavLink>`; `aria-current="page"` on active. Collapses to `<NavToggle>` below `nav: 960px` breakpoint.
 - **NavToggle** ✓ — mobile hamburger; `aria-controls` + `aria-expanded`, focus-trap inside open menu, Esc closes, body-scroll lock while open, focus returns to toggle on close.
-- **AvatarMenu** — account chip dropdown; Profile / My bookings / Avatar / (My venues) / Sign out. `aria-haspopup`, Esc + outside-click close. *(slice 5.1 — replaces the auth-slot link)*
+- **AvatarMenu** ✓ — account chip dropdown; Profile / My bookings / (My venues) / Avatar / Sign out. `aria-haspopup`, Esc + outside-click close, role chip (Guest / Host). *(slice 5.1, shipped 2026-05-02)*
+- **SignedOutLinks** ✓ — extracted from Topbar's auth-slot; renders Sign in + Register `<NavLink>`s for anonymous users. *(slice 5.1)*
 - **CommandBar** *(editorial)* — `⌘K` / `Ctrl+K` / `/` site-wide dialog; listbox semantics, arrow-key nav, enter-to-open. *(slice 5.6)*
 
 ### 5.3 Auth
 
-`src/components/auth/`
+`src/components/auth/` — all shipped in slice 5.1 (2026-05-02). Press-credentials chassis, light mode, Caveat marginalia exception.
 
-- **LoginForm** — email + password, `stud.noroff.no` regex gate, `?next=` redirect.
-- **RegisterForm** — name + email + password + role picker (customer / manager → `venueManager: true`).
-- **AuthGuard** — wraps protected routes; redirect unauthenticated → `/login?next=…`.
-- **RoleGuard** — wraps manager-only routes; redirect wrong-role → `/profile`.
-- **AuthRequiredModal** — `ConfirmDialog` variant fired from the booking form when not signed in.
+**Form primitives (shared by Login + Register):**
+
+- **AuthCard** ✓ — bone-paper card with corner ticks + saffron postal stamp + masthead row.
+- **MarginaliaNote** ✓ — Caveat-font note pinned at -3.5° with saffron pin SVG.
+- **SpecimenField** ✓ — numbered hairline-rule input row; `forwardRef`; `aria-invalid` + `aria-describedby` wiring.
+- **RoleBento** ✓ — controlled 2-up role picker (guest / host); cinnabar fill on selected.
+- **SubmitBar** ✓ — wide ink submit with pending-state label flip.
+
+**Forms:**
+
+- **LoginForm** ✓ — email + password, `stud.noroff.no` regex gate, submit-time Zod, `?next=` redirect, 401 form banner.
+- **RegisterForm** ✓ — name + email + password + role picker (customer / manager → `venueManager: true`); `?role=host` URL prefill; 409 inline email error; auto-login fallback to `/login?email=…` on chain failure.
+
+**Guards:**
+
+- **AuthGuard** ✓ — wraps protected routes; redirect unauthenticated → `/login?next=…` (URL-encoded).
+- **RoleGuard** ✓ — wraps manager-only routes; redirect non-manager → `/profile` with toast.
+- **AuthRequiredModal** ✓ — native `<dialog>` for inline interrupts; `sessionStorage` stash for deferred actions (consumer wiring in slice 5.2).
 
 ### 5.4 Browsing
 

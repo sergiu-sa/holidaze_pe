@@ -1,14 +1,21 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 
+import { ToastProvider } from './components/ui/ToastProvider'
+import { AuthProvider } from './hooks/useAuth'
 import { AppRoutes } from './routes/AppRoutes'
 
 // MemoryRouter substitutes for the BrowserRouter that <App> mounts in production.
+// AuthProvider + ToastProvider mirror App.tsx so the Topbar's auth slot can render.
 function renderAt(path: string) {
   return render(
-    <MemoryRouter initialEntries={[path]}>
-      <AppRoutes />
-    </MemoryRouter>,
+    <AuthProvider>
+      <ToastProvider>
+        <MemoryRouter initialEntries={[path]}>
+          <AppRoutes />
+        </MemoryRouter>
+      </ToastProvider>
+    </AuthProvider>,
   )
 }
 
