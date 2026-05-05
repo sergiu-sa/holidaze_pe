@@ -1,6 +1,6 @@
-import { render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
 import { ToastProvider, useToast } from '../ToastProvider'
 
@@ -76,5 +76,63 @@ describe('ToastProvider', () => {
       return null
     }
     expect(() => render(<Bare />)).toThrow(/ToastProvider/)
+  })
+})
+
+describe('ToastProvider — queue + auto-dismiss', () => {
+  it('caps the visible queue at MAX_VISIBLE = 3 (FIFO drop)', async () => {
+    function Probe() {
+      const toast = useToast()
+      return (
+        <>
+          <button type="button" onClick={() => { toast('one') }}>1</button>
+          <button type="button" onClick={() => { toast('two') }}>2</button>
+          <button type="button" onClick={() => { toast('three') }}>3</button>
+          <button type="button" onClick={() => { toast('four') }}>4</button>
+        </>
+      )
+    }
+    render(
+      <ToastProvider>
+        <Probe />
+      </ToastProvider>,
+    )
+
+    await userEvent.click(screen.getByText('1'))
+    await userEvent.click(screen.getByText('2'))
+    await userEvent.click(screen.getByText('3'))
+    await userEvent.click(screen.getByText('4'))
+
+    const live = screen.getByRole('status')
+    expect(live).not.toHaveTextContent('one')        // dropped
+    expect(live).toHaveTextContent('two')
+    expect(live).toHaveTextContent('three')
+    expect(live).toHaveTextContent('four')
+  })
+
+  it('auto-dismisses a toast after the default duration', () => {
+    // user-event v14 + vitest v4 fake timers hang on `await user.click()`,
+    // so fire the click with `fireEvent` (sync) to keep fake timers active.
+    vi.useFakeTimers()
+    function Probe() {
+      const toast = useToast()
+      return <button type="button" onClick={() => { toast('flash') }}>fire</button>
+    }
+    render(
+      <ToastProvider>
+        <Probe />
+      </ToastProvider>,
+    )
+    fireEvent.click(screen.getByText('fire'))
+
+    expect(screen.getByRole('status')).toHaveTextContent('flash')
+
+    act(() => {
+      vi.advanceTimersByTime(4500)
+    })
+
+    expect(screen.getByRole('status')).not.toHaveTextContent('flash')
+
+    vi.useRealTimers()
   })
 })
