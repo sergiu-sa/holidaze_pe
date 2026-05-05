@@ -5,6 +5,8 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { BASE } from '../../api/client'
+import { ToastProvider } from '../../components/ui/ToastProvider'
+import { AuthProvider } from '../../hooks/useAuth'
 import { server } from '../../test/msw/server'
 import type { Venue } from '../../types/venue'
 import VenueDetail from '../VenueDetail'
@@ -56,9 +58,13 @@ const SAMPLE: Venue = {
 function renderAt(path: string) {
   return render(
     <MemoryRouter initialEntries={[path]}>
-      <Routes>
-        <Route path="/venues/:id" element={<VenueDetail />} />
-      </Routes>
+      <AuthProvider>
+        <ToastProvider>
+          <Routes>
+            <Route path="/venues/:id" element={<VenueDetail />} />
+          </Routes>
+        </ToastProvider>
+      </AuthProvider>
     </MemoryRouter>,
   )
 }
@@ -93,9 +99,9 @@ describe('VenueDetail page', () => {
       screen.getByRole('heading', { level: 2, name: /pick your nights/i }),
     ).toBeInTheDocument()
 
-    // Booking panel CTA is disabled until the booking endpoint is wired.
+    // Booking panel CTA is the entry into the 4-state booking machine.
     const cta = screen.getByRole('button', { name: /book now/i })
-    expect(cta).toBeDisabled()
+    expect(cta).toBeEnabled()
 
     // Host strip — owner present
     expect(screen.getByText(/hosted by/i)).toBeInTheDocument()
