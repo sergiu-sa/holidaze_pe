@@ -1,6 +1,6 @@
 import type { z } from 'zod'
 
-import type { PaginationMetaSchema, ProfileSchema } from '../api/schemas'
+import type { PaginationMetaSchema } from '../api/schemas'
 
-export type Profile = z.infer<typeof ProfileSchema>
+export type { Profile } from '../api/schemas'
 export type PaginationMeta = z.infer<typeof PaginationMetaSchema>
