@@ -1,4 +1,5 @@
 @import './auth.css';
+@import './booking.css';
 
 @tailwind base;
 @tailwind components;
@@ -42,6 +43,34 @@
 
   --rule:        rgb(15 14 11 / 0.15);
   --rule-strong: rgb(15 14 11 / 0.33);
+
+  /* Aliases for prototype-ported CSS (booking.css, etc.).
+     Tailwind utilities cover the build's components; these mirror the
+     prototype's base.css tokens so verbatim ports resolve. */
+  --ff-display: 'Fraunces', Georgia, serif;
+  --ff-serif:   'Fraunces', Georgia, serif;
+  --ff-ui:      'Bricolage Grotesque', system-ui, sans-serif;
+  --ff-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  --step--2: clamp(0.72rem, 0.70rem + 0.10vw, 0.78rem);
+  --step--1: clamp(0.83rem, 0.80rem + 0.15vw, 0.90rem);
+  --step-0:  clamp(1.00rem, 0.95rem + 0.25vw, 1.10rem);
+  --step-1:  clamp(1.18rem, 1.10rem + 0.40vw, 1.35rem);
+  --step-2:  clamp(1.45rem, 1.30rem + 0.75vw, 1.75rem);
+  --step-3:  clamp(1.95rem, 1.60rem + 1.75vw, 2.75rem);
+  --step-4:  clamp(2.75rem, 2.00rem + 3.75vw, 4.50rem);
+  --step-5:  clamp(3.75rem, 2.50rem + 6.25vw, 7.00rem);
+  --step-6:  clamp(4.50rem, 2.75rem + 8.75vw, 9.50rem);
+
+  --gutter: clamp(1.25rem, 0.75rem + 2.5vw, 3rem);
+  --shelf:  clamp(4rem, 2.5rem + 7.5vw, 8rem);
+  --paper:  #F5EEDD;
+
+  --ease-out:    cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:    180ms;
+  --dur-med:     360ms;
+  --dur-slow:    640ms;
 }
 
 @layer base {
@@ -5545,4 +5574,49 @@
   .atp__reading__card { transition: none; }
   .atp__reading__card.is-hovered-ext { transform: none; }
   .atp__reading__track { scroll-behavior: auto; }
+}
+
+/* Toast — queued stack, hairline-bordered, kind-coloured borders */
+.toast-host {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 999;
+  max-width: min(32ch, 90vw);
+  pointer-events: none;
+}
+.toast-host[data-empty] { pointer-events: none; }
+
+.toast-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toast {
+  background: var(--bone, #FAF7EE);
+  border: 1px solid var(--ink, #0F0E0B);
+  box-shadow: 8px 8px 0 var(--ink, #0F0E0B);
+  padding: 12px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink, #0F0E0B);
+  pointer-events: auto;
+  animation: toast-in 220ms ease-out both;
+}
+.toast--success { border-color: var(--ink, #0F0E0B); }
+.toast--error   { border-color: var(--cinnabar, #C7392F); color: var(--cinnabar, #C7392F); }
+.toast--info    { border-color: var(--ink-mute, #6B6759); }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { animation: none; }
 }

@@ -1,6 +1,7 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
+import { AuthRequiredModal } from '../components/auth/AuthRequiredModal'
 import { AvailabilityCalendar, BookingPanel } from '../components/booking'
 import { NotFoundCard } from '../components/shell/NotFoundCard'
 import {
@@ -10,6 +11,7 @@ import {
   VenueSpread,
   VenueTitlePlate,
 } from '../components/venue'
+import { useAuth } from '../hooks/useAuth'
 import { useDateRange } from '../hooks/useDateRange'
 import { useVenue } from '../hooks/useVenue'
 import { buildBookedSet } from '../lib/dates'
@@ -22,6 +24,13 @@ import { ApiError } from '../types/api'
 export default function VenueDetail() {
   const { id } = useParams<{ id: string }>()
   const { data: venue, error, isLoading, refetch } = useVenue(id)
+  const { user } = useAuth()
+  const [authModalOpen, setAuthModalOpen] = useState(false)
+  const [pendingAction, setPendingAction] = useState<{
+    from: string
+    to: string
+    guests: number
+  } | null>(null)
 
   const bookedSet = useMemo(
     () => buildBookedSet(venue?.bookings),
@@ -104,32 +113,53 @@ export default function VenueDetail() {
   if (!venue) return null
 
   return (
-    <main id="main" className="v-mag">
-      <nav className="crumbs" aria-label="Breadcrumb">
-        <ol className="crumbs__list">
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/venues">Venues</Link>
-          </li>
-          <li>
-            <span aria-current="page">{venue.name}</span>
-          </li>
-        </ol>
-      </nav>
+    <>
+      <main id="main" className="v-mag">
+        <nav className="crumbs" aria-label="Breadcrumb">
+          <ol className="crumbs__list">
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/venues">Venues</Link>
+            </li>
+            <li>
+              <span aria-current="page">{venue.name}</span>
+            </li>
+          </ol>
+        </nav>
 
-      <VenueGallery
-        media={venue.media}
-        venueName={venue.name}
-        coords={formatCoord(venue.location.lat, venue.location.lng)}
-        indexLabel={formatLocation(venue).toUpperCase()}
+        <VenueGallery
+          media={venue.media}
+          venueName={venue.name}
+          coords={formatCoord(venue.location.lat, venue.location.lng)}
+          indexLabel={formatLocation(venue).toUpperCase()}
+        />
+        <VenueTitlePlate venue={venue} />
+        <VenueSpread venue={venue} />
+        <AvailabilityCalendar range={range} />
+        <BookingPanel
+          venue={venue}
+          range={range}
+          isAuthenticated={user !== null}
+          onRequestAuth={(action) => {
+            setPendingAction(action)
+            setAuthModalOpen(true)
+          }}
+          onConflictRefetch={refetch}
+        />
+        <HostStrip owner={venue.owner} />
+      </main>
+
+      <AuthRequiredModal
+        open={authModalOpen}
+        onClose={() => {
+          setAuthModalOpen(false)
+        }}
+        trigger="book"
+        pendingActionKey={`holidaze:pending:venue/${venue.id}`}
+        pendingAction={pendingAction ?? undefined}
       />
-      <VenueTitlePlate venue={venue} />
-      <VenueSpread venue={venue} />
-      <AvailabilityCalendar range={range} />
-      <BookingPanel venue={venue} range={range} />
-      <HostStrip owner={venue.owner} />
-    </main>
+    </>
   )
 }

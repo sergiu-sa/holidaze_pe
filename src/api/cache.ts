@@ -75,5 +75,16 @@ export function clearCacheNamespace(namespace: string): void {
   }
 }
 
+// Drops the venue-detail cache entry so the next useVenue(id) re-fetches —
+// called after a booking succeeds so the calendar reflects the new range.
+export function bustVenueCache(id: string): void {
+  if (typeof window === 'undefined') return
+  try {
+    window.sessionStorage.removeItem(buildKey({ namespace: 'venue', params: { id } }))
+  } catch {
+    /* ignore */
+  }
+}
+
 // Test-only — exposes the literal storage key shape.
 export const __test__buildKey = buildKey

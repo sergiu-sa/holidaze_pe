@@ -6,12 +6,16 @@ import venuesList from '../test/fixtures/venues-list.json'
 import {
   ApiKeySuccessSchema,
   BookingSchema,
+  BookingsListSuccessSchema,
+  BookingSuccessSchema,
+  CreateBookingInputSchema,
   LoginInputSchema,
   LoginSuccessSchema,
   OwnerSchema,
   PaginationMetaSchema,
   RegisterInputSchema,
   RegisterSuccessSchema,
+  UpdateBookingInputSchema,
   VenueSchema,
 } from './schemas'
 
@@ -214,6 +218,87 @@ describe('ApiKeySuccessSchema', () => {
   it('parses a valid api-key response', () => {
     const result = ApiKeySuccessSchema.safeParse({
       data: { name: 'Holidaze session', status: 'ACTIVE', key: 'uuid-1234' },
+    })
+    expect(result.success).toBe(true)
+  })
+})
+
+describe('CreateBookingInputSchema', () => {
+  const valid = {
+    dateFrom: '2026-06-01T00:00:00.000Z',
+    dateTo: '2026-06-04T00:00:00.000Z',
+    guests: 2,
+    venueId: 'venue-uuid-1',
+  }
+
+  it('parses a valid booking input', () => {
+    expect(CreateBookingInputSchema.safeParse(valid).success).toBe(true)
+  })
+
+  it('rejects guests < 1', () => {
+    const result = CreateBookingInputSchema.safeParse({ ...valid, guests: 0 })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects non-integer guests', () => {
+    const result = CreateBookingInputSchema.safeParse({ ...valid, guests: 2.5 })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects malformed dateFrom', () => {
+    const result = CreateBookingInputSchema.safeParse({ ...valid, dateFrom: 'not-a-date' })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects extra fields in strict mode', () => {
+    const result = CreateBookingInputSchema.safeParse({ ...valid, extra: 'x' })
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('UpdateBookingInputSchema', () => {
+  it('accepts a partial patch (guests only)', () => {
+    expect(UpdateBookingInputSchema.safeParse({ guests: 3 }).success).toBe(true)
+  })
+
+  it('accepts an empty patch (all fields optional)', () => {
+    expect(UpdateBookingInputSchema.safeParse({}).success).toBe(true)
+  })
+
+  it('rejects extra fields in strict mode', () => {
+    expect(UpdateBookingInputSchema.safeParse({ guests: 2, extra: 'x' }).success).toBe(false)
+  })
+})
+
+describe('BookingSuccessSchema', () => {
+  it('parses a valid booking response envelope', () => {
+    const result = BookingSuccessSchema.safeParse({
+      data: {
+        id: 'b-1',
+        dateFrom: '2026-06-01T00:00:00.000Z',
+        dateTo: '2026-06-04T00:00:00.000Z',
+        guests: 2,
+        created: '2026-05-04T12:00:00.000Z',
+        updated: '2026-05-04T12:00:00.000Z',
+      },
+    })
+    expect(result.success).toBe(true)
+  })
+})
+
+describe('BookingsListSuccessSchema', () => {
+  it('parses a list response with meta', () => {
+    const result = BookingsListSuccessSchema.safeParse({
+      data: [],
+      meta: {
+        isFirstPage: true,
+        isLastPage: true,
+        currentPage: 1,
+        previousPage: null,
+        nextPage: null,
+        pageCount: 1,
+        totalCount: 0,
+      },
     })
     expect(result.success).toBe(true)
   })

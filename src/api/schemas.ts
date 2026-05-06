@@ -188,3 +188,30 @@ export type RegisterInput = z.infer<typeof RegisterInputSchema>
 export type LoginSuccess = z.infer<typeof LoginSuccessSchema>
 export type RegisterSuccess = z.infer<typeof RegisterSuccessSchema>
 export type ApiKeySuccess = z.infer<typeof ApiKeySuccessSchema>
+
+export const CreateBookingInputSchema = z
+  .object({
+    dateFrom: z.iso.datetime(),
+    dateTo: z.iso.datetime(),
+    guests: z.number().int().min(1, 'At least 1 guest'),
+    venueId: z.string(),
+  })
+  .strict()
+
+export const UpdateBookingInputSchema = z
+  .object({
+    dateFrom: z.iso.datetime().optional(),
+    dateTo: z.iso.datetime().optional(),
+    guests: z.number().int().min(1).optional(),
+  })
+  .strict()
+
+export const BookingSuccessSchema = z.object({ data: BookingSchema })
+
+export const BookingsListSuccessSchema = z.object({
+  data: z.array(BookingSchema),
+  meta: PaginationMetaSchema,
+})
+
+export type CreateBookingInput = z.infer<typeof CreateBookingInputSchema>
+export type UpdateBookingInput = z.infer<typeof UpdateBookingInputSchema>
