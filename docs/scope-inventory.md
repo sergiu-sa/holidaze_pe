@@ -161,12 +161,12 @@ Every graded story maps to a file + component in the build.
 
 `src/components/booking/`
 
-- **BookingPanel** — date-range picker + `GuestStepper` + live nights × price total + submit. States: Pick / Review / Confirm / Success.
+- **BookingPanel** ✓ — *(slice 4.2 placeholder; rewritten as 4-state inline machine in slice 5.2)* — date-range picker + `GuestStepper` + live nights × price total + submit. States: Pick / Review / Confirm / Success.
 - **AvailabilityCalendar** — two-month grid, hatched booked nights, ink-block selection edges, range-fill. Real `<button>` per day with descriptive `aria-label`, keyboard-navigable.
 - **DateRangePicker** — paired `<input type="date">` mirroring the calendar.
 - **GuestStepper** — −/+ buttons flanking `<input type="number">`, disabled at bounds.
 - **GuestBanner** — cobalt-striped note inside booking form for unsigned visitors.
-- **Receipt** — print-ready confirmation document (double-frame border, typographic).
+- **Receipt** ✓ — *(slice 5.2)* — print-ready confirmation document (double-frame border, typographic).
 
 ### 5.7 Manager (CRUD)
 
@@ -197,7 +197,7 @@ Every graded story maps to a file + component in the build.
 `src/components/ui/`
 
 - **ConfirmDialog** — `Promise<boolean>` API; rubric + title + body + cancel / confirm; danger variant. Used for cancel booking, delete venue, auth-required modal.
-- **Toast** + **ToastProvider** — bottom-right stack, `aria-live="polite"`, ok / err / info kinds, auto-dismiss, reduced-motion aware.
+- **Toast** + **ToastProvider** ✓ — *(slice 5.1 minimal single-slot; enriched to queued stack + kinds + auto-dismiss in slice 5.2)* — bottom-right stack, `aria-live="polite"`, ok / err / info kinds, auto-dismiss, reduced-motion aware.
 - **Modal** — `<dialog>` wrapper with focus-trap + Esc-close for custom dialogs.
 - **Skeleton** — card and line skeletons for loading states.
 - **FormError** — terracotta band above submit.
