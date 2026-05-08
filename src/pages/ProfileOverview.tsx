@@ -51,7 +51,7 @@ export default function ProfileOverview() {
       <ProfileHeader
         title={
           <>
-            <em>Hel<span className="h-easter">l</span>o,</em>
+            <em>Hello,</em>
             <br />
             {user?.name ?? 'you'}.
           </>

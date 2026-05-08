@@ -90,6 +90,7 @@
   font-size: 0.65rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
+  border: 1px solid var(--ink);
   width: -moz-fit-content;
   width: fit-content;
 }
@@ -189,24 +190,6 @@
   font-style: italic;
   font-weight: 300;
   color: var(--cinnabar);
-}
-.profile-header__title .h-easter {
-  font-style: italic;
-  position: relative;
-}
-.profile-header__title .h-easter::after {
-  content: '°';
-  position: absolute;
-  top: -0.1em;
-  right: -0.4em;
-  font-size: 0.55em;
-  color: var(--cinnabar);
-  opacity: 0;
-  transition: opacity 200ms ease;
-}
-.profile-header__title:hover .h-easter::after { opacity: 1; }
-@media (prefers-reduced-motion: reduce) {
-  .profile-header__title .h-easter::after { transition: none; }
 }
 .profile-header__sub {
   font-family: 'Fraunces', serif;
@@ -344,6 +327,21 @@
 .rec__btn--danger:hover {
   background: var(--cinnabar);
   color: var(--ivory);
+}
+
+/* Thin contextual action bar above the rec-list. */
+.manager-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.manager-toolbar--start {
+  justify-content: flex-start;
 }
 
 .empty-state {
@@ -1171,4 +1169,104 @@ body[data-mono='saffron']  .av-ctx-stamp__av { background: #D4A130; color: var(-
   padding: 0.75rem;
   margin-block: 0.75rem;
   font-size: 0.875rem;
+}
+
+/* Venue editor — manager create / edit form. */
+.v-editor {
+  display: grid;
+  gap: 1.25rem;
+  max-width: 52rem;
+}
+
+.v-editor__group-label {
+  margin-bottom: 0.5rem;
+}
+
+.v-editor__delete {
+  margin-left: auto;
+}
+
+.v-editor__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .v-editor__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.v-editor__media {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.v-editor__media-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+@media (max-width: 640px) {
+  .v-editor__media-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Inner wrapper so the URL/Alt pair stack on narrow widths while the
+   Remove button still hugs the right on wide widths. */
+.v-editor__media-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .v-editor__media-pair {
+    grid-template-columns: 1fr;
+  }
+}
+
+.v-editor__meta-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 2rem;
+  padding: 1rem;
+  border: 1px solid var(--ink);
+  background: var(--bone-soft, var(--ivory));
+}
+
+@media (max-width: 480px) {
+  .v-editor__meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.v-editor__meta-grid label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-serif, 'Fraunces', serif);
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+  min-height: 44px; /* WCAG 2.5.5 — tap target */
+}
+
+.v-editor__meta-grid input {
+  accent-color: var(--cinnabar);
+  width: 1rem;
+  height: 1rem;
+}
+
+.v-editor__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule-strong);
+  align-items: center;
 }
