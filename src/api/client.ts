@@ -96,6 +96,9 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
     throw new ApiError(res.status, res.statusText || 'Request failed')
   }
 
+  // 204 No Content has no body to parse.
+  if (res.status === 204) return null as T
+
   const data = (await res.json()) as unknown
 
   // Noroff wraps in { data, meta } for resources but not auth (e.g. /auth/login).

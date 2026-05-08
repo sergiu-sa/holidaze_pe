@@ -243,5 +243,33 @@ export const ProfileBookingsListSuccessSchema = z.object({
   meta: PaginationMetaSchema,
 })
 
+// ---------------------------------------------------------------------------
+// Venue — input + response schemas
+// ---------------------------------------------------------------------------
+
+const VenueInputShape = z.object({
+  name: z.string().min(1, 'Required').max(60, '60 characters max'),
+  description: z.string().min(1, 'Required'),
+  media: z.array(MediaSchema),
+  price: z.number().min(0, 'Must be 0 or more').max(10_000, '10 000 max'),
+  maxGuests: z.number().int().min(1, 'At least 1 guest').max(100, '100 max'),
+  rating: z.number().min(0).max(5).optional(),
+  meta: MetaFlagsSchema,
+  location: LocationSchema.optional(),
+})
+
+export const CreateVenueInputSchema = VenueInputShape.strict()
+export const UpdateVenueInputSchema = VenueInputShape.partial().strict()
+
+export const VenueSuccessSchema = z.object({ data: VenueSchema })
+
+export const ProfileVenuesListSuccessSchema = z.object({
+  data: z.array(VenueSchema),
+  meta: PaginationMetaSchema,
+})
+
+export type CreateVenueInput = z.infer<typeof CreateVenueInputSchema>
+export type UpdateVenueInput = z.infer<typeof UpdateVenueInputSchema>
+
 export type UpdateProfileInput = z.infer<typeof UpdateProfileInputSchema>
 export type Profile = z.infer<typeof ProfileSchema>
