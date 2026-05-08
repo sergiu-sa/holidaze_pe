@@ -1,5 +1,6 @@
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, render, renderHook, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { http, HttpResponse } from 'msw'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
 import { clearSession, getSession, setSession } from '../../api/session'
@@ -305,5 +306,113 @@ describe('useAuth cross-tab sync', () => {
     await waitFor(() => {
       expect(screen.getByTestId('status')).toHaveTextContent('anonymous')
     })
+  })
+})
+
+// ─── avatar/banner persistence (slice 5.3) ─────────────────────────────────
+
+const NOROFF_AUTH = 'https://v2.api.noroff.dev/auth'
+
+describe('useAuth — avatar/banner persistence (slice 5.3)', () => {
+  it('persists avatar to localStorage on login', async () => {
+    server.use(
+      http.post(`${NOROFF_AUTH}/login`, () =>
+        HttpResponse.json({
+          data: {
+            accessToken: 't',
+            name: 'tester',
+            email: 'tester@stud.noroff.no',
+            avatar: { url: 'https://example.com/me.jpg', alt: 'Me' },
+            banner: { url: '', alt: '' },
+            venueManager: false,
+          },
+        }),
+      ),
+      http.post(`${NOROFF_AUTH}/create-api-key`, () =>
+        HttpResponse.json({
+          data: { name: 'Holidaze session', status: 'ACTIVE', key: 'k' },
+        }),
+      ),
+    )
+
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider })
+    await act(async () => {
+      await result.current.login({
+        email: 'tester@stud.noroff.no',
+        password: 'pwlongenough',
+      })
+    })
+
+    const raw = localStorage.getItem('holidaze:v1:session')
+    expect(raw).not.toBeNull()
+    const parsed = JSON.parse(raw!) as { avatar: { url: string } }
+    expect(parsed.avatar.url).toBe('https://example.com/me.jpg')
+  })
+
+  it('hydrates avatar back into AuthState on boot', () => {
+    // setSession() primes both the in-memory cache (read by bootState) and
+    // localStorage. The persisted JSON is what a reloaded tab would see.
+    setSession({
+      accessToken: 't',
+      apiKey: 'k',
+      name: 'tester',
+      email: 'tester@stud.noroff.no',
+      venueManager: false,
+      avatar: { url: 'https://example.com/me.jpg', alt: 'Me' },
+    })
+
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider })
+    expect(result.current.user?.avatar?.url).toBe('https://example.com/me.jpg')
+  })
+})
+
+describe('useAuth — applyProfilePatch (slice 5.3)', () => {
+  it('merges avatar into both session and React state', () => {
+    setSession({
+      accessToken: 't',
+      apiKey: 'k',
+      name: 'tester',
+      email: 'tester@stud.noroff.no',
+      venueManager: false,
+    })
+
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider })
+
+    act(() => {
+      result.current.applyProfilePatch({
+        avatar: { url: 'https://example.com/new.jpg', alt: 'New' },
+      })
+    })
+
+    expect(result.current.user?.avatar?.url).toBe('https://example.com/new.jpg')
+    const raw = JSON.parse(localStorage.getItem('holidaze:v1:session')!) as {
+      avatar: { url: string }
+    }
+    expect(raw.avatar.url).toBe('https://example.com/new.jpg')
+  })
+
+  it('toggles venueManager when patched', () => {
+    setSession({
+      accessToken: 't',
+      apiKey: 'k',
+      name: 'tester',
+      email: 'tester@stud.noroff.no',
+      venueManager: false,
+    })
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider })
+    act(() => {
+      result.current.applyProfilePatch({ venueManager: true })
+    })
+    expect(result.current.user?.venueManager).toBe(true)
+  })
+
+  it('throws if called while anonymous', () => {
+    clearSession()
+    const { result } = renderHook(() => useAuth(), { wrapper: AuthProvider })
+    expect(() => {
+      result.current.applyProfilePatch({
+        avatar: { url: 'https://x', alt: 'x' },
+      })
+    }).toThrow()
   })
 })

@@ -37,6 +37,12 @@ export interface AuthApi {
   }) => Promise<void>
   logout: () => void
   refreshApiKey: () => Promise<void>
+  applyProfilePatch: (patch: {
+    avatar?: { url: string; alt: string }
+    banner?: { url: string; alt: string }
+    bio?: string | null
+    venueManager?: boolean
+  }) => void
 }
 
 const AuthContext = createContext<AuthApi | null>(null)
@@ -51,6 +57,8 @@ function sessionToUser(session: Session): AuthenticatedUser | null {
     name: session.name,
     email: session.email,
     venueManager: session.venueManager ?? false,
+    avatar: session.avatar,
+    banner: session.banner,
   }
 }
 
@@ -130,6 +138,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       name: userData.name,
       email: userData.email,
       venueManager: userData.venueManager,
+      avatar: userData.avatar,
+      banner: userData.banner,
     })
     setState({
       status: 'authenticated',
@@ -177,6 +187,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession({ ...session, apiKey: key })
   }, [])
 
+  const applyProfilePatch = useCallback<AuthApi['applyProfilePatch']>((patch) => {
+    const session = getSession()
+    if (!session) {
+      throw new Error('applyProfilePatch called while anonymous')
+    }
+    const nextSession: Session = {
+      ...session,
+      avatar: patch.avatar ?? session.avatar,
+      banner: patch.banner ?? session.banner,
+      venueManager: patch.venueManager ?? session.venueManager,
+    }
+    setSession(nextSession)
+    setState((prev) => {
+      if (prev.status !== 'authenticated') return prev
+      return {
+        status: 'authenticated',
+        user: {
+          ...prev.user,
+          avatar: patch.avatar ?? prev.user.avatar,
+          banner: patch.banner ?? prev.user.banner,
+          venueManager: patch.venueManager ?? prev.user.venueManager,
+        },
+      }
+    })
+  }, [])
+
   const api = useMemo<AuthApi>(
     () => ({
       state,
@@ -185,8 +221,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       register,
       logout,
       refreshApiKey,
+      applyProfilePatch,
     }),
-    [state, login, register, logout, refreshApiKey],
+    [state, login, register, logout, refreshApiKey, applyProfilePatch],
   )
 
   return <AuthContext.Provider value={api}>{children}</AuthContext.Provider>

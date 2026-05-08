@@ -492,19 +492,40 @@
 
 .avatar-menu__pop a,
 .avatar-menu__pop button {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   width: 100%;
   text-align: left;
   background: transparent;
   border: 0;
-  padding: 8px 0;
+  padding: 8px 10px;
+  margin-inline: -10px;
   font-family: 'Bricolage Grotesque', sans-serif;
   font-size: 13px;
   color: var(--ink, #0F0E0B);
   cursor: pointer;
   text-decoration: none;
+  border-left: 2px solid transparent;
 }
+.avatar-menu__pop a svg,
+.avatar-menu__pop button svg { flex: 0 0 auto; }
 .avatar-menu__pop a:hover,
 .avatar-menu__pop button:hover { color: var(--cinnabar, #C7392F); }
 .avatar-menu__pop a:focus-visible,
 .avatar-menu__pop button:focus-visible { outline: 2px solid var(--cinnabar, #C7392F); outline-offset: 2px; }
+.avatar-menu__pop a.active,
+.avatar-menu__pop a[aria-current="page"] {
+  color: var(--cinnabar, #C7392F);
+  border-left-color: var(--cinnabar, #C7392F);
+  font-weight: 600;
+}
+.avatar-menu__pop a.active svg,
+.avatar-menu__pop a[aria-current="page"] svg { color: var(--cinnabar, #C7392F); }
+.avatar-menu__signout {
+  color: var(--cinnabar, #C7392F) !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}

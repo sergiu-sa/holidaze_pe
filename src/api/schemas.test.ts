@@ -13,9 +13,12 @@ import {
   LoginSuccessSchema,
   OwnerSchema,
   PaginationMetaSchema,
+  ProfileBookingsListSuccessSchema,
+  ProfileSuccessSchema,
   RegisterInputSchema,
   RegisterSuccessSchema,
   UpdateBookingInputSchema,
+  UpdateProfileInputSchema,
   VenueSchema,
 } from './schemas'
 
@@ -289,6 +292,76 @@ describe('BookingSuccessSchema', () => {
 describe('BookingsListSuccessSchema', () => {
   it('parses a list response with meta', () => {
     const result = BookingsListSuccessSchema.safeParse({
+      data: [],
+      meta: {
+        isFirstPage: true,
+        isLastPage: true,
+        currentPage: 1,
+        previousPage: null,
+        nextPage: null,
+        pageCount: 1,
+        totalCount: 0,
+      },
+    })
+    expect(result.success).toBe(true)
+  })
+})
+
+describe('UpdateProfileInputSchema', () => {
+  it('accepts an avatar-only patch', () => {
+    const result = UpdateProfileInputSchema.safeParse({
+      avatar: { url: 'https://example.com/me.jpg', alt: 'Me' },
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts a banner-only patch', () => {
+    const result = UpdateProfileInputSchema.safeParse({
+      banner: { url: 'https://example.com/banner.jpg', alt: 'Banner' },
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it('accepts an empty patch', () => {
+    expect(UpdateProfileInputSchema.safeParse({}).success).toBe(true)
+  })
+
+  it('rejects unknown fields in strict mode', () => {
+    const result = UpdateProfileInputSchema.safeParse({
+      avatar: { url: 'https://x', alt: 'x' },
+      monoColor: 'ink',
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it('rejects malformed avatar (missing url)', () => {
+    const result = UpdateProfileInputSchema.safeParse({
+      avatar: { alt: 'Me' },
+    })
+    expect(result.success).toBe(false)
+  })
+})
+
+describe('ProfileSuccessSchema', () => {
+  it('parses a valid profile envelope', () => {
+    const result = ProfileSuccessSchema.safeParse({
+      data: {
+        name: 'tester',
+        email: 'tester@stud.noroff.no',
+        bio: null,
+        avatar: { url: '', alt: '' },
+        banner: { url: '', alt: '' },
+        venueManager: false,
+        _count: { venues: 0, bookings: 2 },
+      },
+    })
+    expect(result.success).toBe(true)
+  })
+})
+
+describe('ProfileBookingsListSuccessSchema', () => {
+  it('parses an empty bookings list with meta', () => {
+    const result = ProfileBookingsListSuccessSchema.safeParse({
       data: [],
       meta: {
         isFirstPage: true,

@@ -5,6 +5,7 @@ import {
   getAccessToken,
   getApiKey,
   getSession,
+  type Session,
   setSession,
 } from './session'
 
@@ -74,5 +75,43 @@ describe('session — localStorage round-trip', () => {
 
     expect(getSession()).toEqual(session)
     expect(JSON.parse(localStorage.getItem(STORAGE_KEY) ?? 'null')).toEqual(session)
+  })
+})
+
+describe('Session avatar/banner persistence', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
+  it('round-trips an avatar through localStorage', () => {
+    setSession({
+      accessToken: 't',
+      apiKey: 'k',
+      name: 'tester',
+      email: 'tester@stud.noroff.no',
+      venueManager: false,
+      avatar: { url: 'https://example.com/me.jpg', alt: 'Me' },
+    })
+    const raw = localStorage.getItem('holidaze:v1:session')
+    expect(raw).not.toBeNull()
+    const parsed = JSON.parse(raw!) as Session
+    expect(parsed.avatar).toEqual({
+      url: 'https://example.com/me.jpg',
+      alt: 'Me',
+    })
+  })
+
+  it('round-trips a banner through localStorage', () => {
+    setSession({
+      accessToken: 't',
+      apiKey: 'k',
+      banner: { url: 'https://example.com/b.jpg', alt: 'Banner' },
+    })
+    const raw = localStorage.getItem('holidaze:v1:session')
+    const parsed = JSON.parse(raw!) as Session
+    expect(parsed.banner).toEqual({
+      url: 'https://example.com/b.jpg',
+      alt: 'Banner',
+    })
   })
 })

@@ -12,7 +12,10 @@ const Hosts = lazy(() => import('../pages/Hosts'))
 const Atlas = lazy(() => import('../pages/Atlas'))
 const Login = lazy(() => import('../pages/Login'))
 const Register = lazy(() => import('../pages/Register'))
-const Profile = lazy(() => import('../pages/Profile'))
+const ProfileShell = lazy(() =>
+  import('../components/profile').then((m) => ({ default: m.ProfileShell })),
+)
+const ProfileOverview = lazy(() => import('../pages/ProfileOverview'))
 const ProfileBookings = lazy(() => import('../pages/ProfileBookings'))
 const ProfileAvatar = lazy(() => import('../pages/ProfileAvatar'))
 const ProfileVenues = lazy(() => import('../pages/ProfileVenues'))
@@ -51,70 +54,50 @@ export function AppRoutes() {
             path="/profile"
             element={
               <AuthGuard>
-                <Profile />
+                <ProfileShell />
               </AuthGuard>
             }
-          />
-          <Route
-            path="/profile/bookings"
-            element={
-              <AuthGuard>
-                <ProfileBookings />
-              </AuthGuard>
-            }
-          />
-          <Route
-            path="/profile/avatar"
-            element={
-              <AuthGuard>
-                <ProfileAvatar />
-              </AuthGuard>
-            }
-          />
-          <Route
-            path="/profile/venues"
-            element={
-              <AuthGuard>
-                {/* eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute */}
+          >
+            <Route index element={<ProfileOverview />} />
+            <Route path="bookings" element={<ProfileBookings />} />
+            <Route path="avatar" element={<ProfileAvatar />} />
+            <Route
+              path="venues"
+              element={
+                // eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute
                 <RoleGuard role="manager">
                   <ProfileVenues />
                 </RoleGuard>
-              </AuthGuard>
-            }
-          />
-          <Route
-            path="/profile/venues/new"
-            element={
-              <AuthGuard>
-                {/* eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute */}
+              }
+            />
+            <Route
+              path="venues/new"
+              element={
+                // eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute
                 <RoleGuard role="manager">
                   <ProfileVenuesNew />
                 </RoleGuard>
-              </AuthGuard>
-            }
-          />
-          <Route
-            path="/profile/venues/:id/edit"
-            element={
-              <AuthGuard>
-                {/* eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute */}
+              }
+            />
+            <Route
+              path="venues/:id/edit"
+              element={
+                // eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute
                 <RoleGuard role="manager">
                   <ProfileVenuesEdit />
                 </RoleGuard>
-              </AuthGuard>
-            }
-          />
-          <Route
-            path="/profile/venues/:id/bookings"
-            element={
-              <AuthGuard>
-                {/* eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute */}
+              }
+            />
+            <Route
+              path="venues/:id/bookings"
+              element={
+                // eslint-disable-next-line jsx-a11y/aria-role -- `role` here is the RoleGuard prop, not an ARIA attribute
                 <RoleGuard role="manager">
                   <ProfileVenuesBookings />
                 </RoleGuard>
-              </AuthGuard>
-            }
-          />
+              }
+            />
+          </Route>
           <Route
             path="/bookings/:id"
             element={

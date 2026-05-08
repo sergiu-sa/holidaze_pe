@@ -16,10 +16,14 @@ export const NoroffErrorEnvelopeSchema = z.object({
 
 export type NoroffErrorEnvelope = z.infer<typeof NoroffErrorEnvelopeSchema>
 
+// Noroff returns `{ url: '', alt: '' }` for unset profile avatars / banners,
+// so the URL field accepts an empty string in addition to a real URL.
 export const MediaSchema = z.object({
-  url: z.url(),
+  url: z.union([z.literal(''), z.url()]),
   alt: z.string().default(''),
 })
+
+export type Media = z.infer<typeof MediaSchema>
 
 // Location fields are .nullable() (not .optional()) — Noroff sends explicit
 // null rather than omitting the key.
@@ -215,3 +219,29 @@ export const BookingsListSuccessSchema = z.object({
 
 export type CreateBookingInput = z.infer<typeof CreateBookingInputSchema>
 export type UpdateBookingInput = z.infer<typeof UpdateBookingInputSchema>
+
+// ---------------------------------------------------------------------------
+// Profile — input + response schemas (slice 5.3)
+// ---------------------------------------------------------------------------
+
+// PUT /holidaze/profiles/:name accepts a partial patch. Username is immutable
+// so it's omitted from the schema; the avatar editor never sends venueManager,
+// but the field is included so future role-swap flows can reuse this schema.
+export const UpdateProfileInputSchema = z
+  .object({
+    avatar: MediaSchema.optional(),
+    banner: MediaSchema.optional(),
+    bio: z.string().nullable().optional(),
+    venueManager: z.boolean().optional(),
+  })
+  .strict()
+
+export const ProfileSuccessSchema = z.object({ data: ProfileSchema })
+
+export const ProfileBookingsListSuccessSchema = z.object({
+  data: z.array(BookingSchema),
+  meta: PaginationMetaSchema,
+})
+
+export type UpdateProfileInput = z.infer<typeof UpdateProfileInputSchema>
+export type Profile = z.infer<typeof ProfileSchema>
