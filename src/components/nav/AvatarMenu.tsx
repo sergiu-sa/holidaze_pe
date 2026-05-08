@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../../hooks/useAuth'
+import { Icon } from '../ui/Icon'
 import { useToast } from '../ui/ToastProvider'
 
 export function AvatarMenu() {
@@ -109,25 +110,30 @@ export function AvatarMenu() {
 
         <hr className="avatar-menu__rule" aria-hidden="true" />
 
-        <Link role="menuitem" to="/profile" onClick={close}>
-          Profile
-        </Link>
-        <Link role="menuitem" to="/profile/bookings" onClick={close}>
-          My bookings
-        </Link>
+        <NavLink role="menuitem" to="/profile" end onClick={close} className="avatar-menu__item">
+          <Icon name="guest" size="sm" />
+          <span>Profile</span>
+        </NavLink>
+        <NavLink role="menuitem" to="/profile/bookings" onClick={close} className="avatar-menu__item">
+          <Icon name="ticket" size="sm" />
+          <span>My bookings</span>
+        </NavLink>
         {user.venueManager && (
-          <Link role="menuitem" to="/profile/venues" onClick={close}>
-            My venues
-          </Link>
+          <NavLink role="menuitem" to="/profile/venues" onClick={close} className="avatar-menu__item">
+            <Icon name="compass" size="sm" />
+            <span>My venues</span>
+          </NavLink>
         )}
-        <Link role="menuitem" to="/profile/avatar" onClick={close}>
-          Avatar
-        </Link>
+        <NavLink role="menuitem" to="/profile/avatar" onClick={close} className="avatar-menu__item">
+          <Icon name="edit" size="sm" />
+          <span>Avatar</span>
+        </NavLink>
 
         <hr className="avatar-menu__rule" aria-hidden="true" />
 
-        <button role="menuitem" type="button" onClick={handleSignOut}>
-          Sign out
+        <button role="menuitem" type="button" onClick={handleSignOut} className="avatar-menu__signout">
+          <Icon name="logout" size="sm" />
+          <span>Sign out</span>
         </button>
       </div>
     </div>
