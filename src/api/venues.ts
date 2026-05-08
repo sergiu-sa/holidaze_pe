@@ -2,9 +2,18 @@ import { FALLBACK_VENUES } from '../lib/fallback'
 import { isUsable } from '../lib/isUsable'
 import { ApiError } from '../types/api'
 import type { Venue } from '../types/venue'
-import { readCache, writeCache } from './cache'
+import { bustVenueCache, clearCacheNamespace, readCache, writeCache } from './cache'
 import { apiFetch } from './client'
-import { type PaginationMeta, PaginationMetaSchema, VenueSchema } from './schemas'
+import {
+  type CreateVenueInput,
+  CreateVenueInputSchema,
+  type PaginationMeta,
+  PaginationMetaSchema,
+  type UpdateVenueInput,
+  UpdateVenueInputSchema,
+  VenueSchema,
+  VenueSuccessSchema,
+} from './schemas'
 
 const VENUES_NAMESPACE = 'venues'
 const VENUE_NAMESPACE = 'venue'
@@ -141,4 +150,42 @@ export async function getVenue(id: string, opts: GetVenueOptions = {}): Promise<
 
   writeCache(cacheKey, parsed.data)
   return parsed.data
+}
+
+export async function createVenue(input: CreateVenueInput): Promise<Venue> {
+  const body = CreateVenueInputSchema.parse(input)
+  const res = await apiFetch<unknown>('/venues', {
+    method: 'POST',
+    body,
+    auth: 'required',
+    unwrap: false,
+  })
+  const venue = VenueSuccessSchema.parse(res).data
+  clearCacheNamespace(VENUES_NAMESPACE)
+  return venue
+}
+
+export async function updateVenue(id: string, patch: UpdateVenueInput): Promise<Venue> {
+  const body = UpdateVenueInputSchema.parse(patch)
+  const res = await apiFetch<unknown>(`/venues/${encodeURIComponent(id)}`, {
+    method: 'PUT',
+    body,
+    auth: 'required',
+    unwrap: false,
+  })
+  const venue = VenueSuccessSchema.parse(res).data
+  bustVenueCache(id)
+  clearCacheNamespace(VENUES_NAMESPACE)
+  return venue
+}
+
+export async function deleteVenue(id: string): Promise<void> {
+  // Noroff returns 204 No Content; nothing to parse.
+  await apiFetch<unknown>(`/venues/${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    auth: 'required',
+    unwrap: false,
+  })
+  bustVenueCache(id)
+  clearCacheNamespace(VENUES_NAMESPACE)
 }
