@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 
 import { useAuth } from '../../hooks/useAuth'
 import { Icon, type IconName } from '../ui'
@@ -8,6 +8,9 @@ interface SidebarLink {
   label: string
   icon: IconName
   end?: boolean
+  /** Custom matcher overrides NavLink's default. Useful when one route should
+   *  cover several sub-routes while a sibling stays exact-match. */
+  match?: (pathname: string) => boolean
 }
 
 const customerLinks: SidebarLink[] = [
@@ -17,12 +20,22 @@ const customerLinks: SidebarLink[] = [
 ]
 
 const managerLinks: SidebarLink[] = [
-  { to: '/profile/venues', label: 'My venues', icon: 'compass' },
+  {
+    to: '/profile/venues',
+    label: 'My venues',
+    icon: 'compass',
+    // Active for every /profile/venues/* sub-route except the create page,
+    // which has its own sidebar entry.
+    match: (pathname) =>
+      pathname.startsWith('/profile/venues') && pathname !== '/profile/venues/new',
+  },
+  { to: '/profile/venues/new', label: 'New venue', icon: 'plus', end: true },
 ]
 
 export function ProfileSidebar() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   if (!user) return null
 
@@ -56,17 +69,33 @@ export function ProfileSidebar() {
       </div>
 
       <nav className="profile__menu" aria-label="Account">
-        {links.map((link) => (
-          <NavLink
-            key={link.to}
-            to={link.to}
-            end={link.end}
-            className={({ isActive }) => (isActive ? 'profile__link is-active' : 'profile__link')}
-          >
-            <Icon name={link.icon} size="sm" />
-            <span>{link.label}</span>
-          </NavLink>
-        ))}
+        {links.map((link) => {
+          if (link.match) {
+            const isActive = link.match(location.pathname)
+            return (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={isActive ? 'profile__link is-active' : 'profile__link'}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <Icon name={link.icon} size="sm" />
+                <span>{link.label}</span>
+              </Link>
+            )
+          }
+          return (
+            <NavLink
+              key={link.to}
+              to={link.to}
+              end={link.end}
+              className={({ isActive }) => (isActive ? 'profile__link is-active' : 'profile__link')}
+            >
+              <Icon name={link.icon} size="sm" />
+              <span>{link.label}</span>
+            </NavLink>
+          )
+        })}
       </nav>
 
       <button type="button" className="profile__logout" onClick={onSignOut}>
