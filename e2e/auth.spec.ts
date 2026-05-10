@@ -76,9 +76,11 @@ test.describe('auth · happy path', () => {
     await expect(page).toHaveURL(/\/profile/)
     await expect(page.getByRole('button', { name: /account menu/i })).toBeVisible()
 
-    // Sign out via avatar menu
+    // Sign out via avatar menu — Sign out is a real <button>, not a menuitem
+    // (slice 5.4 dropped role="menu" from AvatarMenu in favor of native semantics).
+    // Scope to the popover because the Footer also renders a Sign out <button> when authenticated.
     await page.getByRole('button', { name: /account menu/i }).click()
-    await page.getByRole('menuitem', { name: /sign out/i }).click()
+    await page.locator('#avatar-menu-pop').getByRole('button', { name: /sign out/i }).click()
     await expect(page).toHaveURL('/')
     await expect(page.getByRole('link', { name: /sign in/i }).first()).toBeVisible()
 
@@ -189,7 +191,9 @@ test.describe('auth · manager path', () => {
     await page.getByRole('button', { name: /apply for access/i }).click()
     await expect(page).toHaveURL(/\/profile/)
     await page.getByRole('button', { name: /account menu/i }).click()
-    await expect(page.getByRole('menuitem', { name: /my venues/i })).toBeVisible()
+    await expect(
+      page.locator('#avatar-menu-pop').getByRole('link', { name: /my venues/i }),
+    ).toBeVisible()
   })
 
   test('customer is redirected away from /profile/venues', async ({ page }) => {
