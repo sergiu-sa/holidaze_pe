@@ -1,0 +1,1866 @@
+/* ─────────────────────────────────────────
+   HOLIDAZE — On Hosting · A Specimen, N°03
+   A magazine spread laid in editorial brutalism.
+   Three faces only (Fraunces / Bricolage / Mono).
+   Raw marks: regmark crosshairs, hand-drawn strikes,
+   plate stamps. Fun where it earns it (anatomy,
+   strike), restrained where it doesn't.
+   Section vocabulary (§ 03·α … § fin):
+     h2-hero      — 0%, with handwritten "commission" struck across
+     plates-wrap  — contact-sheet of host portraits + kept-amounts
+     anatomy-wrap — line-drawn diagram of a booking
+     strike-wrap  — three moves on one strike-line, middle dominant
+     post-wrap    — three desks + postal stamp, contact route
+     signed       — sign-off, single crown over the S
+   ───────────────────────────────────────── */
+
+.page-wrap {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+/* Help-rail — above-fold contact strip. */
+.help-rail {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0.6rem var(--gutter) 0.7rem;
+  border-bottom: 1px dotted var(--rule-strong);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.help-rail__lbl {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.help-rail__lbl em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+  font-size: 0.95rem;
+  margin-left: 0.35rem;
+}
+.help-rail__link {
+  font-family: var(--ff-display);
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+.help-rail__link em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.help-rail__link:hover,
+.help-rail__link:focus-visible {
+  color: var(--terracotta);
+  border-color: var(--terracotta);
+}
+.help-rail__link::after {
+  content: ' ↓';
+  font-family: var(--ff-mono);
+  font-size: 0.75em;
+  margin-left: 0.25em;
+}
+@media (max-width: 540px) {
+  .help-rail {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+}
+
+/* ─── §0 H2-HERO ─── */
+
+/* === Reveal cascade =====================================
+   Once `fonts-ready` lands, the hero stages itself in six
+   beats so the gag *happens* in front of the reader instead
+   of arriving as a still frame:
+
+     100ms   0% fades in  (the figure)
+     500ms   strike line draws across the % stem (~950ms)
+     700ms   "commission" fades through the line
+    1500ms   marginalia tick pen-strokes itself
+    1700ms   folio chip rises into place
+    1800ms   right-side deck arrives
+    2800ms+  strike begins a 6s idle breath, infinite
+
+   The `.signed__sig` opacity gate at the bottom of the page
+   stays — it's the page's other Caveat moment.
+   ======================================================= */
+.h2-hero__num,
+.h2-hero__strike-text,
+.h2-hero__tick,
+.h2-hero__note,
+.h2-hero__folio,
+.signed__sig {
+  opacity: 0;
+}
+
+/* SVG paths that draw on need their dasharray pre-applied */
+.h2-hero__strike-line {
+  opacity: 0;
+}
+.h2-hero__strike-line path {
+  stroke-dasharray: 280;
+  stroke-dashoffset: 280;
+}
+.h2-hero__tick path {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+}
+
+.fonts-ready .h2-hero__num {
+  animation: heroFade 380ms var(--ease-out) 100ms both;
+}
+.fonts-ready .h2-hero__strike-text {
+  animation: heroFade 380ms var(--ease-out) 700ms both;
+}
+.fonts-ready .h2-hero__strike-line {
+  opacity: 1;
+}
+.fonts-ready .h2-hero__strike-line path {
+  animation: drawStroke 950ms cubic-bezier(0.55, 0, 0.3, 1) 500ms forwards;
+}
+.fonts-ready .h2-hero__tick {
+  opacity: 1;
+}
+.fonts-ready .h2-hero__tick path {
+  animation: drawStroke 700ms var(--ease-out) 1500ms forwards;
+}
+.fonts-ready .h2-hero__tick text {
+  animation: heroFade 320ms var(--ease-out) 1900ms both;
+}
+.fonts-ready .h2-hero__folio {
+  animation: heroRise 380ms var(--ease-out) 1700ms both;
+}
+.fonts-ready .h2-hero__note {
+  animation: deckPin 560ms cubic-bezier(0.45, 0, 0.35, 1.25) 1800ms both;
+}
+.fonts-ready .h2-hero__strike {
+  animation: strikeBreathe 6s ease-in-out 2800ms infinite;
+}
+.fonts-ready .signed__sig {
+  opacity: 1;
+  transition: opacity 220ms ease-out;
+}
+
+@keyframes heroFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes heroRise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes drawStroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes strikeBreathe {
+  0%,
+  100% {
+    transform: rotate(-4deg);
+  }
+  50% {
+    transform: rotate(-3.5deg);
+  }
+}
+/* Deck-pin — the card drops in from above and settles at a left
+   tilt, like a piece of paper being pinned to the spread. */
+@keyframes deckPin {
+  0% {
+    opacity: 0;
+    transform: translateY(-14px) rotate(-15deg);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(2px) rotate(-9deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(-10deg);
+  }
+}
+
+/* Reduced motion: short-circuit the choreography to a flat reveal */
+@media (prefers-reduced-motion: reduce) {
+  .fonts-ready .h2-hero__num,
+  .fonts-ready .h2-hero__strike-text,
+  .fonts-ready .h2-hero__tick text,
+  .fonts-ready .h2-hero__folio,
+  .fonts-ready .signed__sig {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .fonts-ready .h2-hero__note {
+    animation: none;
+    opacity: 1;
+    /* No explicit transform — inherits the base / breakpoint rule's
+       rotation (−10° on desktop, −3° on tablet+mobile). The @keyframes
+       endpoint matches the desktop base, so cancelling the animation
+       lands on the right tilt at every viewport. */
+  }
+  .fonts-ready .h2-hero__strike-line,
+  .fonts-ready .h2-hero__tick {
+    opacity: 1;
+  }
+  .fonts-ready .h2-hero__strike-line path,
+  .fonts-ready .h2-hero__tick path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .fonts-ready .h2-hero__strike {
+    animation: none;
+  }
+}
+
+.h2-hero {
+  position: relative;
+  padding: clamp(1.25rem, 0.75rem + 1.5vw, 2.25rem) 0 clamp(1rem, 0.5rem + 1.5vw, 2rem);
+  border-bottom: 1px solid var(--ink);
+}
+.h2-hero__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.5rem;
+  align-items: baseline;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px dotted var(--rule-strong);
+}
+.h2-hero__rubric {
+  font-family: var(--ff-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.h2-hero__rubric em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.h2-hero__stage {
+  position: relative;
+  margin-top: clamp(0.75rem, 0.25rem + 1.5vw, 2rem);
+  aspect-ratio: 19 / 7;
+  overflow: visible;
+}
+
+/* The 0% — fills the frame, edge-to-edge, magazine-cover scale.
+   Sized to the stage via container-relative units so it always
+   spans corner-to-corner regardless of viewport width. */
+.h2-hero__num {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  font-size: clamp(13rem, 7rem + 26vw, 30rem);
+  line-height: 0.78;
+  letter-spacing: -0.07em;
+  color: var(--ink);
+  position: absolute;
+  top: -0.06em;
+  left: -1.5vw;
+  z-index: 2;
+  user-select: none;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.h2-hero__num em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+
+/* Caveat "commission" — strikes straight across the % stem,
+   Basquiat-style. The strike line is a hand-drawn SVG path
+   (slightly wobbly) instead of a straight CSS bar so it reads
+   as drawn, not CAD. */
+.h2-hero__strike {
+  position: absolute;
+  top: 62%;
+  left: 24vw;
+  transform: rotate(-4deg);
+  transform-origin: left center;
+  z-index: 3;
+  pointer-events: none;
+}
+.h2-hero__strike-text {
+  display: inline-block;
+  position: relative;
+  font-family: var(--hand);
+  font-weight: 500;
+  font-size: clamp(6rem, 3rem + 10vw, 13rem);
+  line-height: 1;
+  color: var(--terracotta);
+  letter-spacing: -0.02em;
+  z-index: 1;
+  /* Bone halo so the red glyphs stay legible where they
+     cross the red %. A multi-offset text-shadow paints a
+     thin ivory outline behind every letter — paint-knife
+     cutout effect, no extra DOM. */
+  text-shadow:
+    -2px 0 0 var(--bone),
+    2px 0 0 var(--bone),
+    0 -2px 0 var(--bone),
+    0 2px 0 var(--bone),
+    -2px -2px 0 var(--bone),
+    2px -2px 0 var(--bone),
+    -2px 2px 0 var(--bone),
+    2px 2px 0 var(--bone),
+    -3px 0 0 var(--bone),
+    3px 0 0 var(--bone),
+    0 -3px 0 var(--bone),
+    0 3px 0 var(--bone);
+}
+/* Keep the strike line on top of the halo so it still
+   visibly cuts through the word. */
+@supports (paint-order: stroke) {
+  .h2-hero__strike-text {
+    paint-order: stroke fill;
+  }
+}
+/* hand-drawn underline drawn through the word */
+.h2-hero__strike-line {
+  position: absolute;
+  left: -2%;
+  right: -4%;
+  top: 56%;
+  height: 0.18em;
+  z-index: 2;
+  pointer-events: none;
+}
+.h2-hero__strike-line svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+.h2-hero__strike-line path {
+  fill: none;
+  stroke: var(--terracotta);
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Marginalia — short hand-drawn arrow tick anchored to the strike.
+   Drifts ±8/5px on cursor (set via --tx/--ty by the parallax JS at
+   the bottom of the file). The transition smooths the drift, so the
+   tick never reads as wobbly. Reduced-motion / coarse-pointer users
+   get a static tick — JS short-circuits there. */
+.h2-hero__tick {
+  position: absolute;
+  bottom: 8%;
+  left: 4vw;
+  width: clamp(8rem, 5rem + 6vw, 12rem);
+  height: clamp(2.2rem, 1.2rem + 1.5vw, 3.2rem);
+  z-index: 4;
+  pointer-events: none;
+  --tx: 0px;
+  --ty: 0px;
+  transform: translate(var(--tx), var(--ty));
+  transition: transform 320ms cubic-bezier(0.2, 1, 0.3, 1);
+}
+.h2-hero__tick svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+.h2-hero__tick path {
+  fill: none;
+  stroke: var(--ink-soft);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.h2-hero__tick text {
+  font-family: var(--ff-mono);
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  fill: var(--ink-soft);
+}
+
+/* The pinned deck card — paper plate with a saffron-tipped pin
+   at the top centre and the brand's three-peak crown to the
+   right of the prose. Lives inside the stage as an absolute
+   overlay at the upper-right of the figure on desktop; on phone
+   it pops out to a static block below the stage (handled in the
+   responsive overrides). The static rotation matches the deckPin
+   animation's resting transform so the cascade flows into a
+   visible tilt with no jump. */
+.h2-hero__note {
+  position: absolute;
+  top: 4%;
+  right: 3%;
+  z-index: 4;
+  width: clamp(20rem, 14rem + 14vw, 28rem);
+  padding: 1.25rem 1.5rem 1.25rem 1.4rem;
+  background: var(--bone-soft);
+  border: 1px solid var(--ink);
+  transform: rotate(-10deg);
+  transform-origin: 50% 0%;
+  box-shadow:
+    0 1px 0 var(--bone-deep),
+    0 8px 18px -10px rgba(15, 14, 11, 0.22),
+    0 2px 4px rgba(15, 14, 11, 0.05);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: clamp(0.85rem, 0.5rem + 0.6vw, 1.4rem);
+  align-items: center;
+}
+.h2-hero__note-pin {
+  position: absolute;
+  top: -0.7rem;
+  left: 50%;
+  width: 1.5rem;
+  height: 1.5rem;
+  transform: translateX(-50%);
+  z-index: 1;
+  filter: drop-shadow(0 2px 3px rgba(15, 14, 11, 0.35));
+}
+.h2-hero__note-pin svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.h2-hero__note-body {
+  min-width: 0;
+}
+.h2-hero__note-eyebrow {
+  display: block;
+  font-family: var(--ff-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+  margin-bottom: 0.55rem;
+}
+.h2-hero__note-line {
+  display: block;
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.15rem, 0.85rem + 0.8vw, 1.6rem);
+  line-height: 1.18;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+  margin: 0;
+  text-wrap: balance;
+}
+.h2-hero__note-line strong {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--terracotta);
+}
+.h2-hero__note-line em {
+  font-style: italic;
+}
+.h2-hero__note-crown {
+  align-self: center;
+  justify-self: end;
+  width: clamp(3.25rem, 2.25rem + 2vw, 4.5rem);
+  aspect-ratio: 120 / 80;
+}
+.h2-hero__note-crown svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Folio chip — bottom-right corner. The negative `right` pulls
+   it slightly past the stage edge into the page-wrap gutter, so
+   it reads as a printed sticker pinned past the frame instead of
+   inside it. (right: 0 inside the stage was being visually
+   pulled inward by the new grid layout — this hard-anchors it.) */
+.h2-hero__folio {
+  position: absolute;
+  bottom: 4%;
+  right: -0.5rem;
+  z-index: 4;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.32rem 0.6rem;
+  border: 1px solid var(--ink);
+  background: var(--bone);
+  font-family: var(--ff-mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  white-space: nowrap;
+}
+.h2-hero__folio strong {
+  color: var(--terracotta);
+  font-weight: 500;
+}
+
+/* Regmarks — printer's frame, balanced rectangle. */
+.h2-hero__stage .regmark {
+  --regmark-ink: var(--ink-soft);
+}
+.h2-hero__stage .regmark--tl {
+  top: 0;
+  left: 0;
+}
+.h2-hero__stage .regmark--tr {
+  top: 0;
+  right: 0;
+}
+.h2-hero__stage .regmark--bl {
+  bottom: 0;
+  left: 0;
+}
+.h2-hero__stage .regmark--br {
+  bottom: 0;
+  right: 0;
+}
+
+/* ─── Responsive — three intermediate steps ──────────────
+   The hero is held together by relative positions inside the
+   stage. Each step recalibrates a) the stage aspect, b) the
+   0% scale, c) the strike anchor, d) which marginalia stays
+   in the frame.
+   ─────────────────────────────────────────────────────── */
+
+/* Tablet-wide / small-laptop: tighten the figure, narrow the deck
+   card so it doesn't hug the regmark or compete with the strike. */
+@media (max-width: 1199px) {
+  .h2-hero__num {
+    font-size: clamp(15rem, 8rem + 32vw, 36rem);
+    letter-spacing: -0.06em;
+  }
+  .h2-hero__strike {
+    left: 22vw;
+  }
+  .h2-hero__strike-text {
+    font-size: clamp(5.5rem, 2.8rem + 9vw, 11rem);
+  }
+  .h2-hero__note {
+    width: clamp(18rem, 12rem + 14vw, 22rem);
+  }
+  .h2-hero__note-line {
+    font-size: clamp(1.05rem, 0.8rem + 0.6vw, 1.35rem);
+  }
+}
+
+/* Tablet stage geometry — figure shrinks, strike repositions, note
+   stays inside the stage's top-right corner (it has room here). The
+   note's pop-out treatment fires only below 640 px (next block). */
+@media (max-width: 900px) {
+  .h2-hero__stage {
+    aspect-ratio: 7 / 5;
+  }
+  .h2-hero__num {
+    font-size: clamp(11rem, 6rem + 24vw, 20rem);
+  }
+  .h2-hero__strike {
+    top: 60%;
+    left: 16vw;
+  }
+  .h2-hero__strike-text {
+    font-size: clamp(4.5rem, 2.4rem + 9vw, 8rem);
+  }
+  .h2-hero__tick {
+    width: 8rem;
+  }
+  .h2-hero__note-line {
+    font-size: clamp(1.2rem, 0.9rem + 0.9vw, 1.55rem);
+  }
+  .h2-hero__note-crown {
+    width: clamp(3.5rem, 2.5rem + 2vw, 5rem);
+  }
+}
+
+/* Below 640 px the stage is too narrow to hold the note alongside
+   the 0% — the note pops out below the stage. The section grows
+   its padding-bottom to reserve room for the popped card; the note
+   keeps its absolute positioning so the figure's context stays
+   intact. Rotation kept gentle (-3°) so the corner doesn't poke
+   into the folio's vertical range. */
+@media (max-width: 640px) {
+  .h2-hero {
+    padding-bottom: clamp(7rem, 4rem + 4vw, 10rem);
+  }
+  .h2-hero__note {
+    top: calc(100% + clamp(1rem, 0.5rem + 0.6vw, 1.5rem));
+    right: 0;
+    left: 0;
+    bottom: auto;
+    width: auto;
+    max-width: 32rem;
+    margin: 0 auto;
+    padding: 1.5rem 1.75rem 1.25rem 1.5rem;
+    transform: rotate(-3deg);
+  }
+}
+
+/* Phone: stage gets tall (5:4), figure recalibrated so the %
+   and the Caveat strike both fit one breath, marginalia tuck
+   into the corners without overlapping. */
+@media (max-width: 540px) {
+  .h2-hero__stage {
+    aspect-ratio: 4 / 3;
+  }
+  .h2-hero__num {
+    font-size: clamp(7.5rem, 4rem + 22vw, 12rem);
+    left: -1vw;
+  }
+  .h2-hero__strike {
+    top: 58%;
+    left: 8vw;
+  }
+  .h2-hero__strike-text {
+    font-size: clamp(3.4rem, 2.2rem + 8vw, 5.5rem);
+  }
+  .h2-hero__folio {
+    font-size: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    letter-spacing: 0.18em;
+  }
+  .h2-hero__tick {
+    width: 6.5rem;
+    bottom: 10%;
+    left: 5vw;
+  }
+  .h2-hero__note {
+    padding: 1.25rem 1.25rem 1rem 1rem;
+  }
+  .h2-hero__note-eyebrow {
+    font-size: 0.6rem;
+  }
+  .h2-hero__note-line {
+    font-size: clamp(1.05rem, 0.85rem + 0.8vw, 1.35rem);
+  }
+  .h2-hero__note-crown {
+    width: 3.25rem;
+  }
+}
+
+/* ───────────────────────────────────────────
+   §03·α PLATES — contact-sheet (kept, refined)
+   ─────────────────────────────────────────── */
+.plates-wrap {
+  padding: clamp(3rem, 2rem + 4vw, 5rem) 0 clamp(3rem, 2rem + 4vw, 5rem);
+  border-bottom: 1px solid var(--ink);
+}
+.section-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.5rem;
+  align-items: baseline;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 1.25rem;
+  margin-bottom: clamp(2rem, 1rem + 2.5vw, 3rem);
+}
+.section-head__num {
+  font-family: var(--ff-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+}
+.section-head__num em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-size: 1.6rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--ink);
+  margin-left: 0.4rem;
+}
+.section-head__title {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.025em;
+}
+.section-head__title em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.section-head__meta {
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: right;
+  line-height: 1.55;
+  max-width: 28ch;
+}
+@media (max-width: 720px) {
+  .section-head {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .section-head__meta {
+    text-align: left;
+  }
+}
+
+/* Visually-hidden utility — content available to screen readers
+   but not visible. Used for the hero h1's accessible name. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Page imprint — closing chip that brackets the spread, mirroring
+   the hero's opening folio. Centered just above the sign-off. */
+.page-imprint {
+  display: flex;
+  justify-content: center;
+  padding: clamp(2rem, 1rem + 2.5vw, 3rem) 0 0;
+}
+.page-imprint__chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--ink);
+  background: var(--bone);
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.page-imprint__chip strong {
+  color: var(--terracotta);
+  font-weight: 500;
+}
+.page-imprint__chip em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+  font-size: 0.85rem;
+}
+
+.plates {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: 5.4rem;
+  grid-auto-flow: row dense;
+  gap: 1.1rem 1.25rem;
+}
+.plate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+.plate__num {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 2;
+  background: rgba(15, 14, 11, 0.78);
+  color: var(--bone);
+  padding: 3px 7px;
+  font-family: var(--ff-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.plate__img {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.plate__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.78) contrast(1.04);
+  transition:
+    transform var(--dur-slow) var(--ease-out),
+    filter var(--dur-slow) var(--ease-out);
+}
+.plate:hover .plate__img img {
+  transform: scale(1.04);
+  filter: saturate(1) contrast(1);
+}
+.plate__cap {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+.plate__cap-name {
+  font-family: var(--ff-display);
+  font-size: 1.1rem;
+  line-height: 1;
+  letter-spacing: -0.005em;
+}
+.plate__cap-name em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.plate__cap-where {
+  font-family: var(--ff-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+/* Kept-amount — folded in from the deleted §β Roll section so each
+   face carries its own financial proof. Dotted top rule keeps the
+   name/where row visually distinct from the figure. */
+.plate__cap-amt {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  margin-top: 0.3rem;
+  padding-top: 0.45rem;
+  border-top: 1px dotted var(--rule-strong);
+}
+.plate__cap-amt em {
+  font-style: italic;
+  color: var(--terracotta);
+  font-size: 1.1rem;
+}
+.plate__cap-amt small {
+  font-family: var(--ff-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-left: 0.4rem;
+}
+
+/* Spans rebalanced so every row totals 12 cleanly:
+     row band 1 (rows 1–6): lead 6 + tall 3 + quote 3 / small 3 = 12
+     row band 2 (rows 7–9): medium 5 + stamp 3 + squat 4    = 12
+     row band 3 (rows 10–12): wide 12                        = 12 */
+.plate--lead {
+  grid-column: span 6;
+  grid-row: span 6;
+}
+.plate--tall {
+  grid-column: span 3;
+  grid-row: span 6;
+}
+.plate--wide {
+  grid-column: span 12;
+  grid-row: span 5;
+}
+.plate--small {
+  grid-column: span 3;
+  grid-row: span 3;
+}
+.plate--medium {
+  grid-column: span 5;
+  grid-row: span 3;
+}
+.plate--squat {
+  grid-column: span 4;
+  grid-row: span 3;
+}
+.plate--lead .plate__cap-name {
+  font-size: 1.85rem;
+}
+.plate--lead .plate__num {
+  font-size: 0.65rem;
+  padding: 4px 9px;
+}
+.plate--lead .plate__cap-amt {
+  font-size: 1.25rem;
+  padding-top: 0.6rem;
+}
+.plate--lead .plate__cap-amt em {
+  font-size: 1.55rem;
+}
+
+.plate-quote {
+  position: relative;
+  grid-column: span 3;
+  grid-row: span 3;
+  border: 1px solid var(--ink);
+  background: color-mix(in oklab, var(--ochre) 14%, var(--bone));
+  padding: 1.25rem 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.plate-quote__mark {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 4.5rem;
+  line-height: 0.55;
+  color: var(--terracotta);
+  margin-bottom: 0.25rem;
+}
+.plate-quote__text {
+  font-family: var(--ff-display);
+  font-size: 1.05rem;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.plate-quote__text em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.plate-quote__attr {
+  font-family: var(--ff-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 0.85rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--ink);
+}
+
+.plate-stamp {
+  position: relative;
+  grid-column: span 3;
+  grid-row: span 3;
+  border: 1px solid var(--ink);
+  padding: 0.95rem 1rem;
+  background: var(--bone-soft);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.plate-stamp__big {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  font-size: 3.4rem;
+  line-height: 0.85;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+.plate-stamp__big em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.plate-stamp__lbl {
+  font-family: var(--ff-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  line-height: 1.4;
+}
+
+/* ───────────────────────────────────────────
+   §03·β ANATOMY — line diagram
+   ─────────────────────────────────────────── */
+.anatomy-wrap {
+  padding: clamp(3rem, 2rem + 4vw, 5rem) 0;
+  border-bottom: 1px solid var(--ink);
+  background: var(--bone-soft);
+}
+.anatomy {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.anatomy__plate {
+  position: relative;
+  border: 1px solid var(--ink);
+  background: var(--bone);
+  padding: clamp(2rem, 1rem + 3vw, 3.5rem) clamp(1rem, 0.5rem + 2.5vw, 3.5rem)
+    clamp(1.25rem, 0.5rem + 2vw, 2rem);
+}
+.anatomy__plate-tag {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  z-index: 3;
+  background: var(--ink);
+  color: var(--bone);
+  padding: 0.4rem 0.9rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.anatomy__plate-no {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  border-left: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 0.4rem 0.9rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: baseline;
+}
+.anatomy__plate-no em {
+  color: var(--terracotta);
+  font-style: italic;
+  font-family: var(--ff-display);
+  font-size: 0.85rem;
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+/* Below 720 px the plate-no ("Anatomy of a booking") collides with
+   the plate-tag ("FIG. 01 · PLATE 12 · N°04") in opposite corners.
+   It's also redundant with the section h2 directly above the plate,
+   so hide it on phone/tablet rather than stack and push the diagram
+   down. The plate-tag carries the editorial chord on its own. */
+@media (max-width: 720px) {
+  .anatomy__plate-no {
+    display: none;
+  }
+}
+.anatomy__svg-wrap {
+  margin-top: 1rem;
+}
+.anatomy svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+/* Strokes hold 1px so the line work survives when the diagram scales
+   down on tablet/phone — without this, hairlines fade as the SVG shrinks. */
+.anatomy svg .stroke,
+.anatomy svg .case-glyph,
+.anatomy svg .key-glyph line,
+.anatomy svg .key-glyph circle,
+.anatomy svg .venue-stamp {
+  vector-effect: non-scaling-stroke;
+}
+/* Below 720 px the SVG shrinks; bump label sizes so the data stays
+   readable when the 1100×540 viewBox renders into a phone column. */
+@media (max-width: 720px) {
+  .anatomy svg text.lbl-tiny {
+    font-size: 18px;
+  }
+  .anatomy svg text.lbl-name,
+  .anatomy svg text.lbl-coord,
+  .anatomy svg text.lbl-amt,
+  .anatomy svg text.lbl-route {
+    font-size: 22px;
+  }
+  .anatomy svg text.lbl-name--xl {
+    font-size: 36px;
+  }
+  .anatomy svg text {
+    font-size: 20px;
+  }
+}
+.anatomy svg .stroke {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+.anatomy svg .stroke--strong {
+  stroke-width: 1.5;
+}
+.anatomy svg .stroke--accent {
+  stroke: var(--terracotta);
+  stroke-width: 1.5;
+}
+.anatomy svg .stroke--mute {
+  stroke: var(--ink-mute);
+  stroke-dasharray: 3 3;
+  stroke-width: 1;
+}
+.anatomy svg text {
+  font-family: var(--ff-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  fill: var(--ink-soft);
+}
+.anatomy svg text.lbl-name {
+  font-family: var(--ff-display);
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  fill: var(--ink);
+}
+.anatomy svg text.lbl-name tspan {
+  font-style: italic;
+  fill: var(--terracotta);
+}
+.anatomy svg text.lbl-name--xl {
+  font-size: 30px;
+}
+.anatomy svg text.lbl-amt {
+  font-family: var(--ff-display);
+  font-size: 26px;
+  letter-spacing: 0;
+  text-transform: none;
+  fill: var(--ink);
+}
+.anatomy svg text.lbl-amt tspan {
+  font-style: italic;
+  fill: var(--terracotta);
+}
+.anatomy svg text.lbl-tiny {
+  font-size: 9.5px;
+  letter-spacing: 0.18em;
+}
+/* Anatomy — polish layer (typographic venue, key/case glyphs, big 0%) */
+.anatomy svg text.lbl-coord {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  fill: var(--ink);
+  text-transform: uppercase;
+}
+.anatomy svg text.lbl-coord tspan.deg {
+  fill: var(--terracotta);
+  font-style: normal;
+}
+.anatomy svg text.lbl-zero {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 110px;
+  letter-spacing: -0.04em;
+  text-transform: none;
+  fill: var(--terracotta);
+}
+.anatomy svg text.lbl-zero tspan {
+  font-style: normal;
+}
+.anatomy svg .key-glyph,
+.anatomy svg .case-glyph {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.5;
+  stroke-linecap: square;
+}
+.anatomy svg .venue-stamp {
+  fill: var(--ink);
+}
+.anatomy svg text.venue-stamp-lbl {
+  font-family: var(--ff-mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  fill: var(--bone);
+}
+.anatomy svg text.lbl-route {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  fill: var(--terracotta);
+  font-weight: 500;
+}
+.anatomy__cap {
+  margin-top: 1.5rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.anatomy__cap em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.85rem;
+}
+
+/* ───────────────────────────────────────────
+   §03·γ STRIKE — three moves on one strike-line.
+   Middle tile dominates (saffron tint, regmarks)
+   to give the line a centre of gravity.
+   ─────────────────────────────────────────── */
+.strike-wrap {
+  padding: clamp(3rem, 2rem + 4vw, 5rem) 0;
+  border-bottom: 1px solid var(--ink);
+}
+.strike {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+.strike::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 4%;
+  right: 4%;
+  height: 3px;
+  background: var(--terracotta);
+  transform: translateY(-50%) rotate(-0.4deg);
+  z-index: 0;
+}
+.move {
+  position: relative;
+  z-index: 1;
+  padding: 0 1.5rem;
+  background: var(--bone);
+  text-align: center;
+}
+.move__digit {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  font-size: clamp(8rem, 4rem + 12vw, 16rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: var(--ink);
+  display: block;
+  padding: 0 0.5rem;
+}
+.move--dom {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--ochre) 18%, var(--bone)) 0%,
+    color-mix(in oklab, var(--ochre) 6%, var(--bone)) 100%
+  );
+  border-left: 1px solid color-mix(in oklab, var(--ochre) 60%, var(--rule-strong));
+  border-right: 1px solid color-mix(in oklab, var(--ochre) 60%, var(--rule-strong));
+  padding: 1.25rem 1.5rem;
+  margin: -1rem -0.25rem;
+}
+.move--dom .move__digit {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.move--dom .move__time {
+  border-color: var(--ochre-deep);
+  color: var(--ochre-deep);
+}
+.move__lbl {
+  font-family: var(--ff-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  margin-top: 1rem;
+}
+.move__title {
+  font-family: var(--ff-display);
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  margin: 0.5rem 0 0.75rem;
+}
+.move__title em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.move__body {
+  font-family: var(--ff-serif);
+  font-weight: 300;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--ink-soft);
+  max-width: 28ch;
+  margin: 0 auto;
+}
+.move__body code {
+  font-family: var(--ff-mono);
+  font-size: 0.78rem;
+  color: var(--ink);
+}
+.move__time {
+  display: inline-block;
+  margin-top: 0.85rem;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--ink);
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.move__time em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  color: var(--terracotta);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 1100px) {
+  .strike {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .strike::before {
+    display: none;
+  }
+}
+
+/* ─── §03·δ CORRESPONDENCE ─── */
+.post-wrap {
+  padding: clamp(3rem, 2rem + 4vw, 5rem) 0;
+  border-bottom: 1px solid var(--ink);
+  background: var(--bone-soft);
+}
+.post {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.post__plate {
+  position: relative;
+  border: 1px solid var(--ink);
+  background: var(--bone);
+  padding: clamp(2rem, 1rem + 3vw, 3.5rem) clamp(1rem, 0.5rem + 2.5vw, 3.5rem)
+    clamp(1.25rem, 0.5rem + 2vw, 2rem);
+}
+.post__plate-tag {
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  z-index: 3;
+  background: var(--ink);
+  color: var(--bone);
+  padding: 0.4rem 0.9rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.post__plate-no {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  border-left: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding: 0.4rem 0.9rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  background: var(--bone);
+}
+.post__plate-no em {
+  color: var(--terracotta);
+  font-style: italic;
+  font-family: var(--ff-display);
+  font-size: 0.85rem;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  margin-left: 0.25rem;
+}
+
+.post__grid {
+  margin-top: clamp(1.5rem, 0.75rem + 1.5vw, 2.5rem);
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: clamp(2rem, 1rem + 3vw, 4rem);
+  align-items: start;
+}
+
+/* ─── Masthead column · three desks ─── */
+.post__desks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--ink);
+}
+.desk {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem 1.25rem;
+  align-items: baseline;
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--rule-strong);
+  transition:
+    padding-left var(--dur-med) var(--ease-out),
+    background var(--dur-med) var(--ease-out);
+}
+.desk:hover {
+  padding-left: 1rem;
+  background: var(--bone-soft);
+}
+.desk__lbl {
+  grid-column: 1 / -1;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+}
+.desk__name {
+  grid-column: 1;
+  font-family: var(--ff-display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.4rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--ink);
+}
+.desk__name em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.desk__mail {
+  grid-column: 2;
+  grid-row: 2;
+  font-family: var(--ff-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+  text-decoration: none;
+  align-self: end;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+.desk__mail:hover,
+.desk__mail:focus-visible {
+  color: var(--terracotta);
+  border-color: var(--terracotta);
+}
+.desk__hours {
+  grid-column: 1 / -1;
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.desk__hours em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.9rem;
+}
+
+/* Middle desk dominates — saffron wash echoing the
+   Strike section's middle move. */
+.desk--dom {
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--ochre) 14%, var(--bone)) 0%,
+    color-mix(in oklab, var(--ochre) 4%, var(--bone)) 100%
+  );
+  margin: 0 -0.85rem;
+  padding-left: 0.85rem;
+  padding-right: 0.85rem;
+  border-bottom-color: color-mix(in oklab, var(--ochre) 60%, var(--rule-strong));
+}
+.desk--dom .desk__lbl {
+  color: var(--ochre-deep);
+}
+.desk--dom:hover {
+  padding-left: 1.85rem;
+  background: color-mix(in oklab, var(--ochre) 10%, var(--bone-soft));
+}
+
+/* ─── Postal block · stamp + address card ─── */
+.post__postal {
+  display: grid;
+  gap: 1.5rem;
+  align-content: start;
+}
+.post__stamp {
+  position: relative;
+  margin: 0 0 0.5rem;
+  width: clamp(11rem, 9rem + 4vw, 13.5rem);
+  aspect-ratio: 7 / 8;
+  border: 1.5px solid var(--ink);
+  background: var(--bone-soft);
+  padding: 0.9rem 0.85rem 0.7rem;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-self: start;
+  /* Inset dashed perforation row — reads as a stamp's
+     inner edge. Using outline + negative offset so the
+     dashes sit fully inside the hard outer border. */
+  outline: 3px dotted color-mix(in oklab, var(--ink) 45%, var(--bone));
+  outline-offset: -7px;
+}
+.post__stamp-cap {
+  font-family: var(--ff-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: center;
+  border-bottom: 1px solid var(--ink-mute);
+  padding-bottom: 0.45rem;
+  margin: 0 0.4rem;
+}
+.post__stamp-mark {
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.4rem;
+}
+.post__stamp-mark img {
+  width: 100%;
+  max-width: clamp(5rem, 3.5rem + 4vw, 6.75rem);
+  height: auto;
+  display: block;
+}
+.post__stamp-foot {
+  font-family: var(--ff-mono);
+  font-size: 0.5rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  text-align: center;
+  border-top: 1px solid var(--ink-mute);
+  padding-top: 0.45rem;
+  margin: 0 0.4rem;
+}
+.post__stamp-postmark {
+  position: absolute;
+  bottom: -1.4rem;
+  right: -1.4rem;
+  width: 4.75rem;
+  height: 4.75rem;
+  color: var(--terracotta);
+  transform: rotate(-12deg);
+  opacity: 0.88;
+  pointer-events: none;
+}
+.post__stamp-postmark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.post__stamp-postmark text {
+  font-family: var(--ff-mono);
+  font-size: 7px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  fill: currentColor;
+}
+
+.post__addr {
+  border-top: 1px solid var(--ink);
+  padding-top: 0.95rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.post__addr-lbl {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--terracotta);
+}
+.post__addr-line {
+  font-family: var(--ff-display);
+  font-weight: 300;
+  font-size: 1.1rem;
+  line-height: 1.45;
+  margin: 0;
+  color: var(--ink);
+  letter-spacing: -0.005em;
+}
+.post__addr-line em {
+  font-style: italic;
+  color: var(--terracotta);
+}
+.post__addr-hours {
+  font-family: var(--ff-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  border-top: 1px dashed var(--ink-soft);
+  padding-top: 0.6rem;
+  margin-top: 0.25rem;
+}
+.post__addr-hours em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.85rem;
+}
+
+.post__cap {
+  margin-top: 1.5rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--ink);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ff-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.post__cap em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .post__grid {
+    grid-template-columns: 1fr;
+  }
+  .post__postal {
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 1.5rem 1.75rem;
+  }
+  .post__stamp {
+    margin-bottom: 0;
+  }
+  .post__addr {
+    border-top: none;
+    padding-top: 0;
+  }
+}
+@media (max-width: 540px) {
+  .post__postal {
+    grid-template-columns: 1fr;
+  }
+  .post__addr {
+    border-top: 1px solid var(--ink);
+    padding-top: 0.95rem;
+  }
+  .desk__name {
+    font-size: clamp(1.4rem, 1rem + 1.6vw, 2rem);
+  }
+  .desk {
+    grid-template-columns: 1fr;
+  }
+  .desk__mail {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+  }
+}
+
+/* ───────────────────────────────────────────
+   §fin SIGNED — sign-off (single crown on S)
+   ─────────────────────────────────────────── */
+.signed {
+  position: relative;
+  padding: clamp(3rem, 2rem + 4vw, 5rem) 0 clamp(4rem, 2.5rem + 5vw, 7rem);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(2rem, 1rem + 3vw, 4rem);
+  align-items: end;
+}
+.signed__line {
+  font-family: var(--ff-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(2rem, 1.4rem + 2.4vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+.signed__line strong {
+  font-weight: 400;
+  font-style: normal;
+  color: var(--terracotta);
+}
+.signed__line a {
+  border-bottom: 2px solid currentColor;
+  padding-bottom: 4px;
+}
+.signed__block {
+  position: relative;
+  text-align: center;
+  padding: 1.5rem 1rem 1rem;
+  min-height: 11rem;
+}
+/* Decorative regmark scatter around the signed block —
+   balanced rectangle, all four corners on the same insets. */
+.signed__block .regmark {
+  --regmark-ink: var(--ink-soft);
+}
+.signed__block .regmark--tl {
+  top: 0;
+  left: 0;
+}
+.signed__block .regmark--tr {
+  top: 0;
+  right: 0;
+}
+.signed__block .regmark--bl {
+  bottom: 0;
+  left: 0;
+}
+.signed__block .regmark--br {
+  bottom: 0;
+  right: 0;
+}
+.signed__sig {
+  font-family: var(--hand);
+  font-weight: 700;
+  font-style: normal;
+  font-size: clamp(4.5rem, 3rem + 4vw, 6rem);
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 0.85rem;
+  display: inline-block;
+  transform: rotate(-3deg);
+}
+.signed__sig-s {
+  position: relative;
+  display: inline-block;
+}
+.signed__crown {
+  position: absolute;
+  left: 100%;
+  top: 0.1em;
+  width: 0.95em;
+  height: auto;
+  transform: translate(-50%, -100%) rotate(-9deg);
+  pointer-events: none;
+}
+.signed__crown svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+.signed__rule {
+  border-top: 1px dashed var(--ink-soft);
+  padding-top: 0.5rem;
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.signed__rule em {
+  font-family: var(--ff-display);
+  font-style: italic;
+  color: var(--ink);
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .signed {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ───────────────────────────────────────────
+   Plates responsive
+   ─────────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .plates {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .plate--lead,
+  .plate--tall {
+    grid-column: span 6;
+    grid-row: span 4;
+  }
+  .plate--wide,
+  .plate--medium {
+    grid-column: span 6;
+    grid-row: span 3;
+  }
+  .plate--small,
+  .plate--squat,
+  .plate-quote,
+  .plate-stamp {
+    grid-column: span 3;
+    grid-row: span 3;
+  }
+}
+@media (max-width: 640px) {
+  .plates {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .plate--lead,
+  .plate--tall,
+  .plate--wide,
+  .plate--medium {
+    grid-column: span 2;
+    grid-row: span 4;
+  }
+  .plate--small,
+  .plate--squat,
+  .plate-quote,
+  .plate-stamp {
+    grid-column: span 2;
+    grid-row: span 3;
+  }
+}
