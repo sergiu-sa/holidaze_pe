@@ -3,8 +3,9 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { server } from '../test/msw/server'
 import { ApiError } from '../types/api'
+import type { Venue } from '../types/venue'
 import { BASE } from './client'
-import { getProfile, getProfileBookings, updateProfile } from './profiles'
+import { getProfile, getProfileBookings, getProfileVenues, updateProfile } from './profiles'
 import { clearSession, setSession } from './session'
 
 const TEST_SESSION = {
@@ -147,5 +148,75 @@ describe('updateProfile', () => {
     await expect(
       updateProfile('tester', { avatar: { url: 'http://broken', alt: 'x' } }),
     ).rejects.toMatchObject({ status: 400 })
+  })
+})
+
+describe('getProfileVenues', () => {
+  const sampleVenue: Venue = {
+    id: 'v-1',
+    name: 'Olive Cabin',
+    description: 'Stone-walled bothy a kilometre off the road.',
+    media: [{ url: 'https://example.com/cover.jpg', alt: 'Cover' }],
+    price: 240,
+    maxGuests: 4,
+    rating: 4.5,
+    created: '2026-04-01T00:00:00.000Z',
+    updated: '2026-04-01T00:00:00.000Z',
+    meta: { wifi: true, parking: true, breakfast: false, pets: false },
+    location: {
+      address: null,
+      city: 'Lisbon',
+      zip: null,
+      country: 'Portugal',
+      continent: 'Europe',
+      lat: null,
+      lng: null,
+    },
+  }
+
+  const venuesEnvelope = {
+    data: [sampleVenue],
+    meta: {
+      isFirstPage: true,
+      isLastPage: true,
+      currentPage: 1,
+      previousPage: null,
+      nextPage: null,
+      pageCount: 1,
+      totalCount: 1,
+    },
+  }
+
+  it('appends _bookings=true by default and parses the response', async () => {
+    let url: URL | null = null
+    server.use(
+      http.get(`${BASE}/profiles/tester/venues`, ({ request }) => {
+        url = new URL(request.url)
+        return HttpResponse.json(venuesEnvelope)
+      }),
+    )
+    const list = await getProfileVenues('tester')
+    expect(list).toHaveLength(1)
+    expect(list[0].name).toBe('Olive Cabin')
+    expect(url).not.toBeNull()
+    expect(url!.searchParams.get('_bookings')).toBe('true')
+  })
+
+  it('omits _bookings=true when caller opts out', async () => {
+    let url: URL | null = null
+    server.use(
+      http.get(`${BASE}/profiles/tester/venues`, ({ request }) => {
+        url = new URL(request.url)
+        return HttpResponse.json(venuesEnvelope)
+      }),
+    )
+    await getProfileVenues('tester', { bookings: false })
+    expect(url).not.toBeNull()
+    expect(url!.searchParams.has('_bookings')).toBe(false)
+  })
+
+  it('throws ApiError(401) when session is missing', async () => {
+    clearSession()
+    await expect(getProfileVenues('tester')).rejects.toBeInstanceOf(ApiError)
   })
 })

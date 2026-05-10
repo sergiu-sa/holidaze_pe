@@ -112,22 +112,34 @@ export function AvatarMenu() {
 
         <NavLink role="menuitem" to="/profile" end onClick={close} className="avatar-menu__item">
           <Icon name="guest" size="sm" />
-          <span>Profile</span>
+          <span>Overview</span>
         </NavLink>
         <NavLink role="menuitem" to="/profile/bookings" onClick={close} className="avatar-menu__item">
           <Icon name="ticket" size="sm" />
           <span>My bookings</span>
         </NavLink>
-        {user.venueManager && (
-          <NavLink role="menuitem" to="/profile/venues" onClick={close} className="avatar-menu__item">
-            <Icon name="compass" size="sm" />
-            <span>My venues</span>
-          </NavLink>
-        )}
         <NavLink role="menuitem" to="/profile/avatar" onClick={close} className="avatar-menu__item">
           <Icon name="edit" size="sm" />
           <span>Avatar</span>
         </NavLink>
+        {user.venueManager && (
+          <>
+            <NavLink role="menuitem" to="/profile/venues" onClick={close} className="avatar-menu__item">
+              <Icon name="compass" size="sm" />
+              <span>My venues</span>
+            </NavLink>
+            <NavLink
+              role="menuitem"
+              to="/profile/venues/new"
+              end
+              onClick={close}
+              className="avatar-menu__item"
+            >
+              <Icon name="plus" size="sm" />
+              <span>New venue</span>
+            </NavLink>
+          </>
+        )}
 
         <hr className="avatar-menu__rule" aria-hidden="true" />
 

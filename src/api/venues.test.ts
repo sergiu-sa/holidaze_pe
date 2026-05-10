@@ -3,9 +3,12 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import { FALLBACK_VENUES } from '../lib/fallback'
 import { server } from '../test/msw/server'
+import { ApiError } from '../types/api'
 import type { Venue } from '../types/venue'
+import { __test__buildKey, writeCache } from './cache'
 import { BASE } from './client'
-import { getVenue, listVenues, searchVenues } from './venues'
+import { clearSession, setSession } from './session'
+import { createVenue, deleteVenue, getVenue, listVenues, searchVenues, updateVenue } from './venues'
 
 const SAMPLE_VENUE: Venue = {
   id: 'real-1',
@@ -251,5 +254,206 @@ describe('getVenue', () => {
     const promise = getVenue('slow', { signal: controller.signal })
     controller.abort()
     await expect(promise).rejects.toThrow()
+  })
+})
+
+const TEST_SESSION = {
+  accessToken: 'tok_test',
+  apiKey: 'key_test',
+  name: 'host',
+  email: 'host@stud.noroff.no',
+  venueManager: true,
+}
+
+const VALID_INPUT = {
+  name: 'Olive Cabin',
+  description: 'Stone-walled bothy a kilometre off the road, with no neighbours.',
+  media: [{ url: 'https://example.com/cover.jpg', alt: 'Cover' }],
+  price: 240,
+  maxGuests: 4,
+  meta: { wifi: true, parking: true, breakfast: false, pets: false },
+  location: {
+    address: null,
+    city: 'Lisbon',
+    zip: null,
+    country: 'Portugal',
+    continent: 'Europe',
+    lat: null,
+    lng: null,
+  },
+}
+
+describe('createVenue', () => {
+  beforeEach(() => {
+    clearSession()
+    setSession(TEST_SESSION)
+  })
+
+  it('POSTs the typed body and returns the parsed venue', async () => {
+    let captured: Record<string, unknown> | null = null
+    server.use(
+      http.post(`${BASE}/venues`, async ({ request }) => {
+        captured = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json({
+          data: { ...SAMPLE_VENUE, id: 'new-1', name: VALID_INPUT.name },
+        })
+      }),
+    )
+
+    const venue = await createVenue(VALID_INPUT)
+
+    expect(captured).toMatchObject({
+      name: VALID_INPUT.name,
+      price: 240,
+      maxGuests: 4,
+      meta: VALID_INPUT.meta,
+    })
+    expect(venue.id).toBe('new-1')
+    expect(venue.name).toBe(VALID_INPUT.name)
+  })
+
+  it('clears the venues-list cache on success', async () => {
+    writeCache({ namespace: 'venues', params: { page: 1 } }, { venues: [], meta: undefined })
+    expect(sessionStorage.getItem(__test__buildKey({ namespace: 'venues', params: { page: 1 } })))
+      .not.toBeNull()
+
+    server.use(
+      http.post(`${BASE}/venues`, () =>
+        HttpResponse.json({ data: { ...SAMPLE_VENUE, id: 'new-2' } }),
+      ),
+    )
+
+    await createVenue(VALID_INPUT)
+    expect(sessionStorage.getItem(__test__buildKey({ namespace: 'venues', params: { page: 1 } })))
+      .toBeNull()
+  })
+
+  it('throws ApiError(401) when no session is set', async () => {
+    clearSession()
+    await expect(createVenue(VALID_INPUT)).rejects.toBeInstanceOf(ApiError)
+  })
+
+  it('rejects malformed input via the strict schema', async () => {
+    await expect(
+      // @ts-expect-error — extra field rejected by .strict()
+      createVenue({ ...VALID_INPUT, isFeatured: true }),
+    ).rejects.toThrow()
+  })
+})
+
+describe('updateVenue', () => {
+  beforeEach(() => {
+    clearSession()
+    setSession(TEST_SESSION)
+  })
+
+  it('PUTs the patch and returns the updated venue', async () => {
+    let captured: Record<string, unknown> | null = null
+    server.use(
+      http.put(`${BASE}/venues/v-1`, async ({ request }) => {
+        captured = (await request.json()) as Record<string, unknown>
+        return HttpResponse.json({
+          data: { ...SAMPLE_VENUE, id: 'v-1', price: 320 },
+        })
+      }),
+    )
+
+    const venue = await updateVenue('v-1', { price: 320 })
+
+    expect(captured).toEqual({ price: 320 })
+    expect(venue.id).toBe('v-1')
+    expect(venue.price).toBe(320)
+  })
+
+  it('busts the venue-detail cache and clears the list cache on success', async () => {
+    writeCache({ namespace: 'venue', params: { id: 'v-1' } }, SAMPLE_VENUE)
+    writeCache({ namespace: 'venues', params: { page: 1 } }, { venues: [], meta: undefined })
+
+    server.use(
+      http.put(`${BASE}/venues/v-1`, () =>
+        HttpResponse.json({ data: { ...SAMPLE_VENUE, id: 'v-1', price: 320 } }),
+      ),
+    )
+
+    await updateVenue('v-1', { price: 320 })
+
+    expect(sessionStorage.getItem(__test__buildKey({ namespace: 'venue', params: { id: 'v-1' } })))
+      .toBeNull()
+    expect(sessionStorage.getItem(__test__buildKey({ namespace: 'venues', params: { page: 1 } })))
+      .toBeNull()
+  })
+
+  it('surfaces ApiError(403) when the caller is not the owner', async () => {
+    server.use(
+      http.put(`${BASE}/venues/v-1`, () =>
+        HttpResponse.json(
+          { errors: [{ message: 'You do not own this venue' }] },
+          { status: 403 },
+        ),
+      ),
+    )
+
+    await expect(updateVenue('v-1', { price: 320 })).rejects.toMatchObject({ status: 403 })
+  })
+
+  it('rejects extra fields via the strict patch schema', async () => {
+    await expect(
+      // @ts-expect-error — id is read-only on the resource
+      updateVenue('v-1', { id: 'forced' }),
+    ).rejects.toThrow()
+  })
+})
+
+describe('deleteVenue', () => {
+  beforeEach(() => {
+    clearSession()
+    setSession(TEST_SESSION)
+  })
+
+  it('DELETEs the venue and resolves on 204', async () => {
+    let called = false
+    server.use(
+      http.delete(`${BASE}/venues/v-1`, () => {
+        called = true
+        return new HttpResponse(null, { status: 204 })
+      }),
+    )
+
+    await expect(deleteVenue('v-1')).resolves.toBeUndefined()
+    expect(called).toBe(true)
+  })
+
+  it('busts the venue-detail cache and clears the list cache on success', async () => {
+    writeCache({ namespace: 'venue', params: { id: 'v-1' } }, SAMPLE_VENUE)
+    writeCache({ namespace: 'venues', params: { page: 1 } }, { venues: [], meta: undefined })
+
+    server.use(
+      http.delete(`${BASE}/venues/v-1`, () => new HttpResponse(null, { status: 204 })),
+    )
+
+    await deleteVenue('v-1')
+
+    expect(sessionStorage.getItem(__test__buildKey({ namespace: 'venue', params: { id: 'v-1' } })))
+      .toBeNull()
+    expect(sessionStorage.getItem(__test__buildKey({ namespace: 'venues', params: { page: 1 } })))
+      .toBeNull()
+  })
+
+  it('surfaces ApiError(403) when the caller is not the owner', async () => {
+    server.use(
+      http.delete(`${BASE}/venues/v-1`, () =>
+        HttpResponse.json(
+          { errors: [{ message: 'You do not own this venue' }] },
+          { status: 403 },
+        ),
+      ),
+    )
+
+    await expect(deleteVenue('v-1')).rejects.toMatchObject({ status: 403 })
+  })
+
+  it('throws ApiError(401) when no session is set', async () => {
+    clearSession()
+    await expect(deleteVenue('v-1')).rejects.toBeInstanceOf(ApiError)
   })
 })
