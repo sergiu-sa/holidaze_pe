@@ -34,7 +34,7 @@ export function AvatarMenu() {
     document.addEventListener('pointerdown', onPointer)
     document.addEventListener('keydown', onKey)
     requestAnimationFrame(() => {
-      popRef.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus()
+      popRef.current?.querySelector<HTMLElement>('.avatar-menu__item')?.focus()
     })
     return () => {
       document.removeEventListener('pointerdown', onPointer)
@@ -66,7 +66,7 @@ export function AvatarMenu() {
         ref={triggerRef}
         type="button"
         className="avatar-menu__trigger"
-        aria-haspopup="menu"
+        aria-haspopup="true"
         aria-expanded={open}
         aria-controls="avatar-menu-pop"
         aria-label={`Account menu for ${user.name}`}
@@ -95,7 +95,6 @@ export function AvatarMenu() {
       <div
         id="avatar-menu-pop"
         ref={popRef}
-        role="menu"
         className="avatar-menu__pop"
         hidden={!open}
       >
@@ -110,40 +109,36 @@ export function AvatarMenu() {
 
         <hr className="avatar-menu__rule" aria-hidden="true" />
 
-        <NavLink role="menuitem" to="/profile" end onClick={close} className="avatar-menu__item">
-          <Icon name="guest" size="sm" />
-          <span>Overview</span>
-        </NavLink>
-        <NavLink role="menuitem" to="/profile/bookings" onClick={close} className="avatar-menu__item">
-          <Icon name="ticket" size="sm" />
-          <span>My bookings</span>
-        </NavLink>
-        <NavLink role="menuitem" to="/profile/avatar" onClick={close} className="avatar-menu__item">
-          <Icon name="edit" size="sm" />
-          <span>Avatar</span>
-        </NavLink>
-        {user.venueManager && (
-          <>
-            <NavLink role="menuitem" to="/profile/venues" onClick={close} className="avatar-menu__item">
-              <Icon name="compass" size="sm" />
-              <span>My venues</span>
-            </NavLink>
-            <NavLink
-              role="menuitem"
-              to="/profile/venues/new"
-              end
-              onClick={close}
-              className="avatar-menu__item"
-            >
-              <Icon name="plus" size="sm" />
-              <span>New venue</span>
-            </NavLink>
-          </>
-        )}
+        <nav aria-label="Account">
+          <NavLink to="/profile" end onClick={close} className="avatar-menu__item">
+            <Icon name="guest" size="sm" />
+            <span>Overview</span>
+          </NavLink>
+          <NavLink to="/profile/bookings" onClick={close} className="avatar-menu__item">
+            <Icon name="ticket" size="sm" />
+            <span>My bookings</span>
+          </NavLink>
+          <NavLink to="/profile/avatar" onClick={close} className="avatar-menu__item">
+            <Icon name="edit" size="sm" />
+            <span>Avatar</span>
+          </NavLink>
+          {user.venueManager && (
+            <>
+              <NavLink to="/profile/venues" onClick={close} className="avatar-menu__item">
+                <Icon name="compass" size="sm" />
+                <span>My venues</span>
+              </NavLink>
+              <NavLink to="/profile/venues/new" end onClick={close} className="avatar-menu__item">
+                <Icon name="plus" size="sm" />
+                <span>New venue</span>
+              </NavLink>
+            </>
+          )}
+        </nav>
 
         <hr className="avatar-menu__rule" aria-hidden="true" />
 
-        <button role="menuitem" type="button" onClick={handleSignOut} className="avatar-menu__signout">
+        <button type="button" onClick={handleSignOut} className="avatar-menu__signout">
           <Icon name="logout" size="sm" />
           <span>Sign out</span>
         </button>

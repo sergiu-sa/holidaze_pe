@@ -304,6 +304,7 @@
   border: 1px solid var(--ink);
   background: transparent;
   padding: 0.5rem 0.75rem;
+  min-height: 44px; /* WCAG 2.5.5 — tap target */
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.68rem;
   letter-spacing: 0.14em;

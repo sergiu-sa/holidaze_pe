@@ -69,11 +69,11 @@ export default function ProfileVenuesBookings() {
         }
       />
 
-      <div className="manager-toolbar manager-toolbar--start">
+      <nav className="manager-toolbar manager-toolbar--start" aria-label="Manager venues">
         <Link to="/profile/venues" className="rec__btn">
           ← Back to my venues
         </Link>
-      </div>
+      </nav>
 
       {isLoading && <p className="mono">Loading…</p>}
 
@@ -94,7 +94,7 @@ export default function ProfileVenuesBookings() {
       )}
 
       {!isLoading && !error && venue && total > 0 && (
-        <div className="rec-list" role="list">
+        <ul className="rec-list">
           {rows.map(({ booking, upcoming }) => {
             const nights = nightsBetween(
               parseToLocalDay(booking.dateFrom),
@@ -102,9 +102,8 @@ export default function ProfileVenuesBookings() {
             )
             const subtotal = nights * venue.price
             return (
-              <article
+              <li
                 key={booking.id}
-                role="listitem"
                 className="rec"
                 aria-label={`Booking from ${formatLongDate(booking.dateFrom)} to ${formatLongDate(booking.dateTo)}`}
               >
@@ -120,10 +119,10 @@ export default function ProfileVenuesBookings() {
                     {!upcoming && ' · past'}
                   </p>
                 </div>
-              </article>
+              </li>
             )
           })}
-        </div>
+        </ul>
       )}
     </>
   )

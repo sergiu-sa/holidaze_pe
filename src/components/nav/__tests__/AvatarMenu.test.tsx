@@ -38,7 +38,7 @@ describe('AvatarMenu', () => {
   it('opens on click and exposes the right ARIA attributes', async () => {
     renderMenu(false)
     const trigger = await screen.findByRole('button', { name: /account menu/i })
-    expect(trigger).toHaveAttribute('aria-haspopup', 'menu')
+    expect(trigger).toHaveAttribute('aria-haspopup', 'true')
     expect(trigger).toHaveAttribute('aria-expanded', 'false')
     await userEvent.click(trigger)
     expect(trigger).toHaveAttribute('aria-expanded', 'true')
@@ -47,13 +47,13 @@ describe('AvatarMenu', () => {
   it('hides "My venues" for a customer', async () => {
     renderMenu(false)
     await userEvent.click(await screen.findByRole('button', { name: /account menu/i }))
-    expect(screen.queryByRole('menuitem', { name: /my venues/i })).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /my venues/i })).not.toBeInTheDocument()
   })
 
   it('shows "My venues" for a manager', async () => {
     renderMenu(true)
     await userEvent.click(await screen.findByRole('button', { name: /account menu/i }))
-    expect(screen.getByRole('menuitem', { name: /my venues/i })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /my venues/i })).toBeInTheDocument()
   })
 
   it('closes when Esc is pressed', async () => {

@@ -88,14 +88,14 @@ export default function ProfileVenues() {
 
       {!isLoading && !error && count > 0 && (
         <>
-          <div className="manager-toolbar" aria-label="Venue list actions">
+          <nav className="manager-toolbar" aria-label="Venue list actions">
             <Link to="/profile/venues/new" className="rec__btn">
               <Icon name="plus" size="sm" /> New venue
             </Link>
-          </div>
-          <div className="rec-list" role="list">
+          </nav>
+          <ul className="rec-list">
             {venues.map((venue) => (
-              <div key={venue.id} role="listitem">
+              <li key={venue.id} className="rec-list__item">
                 <VenueRow
                   venue={venue}
                   onDelete={(v) => {
@@ -103,9 +103,9 @@ export default function ProfileVenues() {
                   }}
                   pendingDelete={deletingId === venue.id}
                 />
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </>
       )}
     </>

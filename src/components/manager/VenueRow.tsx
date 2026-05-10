@@ -20,8 +20,10 @@ export function VenueRow({ venue, onDelete, pendingDelete = false }: VenueRowPro
   const count = bookingCount(venue)
   const location = formatLocation(venue)
 
+  const bookingNoun = count === 1 ? 'booking' : 'bookings'
+
   return (
-    <article className="rec" aria-labelledby={`rec-${venue.id}-name`}>
+    <div className="rec" aria-labelledby={`rec-${venue.id}-name`}>
       {cover?.url ? (
         <img className="rec__img" src={cover.url} alt={cover.alt || ''} loading="lazy" />
       ) : (
@@ -46,7 +48,7 @@ export function VenueRow({ venue, onDelete, pendingDelete = false }: VenueRowPro
         <Link
           to={`/profile/venues/${encodeURIComponent(venue.id)}/bookings`}
           className="rec__btn"
-          aria-label={`View bookings for ${venue.name}`}
+          aria-label={`View bookings for ${venue.name} — ${String(count)} ${bookingNoun}`}
         >
           <Icon name="ticket" size="sm" />
           Bookings
@@ -75,6 +77,6 @@ export function VenueRow({ venue, onDelete, pendingDelete = false }: VenueRowPro
           {pendingDelete ? 'Deleting…' : 'Delete'}
         </button>
       </div>
-    </article>
+    </div>
   )
 }

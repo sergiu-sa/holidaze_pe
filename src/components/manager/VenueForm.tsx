@@ -21,7 +21,10 @@ interface FieldErrors {
   continent?: string
   address?: string
   media?: string
-  mediaRows?: Record<number, string | undefined>
+  mediaRows?: {
+    url?: Record<number, string | undefined>
+    alt?: Record<number, string | undefined>
+  }
   form?: string
 }
 
@@ -98,6 +101,17 @@ export function VenueForm({
     const priceNum = price === '' ? Number.NaN : Number(price)
     const guestsNum = maxGuests === '' ? Number.NaN : Number(maxGuests)
     const cleanedMedia = compactMedia(media)
+
+    const altErrors: Record<number, string> = {}
+    media.forEach((row, i) => {
+      if (row.url.trim() && !row.alt.trim()) {
+        altErrors[i] = 'Describe the photo for screen readers'
+      }
+    })
+    if (Object.keys(altErrors).length > 0) {
+      setErrors({ mediaRows: { alt: altErrors } })
+      return
+    }
 
     const payload = {
       name: name.trim(),

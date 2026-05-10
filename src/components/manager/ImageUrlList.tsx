@@ -4,8 +4,11 @@ import { Field } from '../ui/Field'
 export interface ImageUrlListProps {
   value: Media[]
   onChange: (next: Media[]) => void
-  /** Per-row error keyed by index. */
-  errors?: Record<number, string | undefined>
+  /** Per-row errors keyed by index, split by field. */
+  errors?: {
+    url?: Record<number, string | undefined>
+    alt?: Record<number, string | undefined>
+  }
   /** Top-level error (e.g. "At least one photo required"). */
   error?: string
 }
@@ -47,17 +50,19 @@ export function ImageUrlList({ value, onChange, errors, error }: ImageUrlListPro
               onChange={(event) => {
                 update(index, { url: event.currentTarget.value })
               }}
-              error={errors?.[index]}
+              error={errors?.url?.[index]}
             />
             <Field
               label="Alt text"
               type="text"
               autoComplete="off"
               placeholder="A short description of the photo"
+              hint="Describe the photo for screen readers"
               value={row.alt}
               onChange={(event) => {
                 update(index, { alt: event.currentTarget.value })
               }}
+              error={errors?.alt?.[index]}
             />
           </div>
           <button
