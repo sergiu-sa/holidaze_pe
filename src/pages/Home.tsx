@@ -118,9 +118,10 @@ export default function Home() {
           </div>
           <form className="search" role="search" aria-label="Find a venue" onSubmit={handleSubmit}>
             <span className="search__prose">I&apos;m looking to stay in</span>
-            <label className="search__field">
+            <label className="search__field" htmlFor="search-destination">
               <span className="visually-hidden">Destination</span>
               <input
+                id="search-destination"
                 type="text"
                 name="destination"
                 placeholder="a quiet village"
@@ -132,9 +133,10 @@ export default function Home() {
               />
             </label>
             <span className="search__prose">from</span>
-            <label className="search__field search__field--date">
+            <label className="search__field search__field--date" htmlFor="search-from">
               <span className="visually-hidden">Arrive</span>
               <input
+                id="search-from"
                 type="date"
                 name="from"
                 value={dateFrom}
@@ -144,9 +146,10 @@ export default function Home() {
               />
             </label>
             <span className="search__prose">to</span>
-            <label className="search__field search__field--date">
+            <label className="search__field search__field--date" htmlFor="search-to">
               <span className="visually-hidden">Depart</span>
               <input
+                id="search-to"
                 type="date"
                 name="to"
                 value={dateTo}
@@ -156,9 +159,10 @@ export default function Home() {
               />
             </label>
             <span className="search__prose">, for</span>
-            <label className="search__field search__field--short">
+            <label className="search__field search__field--short" htmlFor="search-guests">
               <span className="visually-hidden">Guests</span>
               <input
+                id="search-guests"
                 type="number"
                 name="guests"
                 min={1}
