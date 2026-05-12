@@ -5,6 +5,7 @@ import { getBooking } from '../api/bookings'
 import { type Booking } from '../api/schemas'
 import { Receipt } from '../components/booking/Receipt'
 import { NotFoundCard } from '../components/shell/NotFoundCard'
+import { ContactShortcut } from '../components/ui/ContactShortcut'
 import { useAuth } from '../hooks/useAuth'
 import { ApiError } from '../types/api'
 import { type Venue } from '../types/venue'
@@ -135,7 +136,7 @@ export default function BookingReceipt() {
 
           <Receipt booking={state.booking} />
 
-          <aside className="receipt__next">
+          <aside className="receipt__next" aria-label="What's next">
             <p className="eyebrow"><span className="eyebrow__num">§ 10</span><span className="eyebrow__label">What&rsquo;s next</span></p>
             <ol className="receipt__steps">
               <li><span className="mono">01</span> The host replies within <em>12 hours</em> with directions.</li>
@@ -143,6 +144,12 @@ export default function BookingReceipt() {
               <li><span className="mono">03</span> Arrive. Be a good guest. Leave a rating in italic afterwards.</li>
             </ol>
           </aside>
+
+          <ContactShortcut
+            to="/hosts#contact"
+            eyebrow="Need to talk to a human?"
+            label="Write to the editor"
+          />
         </>
       )}
     </main>
