@@ -63,7 +63,7 @@ Every graded story maps to a file + component in the build.
 | `/` | public | Home — hero, bento grid of featured venues, inline-prose search, entry to `/venues` |
 | `/venues` | public | Full venues grid, sticky search, filter panel, sort, pagination, dark page-hero |
 | `/venues/:id` | public | Magazine spread: dark headline, gallery, body, specs/amenities/address marginalia, host strip, availability calendar, booking panel |
-| `/hosts` | public | Editorial pitch for prospective managers; CTA into `/register?role=host` |
+| `/hosts` | public | Editorial pitch for prospective managers (shipped slice 4.4); §03·δ Correspondence anchor at `#contact` is the canonical contact route. |
 | `/bookings/:id` | auth (customer) | Post-booking receipt, print-ready |
 | `/login` | public (redirect if signed in) | Reader Access spread — email gate on `stud.noroff.no` |
 | `/register` | public (redirect if signed in) | Reader Access spread — role picker (customer / manager), `venueManager: true` for hosts |
@@ -168,6 +168,18 @@ Every graded story maps to a file + component in the build.
 - **GuestBanner** — cobalt-striped note inside booking form for unsigned visitors.
 - **Receipt** ✓ — *(slice 5.2)* — print-ready confirmation document (double-frame border, typographic).
 
+### 5.6b Hosts page sections
+
+`src/components/hosts/`
+
+- **HelpRail** ✓ — above-fold help strip on `/hosts`, `↓` to `#contact`. *(slice 4.4)*
+- **HostsHero** ✓ — §0 hero (giant 0%, struck "commission", deck-pin note, six-beat reveal cascade). *(slice 4.4)*
+- **HostPlates** ✓ — §03·α contact-sheet of six host specimens + pull-quote + index stamp; reads from `HOSTS_SPECIMENS` fixture. *(slice 4.4)*
+- **BookingAnatomy** ✓ — §03·β static SVG diagram of a booking (Guest €240 → Venue → Host €240 kept). *(slice 4.4)*
+- **StrikeMoves** ✓ — §03·γ three-step pitch (Sign up · List · Host) with dominant middle. *(slice 4.4)*
+- **Correspondence** ✓ — §03·δ `id="contact"` mailto desks + postal stamp + Oslo address. *(slice 4.4)*
+- **SignedOff** ✓ — §fin page imprint chip + "Apply for access" CTA + crowned `oltenkS` signature. *(slice 4.4)*
+
 ### 5.7 Manager (CRUD)
 
 `src/components/manager/`
@@ -202,6 +214,7 @@ Every graded story maps to a file + component in the build.
 - **Skeleton** — card and line skeletons for loading states.
 - **FormError** — terracotta band above submit.
 - **Spinner** — if used; small motion element for pending actions.
+- **ContactShortcut** ✓ — quiet utility strip with mono eyebrow + italic Fraunces link, rendered at the bottom of stress-prone surfaces (booking receipt, 404). Default `→` arrow, optional `↓` for same-page hash links. Visual sibling on `/hosts` is `<HelpRail>` (above-fold variant). *(slice 4.4, shipped 2026-05-10)*
 
 ### 5.10 Base primitives
 
