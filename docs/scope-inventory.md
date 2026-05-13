@@ -237,7 +237,7 @@ Every graded story maps to a file + component in the build.
 
 - **VenueCard** ✓ — magazine plate that links to `/venues/:id`. Renders `.venue → .venue__img → .venue__scrim → .venue__ticks → .venue__meta-top (.venue__index) → .venue__body (name, where, desc, row, amenities)`. Bento + venues-grid CSS overrides reshape this same markup per cell variant.
 - **VenueCardSkeleton** ✓ — same `.venue` outer shape with `.venue--skeleton` shimmer. Accepts a `className` so skeletons occupy the right grid span during loading.
-- **HeroPlate** ✓ — static cover plate for the Home hero (cinnabar-tagged figure with caption). API-driven hero was attempted three times during 4.1; rejected — Noroff dataset is too unreliable to drive the masthead. Live data shows in the bento + stats below.
+- **HeroPlate** ✓ — cover plate for the Home hero (cinnabar-tagged figure with caption). Accepts an optional `cover: HeroCover` prop and falls back to `pickHeroCover()`. Reads `cover.src / .alt / .coords / .place` so the same image, alt, and caption flow through `<HeroPlate>`, the Act 2 backdrop, and the Act 2 folio. API-driven hero was attempted three times during 4.1 and rejected (Noroff dataset too unreliable); the curated rotation in `src/lib/hero/covers.ts` is the source of truth instead. Live data still shows in the bento + stats below.
 - **Pager** ✓ — prototype's `.pager` markup (Prev / numbered list with `.pager__gap` ellipses / Next / `Page X / Y` meta). Mobile (≤640px): list collapses, layout becomes `[Prev] [meta] [Next]`.
 
 ### 5.10b Notable cleanup decision (slice 4.1 post-ship, Apr 27 2026)
@@ -274,8 +274,8 @@ Namespaced so they don't collide with core primitives. Port 1:1 from the prototy
 - **TearLine** — perforated separator with scissors glyphs.
 - **ColorBar** — faux CMYK proof strip at card foot.
 - **IntroCover** *(editorial, first-visit, shipped 2026-05-12)* — fixed-overlay magazine gateway on `/`. Composes `<IntroPlate>` inside a head / plate / gazetteer / wordmark / tagline frame; dismisses on click, any key except Tab, or 4.9 s auto-timer; gated by `useIntroSeen`. Reduced-motion: settled-state instant, manual dismiss only.
-- **IntroPlate** *(editorial, shipped 2026-05-12)* — composes the existing `<WorldPlate>` with eight cinnabar pin layers (`data-city` selectors drive per-city pulse delays in CSS), positioned via `project()` from `src/lib/atlas/project.ts`. Cities: Oslo, Lisbon, Marrakech, Cape Town, Rio, San Francisco, Kyoto, Sydney.
-- **CoverMode** *(editorial)* — scroll-driven `--ct` crossfade on home hero (Order 02 / Act 2, not yet shipped).
+- **IntroPlate** *(editorial, shipped 2026-05-12; pin glyph updated 2026-05-13)* — composes the existing `<WorldPlate>` with eight cinnabar pin layers (`data-city` selectors drive per-city pulse delays in CSS), positioned via `project()` from `src/lib/atlas/project.ts`. Cities: Oslo, Lisbon, Marrakech, Cape Town, Rio, San Francisco, Kyoto, Sydney. Each pin is an inline SVG circle ring (matches the wordmark °) rather than a filled square — brings the pin in line with the brand mark and ties Act 1 to Act 2's lone folio pin.
+- **CoverMode (Act 2 — First Spread)** ✓ *(editorial, shipped 2026-05-13)* — scroll-driven hero backdrop on `/`. On the first `HERO_COVERS.length` page-loads per browser (gated by `useHomeCoverVisits`), the hero opens with the current cover image painted full-bleed behind the H1 + lede + plate (~55 % opacity), under a paper-texture wash and a top-right editorial folio (`§ 01 · Spring 2026` + cinnabar pin + coords + place). As the user scrolls, opacity decays on a `t * t` curve with a subtle parallax (scale + Y), and the layers settle at `t ≥ 1` via a `data-cover-done` attribute. The same `HeroCover` drives `<HeroPlate>`, the backdrop `--cover-img`, and the folio coords + place — one source of truth. Source: `src/lib/hero/covers.ts` (typed `HERO_COVERS` manifest + `pickHeroCover()` rotation, advances per page-load via `localStorage['holidaze:v1:home-cover-rotation-idx']`). Reduced-motion: skipped entirely, no counter increment.
 - **ColophonPopover** *(editorial)* — ISSUE chip → live status surface.
 
 ---
@@ -342,10 +342,11 @@ Three-step bootstrap — the prototype stubs this in localStorage; the real buil
 - **useProfileBookings(name)** — bookings made on manager's venues (aggregation).
 - **useGuards** — thin wrappers around `useAuth` that short-circuit render and redirect.
 - **useRecentlyViewed** *(editorial)* — `localStorage` `holidaze:v1:recent`.
-- **useIntroSeen** *(editorial, shipped 2026-05-12)* — synchronous read of `localStorage['holidaze:v1:intro-seen']` with fail-open semantics; exposes `{ seen, markSeen }`. Sole consumer is `<IntroCover>`; Order 02 (Act 2) will read the same flag.
+- **useIntroSeen** *(editorial, shipped 2026-05-12)* — synchronous read of `localStorage['holidaze:v1:intro-seen']` with fail-open semantics; exposes `{ seen, markSeen }`. Sole consumer is `<IntroCover>`. Act 2 has its own counter (`useHomeCoverVisits`) and runs independently.
+- **useHomeCoverVisits** *(editorial, shipped 2026-05-13)* — gates the Act 2 hero backdrop. Synchronous initialiser reads `localStorage['holidaze:v1:home-cover-visits']` and increments it once per page-load up to `HERO_COVERS.length` (the cap auto-tracks the cover count). Reduced-motion short-circuits without incrementing. Module-level cache makes the increment idempotent under React 18 StrictMode's dev unmount-remount cycle. `DEV_BYPASS_GATES` flag at the top of the file lets a developer bypass the cap during review.
 
 ---
 
 ## 8. Design tokens
 
-Ported from `css/base.css`  into `tailwind.config.ts` as theme extensions + CSS variables on `:root` for runtime-only values (e.g. `--ct`, `--headline-bg`, `--page-hero-bg`, `--cover-img`).
+Ported from `css/base.css` into `tailwind.config.ts` as theme extensions + CSS variables on `:root` for runtime-only values (e.g. `--headline-bg`, `--page-hero-bg`). Hero-specific variables (`--ct`, `--cover-img`, `--cover-scale`, `--cover-y`, `--cover-entrance`) live scoped on `.hero` in `src/styles/home-cover.css` since the Act 2 hero is their only consumer.
