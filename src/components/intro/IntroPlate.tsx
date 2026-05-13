@@ -20,8 +20,13 @@ export function IntroPlate({ cities }: IntroPlateProps) {
                 data-city={c.key}
                 style={{ left: `${String(x)}%`, top: `${String(y)}%` }}
               >
-                <span className="intro-cover__pin-dot" />
-                <span className="intro-cover__pin-ring" />
+                {/* Pin = the brand's coordinate glyph (the wordmark °). */}
+                <svg className="intro-cover__pin-dot" viewBox="0 0 14 14" aria-hidden="true">
+                  <circle cx="7" cy="7" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                </svg>
+                <svg className="intro-cover__pin-ring" viewBox="0 0 14 14" aria-hidden="true">
+                  <circle cx="7" cy="7" r="4" fill="none" stroke="currentColor" strokeWidth="1" />
+                </svg>
               </div>
             )
           })}

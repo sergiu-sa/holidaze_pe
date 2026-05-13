@@ -1,0 +1,172 @@
+/* ── Home — Act 2: First Spread ──
+   Hero opens with a curated cover backdrop + paper wash + top-right
+   editorial folio (cinnabar pin matches Act 1's world pins). On scroll
+   the layers fade with --ct (driven by Home.tsx); settle drops them via
+   [data-cover-done]. Gated by useHomeCoverVisits. */
+
+@property --cover-entrance {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+.hero {
+  --ct: 0;
+  --cover-img: none;
+  --cover-scale: 1;
+  --cover-y: 0px;
+}
+
+.hero--cover {
+  animation: hero-cover-rise 900ms 100ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes hero-cover-rise {
+  to { --cover-entrance: 1; }
+}
+
+/* Cover backdrop — opacity = base × scroll-decay × entrance. */
+.hero--cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--cover-img);
+  background-size: cover;
+  background-position: center 40%;
+  transform-origin: center top;
+  transform: scale(var(--cover-scale)) translateY(var(--cover-y));
+  opacity: calc(0.55 * (1 - var(--ct)) * var(--cover-entrance));
+  will-change: transform, opacity;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Paper-texture wash — same SVG noise as Act 1's .intro-cover__paper.
+   Multiply blend gives the "ink on paper" feel that carries Act 1's
+   typographic register across the seam. */
+.hero--cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.6' numOctaves='2' seed='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+  background-repeat: repeat;
+  mix-blend-mode: multiply;
+  opacity: calc(0.16 * (1 - var(--ct)) * var(--cover-entrance));
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero[data-cover-done]::before,
+.hero[data-cover-done]::after {
+  display: none;
+}
+
+/* Base .hero doesn't z-index its children — lift them above the pseudos. */
+.hero--cover > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__cover-rule {
+  position: absolute;
+  top: clamp(1.5rem, 2vw, 2.5rem);
+  left: clamp(2rem, 4vw, 4rem);
+  right: clamp(2rem, 4vw, 4rem);
+  height: 1px;
+  background: var(--ink);
+  transform-origin: left center;
+  transform: scaleX(var(--cover-entrance));
+  opacity: calc(0.18 * (1 - var(--ct)));
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Editorial folio — mono caps lines with a cinnabar pin in the middle
+   line. The pin is the seam carrier from Act 1's eight world pins. */
+.hero__cover-folio {
+  position: absolute;
+  top: clamp(2.5rem, 4vw, 4.5rem);
+  right: clamp(2rem, 4vw, 4rem);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  font-family: var(--ff-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--ink);
+  /* Bone-tinted halo — reads as offset-print emboss, holds legibility
+     against variable photo backdrops. */
+  text-shadow:
+    0 0 1px rgba(245, 238, 221, 0.55),
+    0 1px 0 rgba(245, 238, 221, 0.35);
+  opacity: calc(1 * (1 - var(--ct)) * var(--cover-entrance));
+  pointer-events: none;
+}
+
+.hero__cover-folio-section { opacity: 0.82; font-weight: 400; }
+.hero__cover-folio-place   { opacity: 0.78; font-weight: 400; }
+
+.hero__cover-folio-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--ink);
+  opacity: 1;
+  font-weight: 600;
+}
+
+/* Pin = brand mark: cinnabar SVG ring matching the wordmark °. */
+.hero__cover-folio-pin {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  color: var(--cinnabar);
+}
+.hero__cover-folio-pin-mark,
+.hero__cover-folio-pin-pulse {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: center;
+  pointer-events: none;
+}
+.hero__cover-folio-pin-mark {
+  animation: hero-pin-beat 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+.hero__cover-folio-pin-pulse {
+  transform: scale(0.4);
+  opacity: 0;
+  animation: hero-pin-ring 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes hero-pin-beat {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.18); }
+}
+@keyframes hero-pin-ring {
+  0%   { transform: scale(0.4); opacity: 0; }
+  20%  { opacity: 0.7; }
+  100% { transform: scale(3.5); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero--cover { animation: none; }
+  .hero--cover::before,
+  .hero--cover::after,
+  .hero__cover-rule,
+  .hero__cover-folio { display: none; }
+}
+
+/* Phones — drop the place line so the folio doesn't crowd the H1. */
+@media (max-width: 720px) {
+  .hero__cover-folio { font-size: 0.55rem; gap: 0.35rem; }
+  .hero__cover-folio-place { display: none; }
+}

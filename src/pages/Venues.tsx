@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
-import heroVenuesUrl from '../assets/hero/hero-venues.png'
+import heroVenuesUrl from '../assets/hero/hero-venues.webp'
 import { Pager } from '../components/browse/Pager'
 import { VenueCard } from '../components/browse/VenueCard'
 import { VenueCardSkeleton } from '../components/browse/VenueCardSkeleton'

@@ -6,11 +6,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Runtime CSS variables — values mutated at runtime by React components or body state classes.
-   Must live here because Tailwind tokens are static at build time. */
+/* Runtime CSS variables — mutated at runtime by React components or body state classes.
+   (Hero-scoped runtime vars — --ct, --cover-img, etc. — live in home-cover.css.) */
 :root {
-  --ct: 0;
-  --cover-img: none;
   --headline-bg: none;
   --page-hero-bg: none;
 
