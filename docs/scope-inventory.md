@@ -273,8 +273,9 @@ Namespaced so they don't collide with core primitives. Port 1:1 from the prototy
 - **RoleGrid** — large CHECK-ONE guest / host picker.
 - **TearLine** — perforated separator with scissors glyphs.
 - **ColorBar** — faux CMYK proof strip at card foot.
-- **IntroSequence** *(editorial, first-visit)* — Act 1 title-page stamp-in + Act 2 scroll-driven cover.
-- **CoverMode** *(editorial)* — scroll-driven `--ct` crossfade on home hero.
+- **IntroCover** *(editorial, first-visit, shipped 2026-05-12)* — fixed-overlay magazine gateway on `/`. Composes `<IntroPlate>` inside a head / plate / gazetteer / wordmark / tagline frame; dismisses on click, any key except Tab, or 4.9 s auto-timer; gated by `useIntroSeen`. Reduced-motion: settled-state instant, manual dismiss only.
+- **IntroPlate** *(editorial, shipped 2026-05-12)* — composes the existing `<WorldPlate>` with eight cinnabar pin layers (`data-city` selectors drive per-city pulse delays in CSS), positioned via `project()` from `src/lib/atlas/project.ts`. Cities: Oslo, Lisbon, Marrakech, Cape Town, Rio, San Francisco, Kyoto, Sydney.
+- **CoverMode** *(editorial)* — scroll-driven `--ct` crossfade on home hero (Order 02 / Act 2, not yet shipped).
 - **ColophonPopover** *(editorial)* — ISSUE chip → live status surface.
 
 ---
@@ -341,7 +342,7 @@ Three-step bootstrap — the prototype stubs this in localStorage; the real buil
 - **useProfileBookings(name)** — bookings made on manager's venues (aggregation).
 - **useGuards** — thin wrappers around `useAuth` that short-circuit render and redirect.
 - **useRecentlyViewed** *(editorial)* — `localStorage` `holidaze:v1:recent`.
-- **useIntroSeen** *(editorial)* — `localStorage` `holidaze:v1:intro-seen` gate for the two-act intro.
+- **useIntroSeen** *(editorial, shipped 2026-05-12)* — synchronous read of `localStorage['holidaze:v1:intro-seen']` with fail-open semantics; exposes `{ seen, markSeen }`. Sole consumer is `<IntroCover>`; Order 02 (Act 2) will read the same flag.
 
 ---
 

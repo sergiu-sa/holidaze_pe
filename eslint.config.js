@@ -97,9 +97,13 @@ export default defineConfig([
     },
   },
 
-  // Pages and routes need default exports for React Router lazy loading.
+  // Pages, routes, and lazy-loaded components need default exports for React.lazy / React Router.
   {
-    files: ['src/pages/**/*.{ts,tsx}', 'src/routes/**/*.{ts,tsx}'],
+    files: [
+      'src/pages/**/*.{ts,tsx}',
+      'src/routes/**/*.{ts,tsx}',
+      'src/components/intro/IntroCover.tsx',
+    ],
     rules: {
       'import/no-default-export': 'off',
     },
