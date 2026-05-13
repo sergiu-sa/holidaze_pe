@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { lazy, Suspense, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Atlas as AtlasComposite } from '../components/atlas/Atlas'
@@ -6,8 +6,11 @@ import { HeroPlate } from '../components/browse/HeroPlate'
 import { VenueCard } from '../components/browse/VenueCard'
 import { VenueCardSkeleton } from '../components/browse/VenueCardSkeleton'
 import { VenuePeekModal } from '../components/browse/VenuePeekModal'
+import { useIntroSeen } from '../hooks/useIntroSeen'
 import { useVenues } from '../hooks/useVenues'
 import type { Venue } from '../types/venue'
+
+const IntroCover = lazy(() => import('../components/intro/IntroCover'))
 
 const FEATURED_LIMIT = 6
 const BENTO_CELLS = ['bento__cell--1', 'bento__cell--2', 'bento__cell--3', 'bento__cell--4', 'bento__cell--5', 'bento__cell--6']
@@ -22,6 +25,7 @@ const SVG_REG = (
 )
 
 export default function Home() {
+  const { seen, markSeen } = useIntroSeen()
   const navigate = useNavigate()
   const [peekVenue, setPeekVenue] = useState<Venue | null>(null)
   const [peekIndex, setPeekIndex] = useState<number | undefined>(undefined)
@@ -68,6 +72,11 @@ export default function Home() {
 
   return (
     <main id="main">
+      {!seen && (
+        <Suspense fallback={null}>
+          <IntroCover onDismissed={markSeen} />
+        </Suspense>
+      )}
       <section className="hero" aria-labelledby="hero-title">
         <div className="hero__masthead" aria-hidden="true">
           <span>Holidaze Press</span>
