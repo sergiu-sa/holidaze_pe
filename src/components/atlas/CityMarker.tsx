@@ -12,14 +12,6 @@ function sizeClass(count: number): 'sm' | 'md' | 'lg' {
   return 'sm'
 }
 
-// Hash a city name into 0..1 for deterministic flip-y assignment so labels
-// alternate above/below without overlapping their neighbours.
-function hashCity(name: string): number {
-  let acc = 0
-  for (const ch of name) acc = (acc + ch.charCodeAt(0)) % 7
-  return acc
-}
-
 export interface CityMarkerProps {
   city: CityEntry
   index: number
@@ -59,11 +51,9 @@ export const CityMarker = forwardRef<HTMLButtonElement, CityMarkerProps>(functio
   // neighbouring continents when zoomed in.
   const outOfView = x < -2 || x > 102 || y < -2 || y > 102
   const flipX = x > 72
-  const flipY = (hashCity(city.city) + index) % 2 === 0
 
   const classes = ['atlas__city', `atlas__city--${size}`]
   if (flipX) classes.push('atlas__city--flip-x')
-  if (flipY) classes.push('atlas__city--flip-y')
   if (isFilteredOut) classes.push('is-filtered-out')
   if (isSelected) classes.push('is-selected')
   if (isHoveredExternally) classes.push('is-hovered-ext')
@@ -105,7 +95,13 @@ export const CityMarker = forwardRef<HTMLButtonElement, CityMarkerProps>(functio
         onHoverEnd?.()
       }}
     >
-      <span className="atlas__dot" aria-hidden="true" />
+      <span className="atlas__pin" aria-hidden="true">
+        <span className="atlas__dot">
+          <svg className="atlas__dot__mark" viewBox="0 0 14 14">
+            <circle cx="7" cy="7" r="4" fill="none" stroke="currentColor" strokeWidth="1.5" />
+          </svg>
+        </span>
+      </span>
       <span className="atlas__name">
         {city.city}
         {fromPrice ? (
