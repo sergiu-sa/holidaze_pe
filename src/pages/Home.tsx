@@ -8,9 +8,14 @@ import { HeroPlate } from '../components/browse/HeroPlate'
 import { VenueCard } from '../components/browse/VenueCard'
 import { VenueCardSkeleton } from '../components/browse/VenueCardSkeleton'
 import { VenuePeekModal } from '../components/browse/VenuePeekModal'
+import { Icon } from '../components/ui/Icon'
+import { useAtlasCities } from '../hooks/useAtlasCities'
 import { useHomeCoverVisits } from '../hooks/useHomeCoverVisits'
 import { useIntroSeen } from '../hooks/useIntroSeen'
+import { useMarqueeDuration } from '../hooks/useMarqueeDuration'
 import { useVenues } from '../hooks/useVenues'
+import { uniqueCitiesByLongitude, uniqueCityOptions } from '../lib/atlas/sortByLongitude'
+import { addDays, formatDay, parseToLocalDay } from '../lib/dates'
 import { pickHeroCover } from '../lib/hero/covers'
 import type { Venue } from '../types/venue'
 
@@ -33,9 +38,9 @@ export default function Home() {
   const { shouldShow: showCover } = useHomeCoverVisits()
   const navigate = useNavigate()
   const heroRef = useRef<HTMLElement>(null)
+  const marqueeTrackRef = useRef<HTMLDivElement>(null)
   const [peekVenue, setPeekVenue] = useState<Venue | null>(null)
   const [peekIndex, setPeekIndex] = useState<number | undefined>(undefined)
-
 
   // Act 2 backdrop, and the folio coords + place.
   const cover = useMemo(() => pickHeroCover(), [])
@@ -87,41 +92,58 @@ export default function Home() {
   }, [showCover, cover.src])
 
   const featured = useVenues({ page: 1, limit: 50, sort: 'rating', sortOrder: 'desc' })
-  // Bigger sample so the stats bar has meaningful unique-city/country/continent counts.
-  const atlas = useVenues({ page: 1, limit: 100 })
+  // useAtlasCities applies the curated gazetteer to fill missing
+  // country/continent values that the raw Noroff data often omits.
+  const atlas = useAtlasCities()
+
+  const cityOptions = useMemo(() => uniqueCityOptions(atlas.cities), [atlas.cities])
 
   const stats = useMemo(() => {
-    const venues = atlas.data ?? []
-    const cities = new Set(venues.map((v) => v.location.city).filter(Boolean))
-    const countries = new Set(venues.map((v) => v.location.country).filter(Boolean))
-    const continents = new Set(venues.map((v) => v.location.continent).filter(Boolean))
+    const countries = new Set(atlas.cities.map((c) => c.country).filter(Boolean))
+    const continents = new Set(atlas.cities.map((c) => c.continent).filter(Boolean))
     return {
-      venues: venues.length,
-      cities: cities.size,
+      venues: atlas.totalVenues,
+      cities: cityOptions.length,
       countries: countries.size,
       continents: continents.size,
     }
-  }, [atlas.data])
+  }, [atlas.cities, atlas.totalVenues, cityOptions])
 
-  const cities = useMemo(() => {
-    const venues = atlas.data ?? []
-    const list = Array.from(
-      new Set(venues.map((v) => v.location.city?.trim()).filter((c): c is string => Boolean(c))),
-    )
+  // Marquee reads west-to-east as a journey, not an alphabetised inventory —
+  // datalist stays alphabetical because picking wants stable order.
+  const marqueeCities = useMemo(() => {
+    const list = uniqueCitiesByLongitude(atlas.cities)
     return list.length > 0 ? list : MARQUEE_FALLBACK
-  }, [atlas.data])
+  }, [atlas.cities])
 
-  // Only `destination` is wired to ?q=; dates + guests defer to slice 4.2 (calendar).
+  useMarqueeDuration(marqueeTrackRef, 140)
+
   const [destination, setDestination] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [guests, setGuests] = useState(2)
 
+  const todayISO = useMemo(() => formatDay(new Date()), [])
+  const minDepart = useMemo(() => {
+    if (!dateFrom) return todayISO
+    return formatDay(addDays(parseToLocalDay(dateFrom), 1))
+  }, [dateFrom, todayISO])
+
+  const handleArriveChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const next = e.target.value
+    setDateFrom(next)
+    if (dateTo && next && dateTo <= next) setDateTo('')
+  }
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const params = new URLSearchParams()
     if (destination.trim()) params.set('q', destination.trim())
-    navigate(`/venues${params.toString() ? `?${params.toString()}` : ''}`)
+    if (dateFrom) params.set('from', dateFrom)
+    if (dateTo) params.set('to', dateTo)
+    if (guests && guests !== 2) params.set('guests', String(guests))
+    const qs = params.toString()
+    navigate(`/venues${qs ? `?${qs}` : ''}`)
   }
 
   const featuredVenues = featured.data?.slice(0, FEATURED_LIMIT) ?? []
@@ -189,11 +211,15 @@ export default function Home() {
           <form className="search" role="search" aria-label="Find a venue" onSubmit={handleSubmit}>
             <span className="search__prose">I&apos;m looking to stay in</span>
             <label className="search__field" htmlFor="search-destination">
+              <span className="search__pictogram" aria-hidden="true">
+                <Icon name="pin" size="sm" />
+              </span>
               <span className="visually-hidden">Destination</span>
               <input
                 id="search-destination"
                 type="text"
                 name="destination"
+                list="search-cities"
                 placeholder="a quiet village"
                 autoComplete="off"
                 value={destination}
@@ -202,26 +228,39 @@ export default function Home() {
                 }}
               />
             </label>
+            <datalist id="search-cities">
+              {cityOptions.map(({ city, country }) => (
+                <option key={city} value={city}>
+                  {country ? `${city}, ${country}` : city}
+                </option>
+              ))}
+            </datalist>
             <span className="search__prose">from</span>
             <label className="search__field search__field--date" htmlFor="search-from">
+              <span className="search__pictogram" aria-hidden="true">
+                <Icon name="calendar" size="sm" />
+              </span>
               <span className="visually-hidden">Arrive</span>
               <input
                 id="search-from"
                 type="date"
                 name="from"
+                min={todayISO}
                 value={dateFrom}
-                onChange={(e) => {
-                  setDateFrom(e.target.value)
-                }}
+                onChange={handleArriveChange}
               />
             </label>
             <span className="search__prose">to</span>
             <label className="search__field search__field--date" htmlFor="search-to">
+              <span className="search__pictogram" aria-hidden="true">
+                <Icon name="calendar" size="sm" />
+              </span>
               <span className="visually-hidden">Depart</span>
               <input
                 id="search-to"
                 type="date"
                 name="to"
+                min={minDepart}
                 value={dateTo}
                 onChange={(e) => {
                   setDateTo(e.target.value)
@@ -230,6 +269,9 @@ export default function Home() {
             </label>
             <span className="search__prose">, for</span>
             <label className="search__field search__field--short" htmlFor="search-guests">
+              <span className="search__pictogram" aria-hidden="true">
+                <Icon name="guests" size="sm" />
+              </span>
               <span className="visually-hidden">Guests</span>
               <input
                 id="search-guests"
@@ -245,7 +287,9 @@ export default function Home() {
             </label>
             <span className="search__prose">guests.</span>
             <button type="submit" className="search__submit">
-              <span>Inquire →</span>
+              <Icon name="search" size="sm" />
+              <span>Inquire</span>
+              <Icon name="arrow-right" size="sm" />
             </button>
           </form>
         </div>
@@ -377,8 +421,8 @@ export default function Home() {
       </section>
 
       <section className="marquee" aria-hidden="true">
-        <div className="marquee__track">
-          {[...cities, ...cities].map((city, i) => (
+        <div className="marquee__track" ref={marqueeTrackRef}>
+          {[...marqueeCities, ...marqueeCities].map((city, i) => (
             <span className="marquee__item" key={`${city}-${String(i)}`}>
               {city}
             </span>

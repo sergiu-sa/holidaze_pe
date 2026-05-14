@@ -55,6 +55,20 @@ const INITIAL_FILTERS: Filters = {
   minRating: 0,
 }
 
+// Hydrates `minGuests` so the Home search funnel's guests count survives navigation.
+function initFiltersFromParams(params: URLSearchParams): Filters {
+  const raw = Number(params.get('guests'))
+  if (!Number.isFinite(raw) || raw <= 1) return INITIAL_FILTERS
+  return { ...INITIAL_FILTERS, minGuests: Math.min(10, Math.floor(raw)) }
+}
+
+const SHORT_DATE = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' })
+
+function formatShortDate(iso: string): string {
+  const d = new Date(iso)
+  return Number.isNaN(d.getTime()) ? iso : SHORT_DATE.format(d)
+}
+
 function filterVenues(venues: Venue[], f: Filters): Venue[] {
   return venues.filter((v) => {
     if (v.price > f.maxPrice) return false
@@ -80,10 +94,13 @@ export default function Venues() {
   const sort: SortValue = isSortValue(sortRaw) ? sortRaw : 'newest'
   const pageParam = Number(searchParams.get('page') ?? '1')
   const page = Number.isFinite(pageParam) && pageParam > 0 ? Math.floor(pageParam) : 1
+  const dateFromParam = searchParams.get('from') ?? ''
+  const dateToParam = searchParams.get('to') ?? ''
+  const hasDateRange = Boolean(dateFromParam && dateToParam)
 
-  // Filters are component state, not URL — they overlay on the current API page only.
+  // Filters are component state, they overlay on the current API page only.
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const [filters, setFilters] = useState<Filters>(INITIAL_FILTERS)
+  const [filters, setFilters] = useState<Filters>(() => initFiltersFromParams(searchParams))
 
   const [searchInput, setSearchInput] = useState(q)
 
@@ -148,6 +165,9 @@ export default function Venues() {
     updateParam('q', null)
     updateParam('sort', null)
     updateParam('page', null)
+    updateParam('from', null)
+    updateParam('to', null)
+    updateParam('guests', null)
     setSearchInput('')
   }
 
@@ -224,6 +244,28 @@ export default function Venues() {
           ))}
         </select>
       </div>
+
+      {hasDateRange && (
+        <div className="v-dates" role="region" aria-label="Selected dates">
+          <span className="v-dates__label">Dates</span>
+          <span className="v-dates__range">
+            <time dateTime={dateFromParam}>{formatShortDate(dateFromParam)}</time>
+            <span aria-hidden="true"> → </span>
+            <time dateTime={dateToParam}>{formatShortDate(dateToParam)}</time>
+          </span>
+          <button
+            type="button"
+            className="v-dates__clear"
+            aria-label="Clear selected dates"
+            onClick={() => {
+              updateParam('from', null)
+              updateParam('to', null)
+            }}
+          >
+            Clear
+          </button>
+        </div>
+      )}
 
       <div className="v-filters" id="v-filters" hidden={!filtersOpen}>
         <fieldset className="v-filters__group">
