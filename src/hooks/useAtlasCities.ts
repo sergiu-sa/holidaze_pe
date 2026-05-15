@@ -14,6 +14,8 @@ export interface UseAtlasCitiesState {
   refetch: UseVenuesState['refetch']
   /** Total venues considered (after isUsable filter applied upstream). */
   totalVenues: number
+  /** Wall-clock ms of the last successful underlying fetch. */
+  lastFetchedAt: number | null
 }
 
 /**
@@ -41,5 +43,6 @@ export function useAtlasCities(options: UseAtlasCitiesOptions = {}): UseAtlasCit
     error: venues.error,
     refetch: venues.refetch,
     totalVenues: venues.data?.length ?? 0,
+    lastFetchedAt: venues.lastFetchedAt,
   }
 }
