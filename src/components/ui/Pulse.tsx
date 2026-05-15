@@ -14,13 +14,22 @@ const VARIANT_CLASS: Record<PulseVariant, string> = {
   fallback: 'pulse pulse--fallback',
 }
 
-// Pulse — square live-status dot. Renders as a square because the global
-// border-radius reset overrides .pulse's `border-radius: 50%` (brand rule).
+// Two stacked SVG rings — mark beats, halo radiates. Mirrors the hero
+// cover-folio pin geometry so live-mark language is one visual system.
 export function Pulse({ variant = 'live', label, className, ...rest }: PulseProps) {
   const composed = [VARIANT_CLASS[variant], className].filter(Boolean).join(' ')
   const a11y = label
     ? { role: 'img' as const, 'aria-label': label }
     : { 'aria-hidden': true as const }
 
-  return <span className={composed} {...a11y} {...rest} />
+  return (
+    <span className={composed} {...a11y} {...rest}>
+      <svg className="pulse__mark" viewBox="0 0 14 14" aria-hidden="true">
+        <circle cx="7" cy="7" r="4" fill="none" stroke="currentColor" strokeWidth="1.4" />
+      </svg>
+      <svg className="pulse__halo" viewBox="0 0 14 14" aria-hidden="true">
+        <circle cx="7" cy="7" r="4" fill="none" stroke="currentColor" strokeWidth="1" />
+      </svg>
+    </span>
+  )
 }

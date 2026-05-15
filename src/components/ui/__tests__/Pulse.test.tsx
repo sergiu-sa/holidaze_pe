@@ -17,4 +17,9 @@ describe('Pulse', () => {
     const dot = screen.getByRole('img', { name: 'Cached data' })
     expect(dot).toHaveClass('pulse--fallback')
   })
+
+  it('is purely structural — no typographic text content', () => {
+    render(<Pulse data-testid="pulse" />)
+    expect(screen.getByTestId('pulse')).toHaveTextContent('')
+  })
 })

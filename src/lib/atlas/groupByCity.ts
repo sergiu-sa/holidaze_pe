@@ -47,16 +47,18 @@ export function groupByCity(venues: readonly Venue[]): CityEntry[] {
 
     // Trust the gazetteer over the venue's own (often empty) country/continent.
     // Coords are only overridden when the venue's are missing or invalid.
-    if (hit) {
-      if (!real) {
-        lat = hit.lat
-        lng = hit.lng
-      }
-      country = hit.country
-      continent = hit.continent
-    } else if (!real) {
-      continue
+    // Unknown cities (not in the gazetteer) are dropped from the atlas plate
+    // even if they ship real-looking coords — the Noroff dataset is full of
+    // manager-typed garbage ("That Town", "Menthure") that can't be verified.
+    // Affected venues still appear in /venues browse + search; this only
+    // governs what gets plotted on the map.
+    if (!hit) continue
+    if (!real) {
+      lat = hit.lat
+      lng = hit.lng
     }
+    country = hit.country
+    continent = hit.continent
 
     const key = entryKey(city, lat, lng)
     const existing = map.get(key)

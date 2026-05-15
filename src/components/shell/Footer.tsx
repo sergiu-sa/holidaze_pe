@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 
 import wordmarkSvg from '../../assets/logo/holidaze-wordmark.svg'
 import { useAuth } from '../../hooks/useAuth'
+import { Pulse } from '../ui/Pulse'
 import { useToast } from '../ui/ToastProvider'
 
 export function Footer() {
@@ -114,7 +115,7 @@ export function Footer() {
           © {year} Holidaze — N°04, Spring {year}
         </p>
         <p className="mono">
-          <span className="pulse" aria-hidden="true" />
+          <Pulse />
           Built against Noroff v2 —{' '}
           <span className="footer__status">live</span>
         </p>

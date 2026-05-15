@@ -21,6 +21,24 @@ Object.defineProperty(window, 'matchMedia', {
   }),
 })
 
+// jsdom does not implement ResizeObserver — provide a no-op default so hooks
+// that observe layout (e.g. useMarqueeDuration) don't throw at mount.
+class ResizeObserverStub {
+  observe(): void {
+    return undefined
+  }
+  unobserve(): void {
+    return undefined
+  }
+  disconnect(): void {
+    return undefined
+  }
+}
+Object.defineProperty(window, 'ResizeObserver', {
+  writable: true,
+  value: ResizeObserverStub,
+})
+
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'error' })
 })

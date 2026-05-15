@@ -147,4 +147,25 @@ describe('groupByCity — gazetteer fallback', () => {
     ]
     expect(groupByCity(venues)).toHaveLength(0)
   })
+
+  it('drops a venue with real coords but no gazetteer hit', () => {
+    // Noroff managers type garbage city names ("That Town", "Menthure") with
+    // plausible-looking coords; without a curated gazetteer entry we can't
+    // verify the city is real, so it stays off the atlas plate.
+    const venues = [
+      makeVenue({
+        id: 'a',
+        location: {
+          city: 'That Town',
+          country: 'France',
+          continent: 'Europe',
+          lat: 48.5,
+          lng: 2.5,
+          address: null,
+          zip: null,
+        },
+      }),
+    ]
+    expect(groupByCity(venues)).toHaveLength(0)
+  })
 })
