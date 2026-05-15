@@ -11,7 +11,9 @@ test.describe('Browse — slice 4.1 (V1 + V2)', () => {
 
   test('Home structured search → /venues?q=norway', async ({ page }) => {
     await page.goto('/')
-    const destination = page.getByRole('textbox', { name: /destination/i })
+    // `<input type="text" list="…">` is exposed as role="combobox", not textbox —
+    // the datalist autocomplete shipped in Order 03 flipped the role.
+    const destination = page.getByRole('combobox', { name: /destination/i })
     await destination.fill('norway')
     await page.getByRole('button', { name: /inquire/i }).click()
     await expect(page).toHaveURL(/\/venues\?q=norway/)
