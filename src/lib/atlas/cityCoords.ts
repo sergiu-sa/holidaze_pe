@@ -59,6 +59,9 @@ export const CITY_COORDS: Readonly<Record<string, CityCoord>> = {
   geneva: { lat: 46.2044, lng: 6.1432, country: 'Switzerland', continent: 'Europe' },
   brussels: { lat: 50.8503, lng: 4.3517, country: 'Belgium', continent: 'Europe' },
   warsaw: { lat: 52.2297, lng: 21.0122, country: 'Poland', continent: 'Europe' },
+  // Canary Islands — geographically off the African coast, politically Spanish;
+  // categorised as Europe so the chip filter behaves consistently with Spain.
+  'morro jable': { lat: 28.0518, lng: -14.3489, country: 'Spain', continent: 'Europe' },
 
   // North America
   'new york': { lat: 40.7128, lng: -74.006, country: 'USA', continent: 'North America' },
@@ -114,6 +117,7 @@ export const CITY_COORDS: Readonly<Record<string, CityCoord>> = {
   'sao paulo': { lat: -23.5505, lng: -46.6333, country: 'Brazil', continent: 'South America' },
   lima: { lat: -12.0464, lng: -77.0428, country: 'Peru', continent: 'South America' },
   cusco: { lat: -13.5319, lng: -71.9675, country: 'Peru', continent: 'South America' },
+  coari: { lat: -4.0851, lng: -63.1414, country: 'Brazil', continent: 'South America' },
 }
 
 export function lookupCity(city: string | null | undefined): CityCoord | null {

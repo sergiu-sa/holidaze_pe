@@ -344,6 +344,7 @@ Three-step bootstrap — the prototype stubs this in localStorage; the real buil
 - **useRecentlyViewed** *(editorial)* — `localStorage` `holidaze:v1:recent`.
 - **useIntroSeen** *(editorial, shipped 2026-05-12)* — synchronous read of `localStorage['holidaze:v1:intro-seen']` with fail-open semantics; exposes `{ seen, markSeen }`. Sole consumer is `<IntroCover>`. Act 2 has its own counter (`useHomeCoverVisits`) and runs independently.
 - **useHomeCoverVisits** *(editorial, shipped 2026-05-13)* — gates the Act 2 hero backdrop. Synchronous initialiser reads `localStorage['holidaze:v1:home-cover-visits']` and increments it once per page-load up to `HERO_COVERS.length` (the cap auto-tracks the cover count). Reduced-motion short-circuits without incrementing. Module-level cache makes the increment idempotent under React 18 StrictMode's dev unmount-remount cycle. `DEV_BYPASS_GATES` flag at the top of the file lets a developer bypass the cap during review.
+- **useMarqueeDuration** *(editorial, shipped 2026-05-13)* — observes a doubled marquee track via `ResizeObserver` and writes `--marquee-duration` so the band moves at a constant ~90 px/sec regardless of viewport width or city count (with a 20s minimum so the small fallback list doesn't sprint). Sole consumer is the Home cities ribbon; pairs with `uniqueCitiesByLongitude` (`src/lib/atlas/sortByLongitude.ts`) which sorts the same data west-to-east for the journey-style ordering.
 
 ---
 
