@@ -1,0 +1,414 @@
+@layer components {
+  .skip {
+    @apply absolute left-2 -top-12 z-[999] bg-ink text-ivory px-4 py-3
+           font-mono text-xs uppercase tracking-[0.14em]
+           transition-[top] duration-fast ease-out-quint;
+  }
+  .skip:focus {
+    @apply top-2;
+  }
+
+  .mono {
+    @apply font-mono uppercase tracking-[0.04em] text-step--2 text-ink-soft;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-baseline gap-3 font-mono text-step--2
+           uppercase tracking-eyebrow text-ink-soft;
+  }
+  .eyebrow__num {
+    @apply text-cinnabar font-medium;
+  }
+  /* Legacy alias — keep `.eyebrow-num` until prototype port is done. */
+  .eyebrow-num {
+    @apply text-cinnabar font-medium;
+  }
+  .eyebrow__label::before {
+    content: "";
+    display: inline-block;
+    width: 1.5rem;
+    height: 1px;
+    background: theme(colors.ink.soft);
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    transform: translateY(-2px);
+  }
+
+  /* Section mark — numbered rule divider between sections */
+  .section-mark {
+    @apply flex items-center gap-3 py-[0.65rem] font-mono uppercase
+           text-[0.62rem] tracking-runhead text-ink-mute
+           border-t border-rule-strong;
+  }
+  .section-mark::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: theme(colors.rule);
+  }
+  .section-mark__num {
+    @apply text-cinnabar font-medium;
+  }
+
+  /* Pull label — small annotation above editorial elements */
+  .pull-label {
+    @apply font-mono text-[0.6rem] tracking-runhead uppercase text-lapis;
+  }
+
+  /* Folio mark — page/section indicator at section bottom */
+  .folio {
+    @apply flex justify-between items-center pt-4 mt-auto
+           font-mono text-[0.58rem] tracking-[0.2em] uppercase text-ink-mute
+           border-t border-rule;
+  }
+  .folio__mark {
+    @apply text-cinnabar;
+  }
+
+  /* Data pair — key:value editorial style (venue marginalia specs) */
+  .data-pair {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    border-bottom: 1px dotted theme(colors.rule);
+  }
+  .data-pair__key {
+    @apply font-mono text-[0.68rem] tracking-eyebrow uppercase text-ink-mute;
+  }
+  .data-pair__dots {
+    border-bottom: 1px dotted theme(colors.rule-strong);
+    align-self: end;
+    margin-bottom: 0.35em;
+  }
+  .data-pair__val {
+    @apply font-serif text-[0.95rem] text-ink text-right;
+  }
+
+  /* Hairline grid hint — subtle structural overlay */
+  .hairline-grid {
+    position: relative;
+  }
+  .hairline-grid::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(to right, theme(colors.rule) 0 1px, transparent 1px);
+    background-size: 50% 100%;
+    background-position: 25% 0;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  /* Reveal — scroll-triggered fade-up. Toggle `.is-in` from IntersectionObserver. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .reveal.is-in {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 900ms theme(transitionTimingFunction.out-quint),
+      transform 900ms theme(transitionTimingFunction.out-quint);
+  }
+
+  /* Pulse — two stacked SVG rings inside a fixed em-square box, same pattern
+     as .hero__cover-folio-pin (just cobalt, not cinnabar). Mark and halo both
+     fill the box via inset:0, so they're co-centred by construction. Tempo
+     locked to 2.4s out-quint — ticks in unison with the hero pin. */
+  .pulse {
+    position: relative;
+    display: inline-block;
+    width: 1.05em;
+    height: 1.05em;
+    vertical-align: -0.18em;
+    flex: 0 0 auto;
+    color: theme(colors.cobalt.DEFAULT);
+    margin-right: 0.5em;
+  }
+  .pulse--fallback { color: theme(colors.saffron.deep); }
+
+  .pulse__mark,
+  .pulse__halo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+    pointer-events: none;
+  }
+  .pulse__mark {
+    animation: pulse-beat 2.4s theme(transitionTimingFunction.out-quint) infinite;
+  }
+  .pulse__halo {
+    transform: scale(0.45);
+    opacity: 0;
+    animation: pulse-halo 2.4s theme(transitionTimingFunction.out-quint) infinite;
+  }
+
+  /* ─── Button (primitive) ───
+     Loading state animates a 1px hairline bar across the bottom edge; reduced-motion collapses it. */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 0.9rem 1.3rem;
+    min-height: 44px;
+    border: 1px solid theme(colors.ink.DEFAULT);
+    background: transparent;
+    color: theme(colors.ink.DEFAULT);
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+    transition:
+      background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      transform theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .btn--primary {
+    background: theme(colors.ink.DEFAULT);
+    color: theme(colors.ivory.DEFAULT);
+  }
+  .btn--primary:not(:disabled):not([aria-disabled="true"]):hover {
+    background: theme(colors.cinnabar.DEFAULT);
+    border-color: theme(colors.cinnabar.DEFAULT);
+    transform: translateY(-2px);
+  }
+  .btn--ghost {
+    background: transparent;
+    color: theme(colors.ink.DEFAULT);
+  }
+  .btn--ghost:not(:disabled):not([aria-disabled="true"]):hover {
+    background: theme(colors.ink.DEFAULT);
+    color: theme(colors.ivory.DEFAULT);
+  }
+  .btn--cobalt {
+    background: theme(colors.lapis.DEFAULT);
+    color: theme(colors.ivory.DEFAULT);
+    border-color: theme(colors.lapis.DEFAULT);
+  }
+  .btn--cobalt:not(:disabled):not([aria-disabled="true"]):hover {
+    background: theme(colors.lapis.deep);
+    border-color: theme(colors.lapis.deep);
+  }
+  .btn--link {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: theme(colors.ink.DEFAULT);
+    border: 0;
+    border-bottom: 1px solid theme(colors.cinnabar.DEFAULT);
+    padding: 0 0 0.15rem;
+    min-height: 0;
+    background: none;
+  }
+  .btn--link:not(:disabled):not([aria-disabled="true"]):hover {
+    color: theme(colors.cinnabar.DEFAULT);
+  }
+  .btn--loading {
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .btn--loading::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 35%;
+    background: currentColor;
+    animation: btnLoading 1.1s theme(transitionTimingFunction.inout-quint) infinite;
+  }
+  @keyframes btnLoading {
+    0%   { left: -35%; }
+    100% { left: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: none; }
+    .btn--loading::after { animation: none; left: 0; width: 100%; opacity: 0.4; }
+    .btn--primary:hover { transform: none; }
+  }
+
+  /* ─── Field (primitive) ───
+     Ported from prototype page.css §.field. Single composition: label + control + optional hint/error.
+     Underline-only border collapses to cinnabar on focus; error swaps to cinnabar permanently. */
+  .field {
+    display: grid;
+    gap: 0.35rem;
+    position: relative;
+  }
+  .field__label {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: theme(colors.lapis.DEFAULT);
+  }
+  .field__control,
+  .field input,
+  .field textarea,
+  .field select {
+    font: inherit;
+    font-family: theme(fontFamily.serif);
+    font-size: 1.15rem;
+    color: theme(colors.ink.DEFAULT);
+    background: transparent;
+    padding: 0.65rem 0.25rem 0.75rem;
+    min-height: 44px;
+    border: 0;
+    border-bottom: 1px solid theme(colors.ink.DEFAULT);
+    transition:
+      border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
+      background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
+  }
+  .field input:focus-visible,
+  .field textarea:focus-visible,
+  .field select:focus-visible {
+    border-color: theme(colors.cinnabar.DEFAULT);
+    background: color-mix(in oklab, theme(colors.cinnabar.DEFAULT) 8%, transparent);
+    outline: 0;
+  }
+  .field__hint {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: theme(colors.ink.mute);
+    text-transform: uppercase;
+  }
+  .field--error input,
+  .field--error textarea,
+  .field--error select {
+    border-bottom-color: theme(colors.cinnabar.DEFAULT);
+  }
+  .field__error {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: theme(colors.cinnabar.DEFAULT);
+  }
+
+  /* ─── Chip (primitive) ───
+     Two variants: index (cinnabar fill, ivory text — venue/issue numbers) and amenity (icon + label, hairline outline). */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: theme(fontFamily.mono);
+    font-size: theme(fontSize.step--2);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+  .chip--index {
+    background: theme(colors.cinnabar.DEFAULT);
+    color: theme(colors.ivory.DEFAULT);
+    padding: 0.25rem 0.55rem;
+    letter-spacing: 0.2em;
+    font-size: 0.72rem;
+  }
+  .chip--amenity {
+    color: theme(colors.ink.soft);
+    padding: 0.35rem 0.6rem;
+    border: 1px solid theme(colors.rule-strong);
+    background: theme(colors.ivory.soft);
+  }
+  .chip--amenity:where(:hover) {
+    color: theme(colors.cinnabar.DEFAULT);
+    border-color: theme(colors.cinnabar.DEFAULT);
+  }
+
+  /* H° easter egg — cinnabar ° ghosts at upper-right of select capital H letters.
+     Brand signature; planted on hosts hero, venue bylines, profile greeting. */
+  .h-easter {
+    position: relative;
+    display: inline-block;
+    padding-right: 0.08em;
+  }
+  .h-easter::after {
+    content: "";
+    position: absolute;
+    top: 0.08em;
+    right: -0.08em;
+    width: 0.28em;
+    height: 0.28em;
+    border: 0.08em solid theme(colors.cinnabar.DEFAULT);
+    border-radius: 50%;
+    opacity: 0.16;
+    transform: scale(0.78);
+    transform-origin: center;
+    transition:
+      opacity 500ms theme(transitionTimingFunction.out-quint),
+      transform 500ms theme(transitionTimingFunction.out-quint);
+    pointer-events: none;
+  }
+  .h-easter:hover::after,
+  .h-easter:focus-visible::after,
+  h1:hover > .h-easter::after,
+  h2:hover > .h-easter::after,
+  h3:hover > .h-easter::after,
+  p:hover > .h-easter::after,
+  span:hover > .h-easter::after,
+  em:hover > .h-easter::after {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+
+  /* Registration marks — printer crosshair corner ticks. Drop four spans inside any
+     positioned parent. Override `--regmark-ink` for light-on-dark uses. */
+  .regmark {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    z-index: 2;
+    --regmark-ink: theme(colors.ink.DEFAULT);
+  }
+  .regmark::before,
+  .regmark::after {
+    content: "";
+    position: absolute;
+    background: var(--regmark-ink);
+  }
+  .regmark::before { left: 6px; top: 0; width: 1px; height: 14px; }
+  .regmark::after  { left: 0; top: 6px; width: 14px; height: 1px; }
+  .regmark--tl { top: 0;    left: 0; }
+  .regmark--tr { top: 0;    right: 0; }
+  .regmark--bl { bottom: 0; left: 0; }
+  .regmark--br { bottom: 0; right: 0; }
+
+  /* Full-page editorial grain. Apply to a fixed div above content. */
+  .grain {
+    @apply pointer-events-none fixed inset-0 z-[200] opacity-[0.35]
+           mix-blend-multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.08  0 0 0 0 0.06  0 0 0 0.55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 240px 240px;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
