@@ -85,10 +85,12 @@ Every graded story maps to a file + component in the build.
 `src/components/shell/`
 
 - **AppLayout** ✓ — `SkipLink → Topbar → <Outlet/> → Footer`; applied via a parent route to every path except 404 (sibling 404 renders standalone).
-- **Topbar** ✓ — wordmark SVG + `<PrimaryNav>` + auth slot (`[data-auth-slot]`) + hairline `<Ruler>` with ticks + ISSUE chip. Sticky with backdrop blur.
+- **Topbar** ✓ — wordmark SVG + `<PrimaryNav>` + auth slot (`[data-auth-slot]`) + hairline `<Ruler>`. The issue chip is a real `<button>` that toggles the `<ColophonPopover>`; right meta carries the live venues signal via `useRulerLabels()`. Sticky with backdrop blur; sets `--scroll-progress` on the element so the ruler tick-cursor can ride it.
+- **ColophonPopover** ✓ — four-column drop panel below the topbar: Issue / Atlas / This issue features / Colophon. Reads venues + cities + continents from `useAtlasCities`. Esc / outside-click / chip close it; focus moves into the panel on open and back to the chip on close. The "Colophon" column links to `/atlas` (closest editorial counterpart — see open question in the build log if a dedicated `/colophon` route ships later).
 - **Footer** ✓ — 4-col (Brand / Explore / Account / Colophon) with hairline rules + live pulse dot (square — brand reading).
 - **SkipLink** ✓ — skip to `#main`; visually hidden until focused, then 2px cinnabar outline.
-- **Ruler** ✓ — hairline band with ticks, left / right meta labels.
+- **Ruler** ✓ — hairline band with ticks, left / right meta labels. Renders an absolutely-positioned `.ruler__tick-cursor` (1px cinnabar hairline) inside `.ruler__ticks` that slides via `--scroll-progress` to mark reading position. String slots wrap in `.ruler__meta`; ReactNode slots (e.g. the chip button) pass through unwrapped.
+- **rulerForRoute** ✓ — pure helper next to `<Ruler>`. `rulerForRoute(pathname, live?)` returns `{ left, right }` per route, blending prototype-faithful per-section copy with the live venues signal. Exposes a `useRulerLabels()` hook wrapper.
 - **RouteErrorBoundary** ✓ — small class component wrapping each Outlet; renders cinnabar fallback with "Try again" reset.
 - **Breadcrumbs** — on venue detail, booking receipt, venues, hosts, all profile sub-pages. *(deferred to first-use slice)*
 - **ProfileShell** — two-column sidebar + main; sidebar is role-aware. *(slice 5.3)*
@@ -345,6 +347,8 @@ Three-step bootstrap — the prototype stubs this in localStorage; the real buil
 - **useIntroSeen** *(editorial, shipped 2026-05-12)* — synchronous read of `localStorage['holidaze:v1:intro-seen']` with fail-open semantics; exposes `{ seen, markSeen }`. Sole consumer is `<IntroCover>`. Act 2 has its own counter (`useHomeCoverVisits`) and runs independently.
 - **useHomeCoverVisits** *(editorial, shipped 2026-05-13)* — gates the Act 2 hero backdrop. Synchronous initialiser reads `localStorage['holidaze:v1:home-cover-visits']` and increments it once per page-load up to `HERO_COVERS.length` (the cap auto-tracks the cover count). Reduced-motion short-circuits without incrementing. Module-level cache makes the increment idempotent under React 18 StrictMode's dev unmount-remount cycle. `DEV_BYPASS_GATES` flag at the top of the file lets a developer bypass the cap during review.
 - **useMarqueeDuration** *(editorial, shipped 2026-05-13)* — observes a doubled marquee track via `ResizeObserver` and writes `--marquee-duration` so the band moves at a constant ~90 px/sec regardless of viewport width or city count (with a 20s minimum so the small fallback list doesn't sprint). Sole consumer is the Home cities ribbon; pairs with `uniqueCitiesByLongitude` (`src/lib/atlas/sortByLongitude.ts`) which sorts the same data west-to-east for the journey-style ordering.
+- **useScrollProgress** *(editorial, shipped with Order 04)* — returns the document scroll position as a 0..1 ratio, throttled via `requestAnimationFrame`. Pinned to 0 under `prefers-reduced-motion: reduce` and when the page is shorter than the viewport (no scrollable height). Sole consumer is the Topbar, which writes the ratio onto `--scroll-progress` so the ruler's tick-cursor slides as the user reads. Pure subroutine `computeScrollProgress(scrollY, scrollHeight, innerHeight)` is exported separately for unit tests.
+- **useVenues** also exposes `lastFetchedAt: number | null` — wall-clock ms of the most recent successful fetch. Used by `rulerForRoute()` via `useAtlasCities` (which passes the timestamp through) to render the live-signal right label, e.g. `32 venues · 12:14 · live`.
 
 ---
 

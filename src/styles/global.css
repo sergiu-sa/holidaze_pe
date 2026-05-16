@@ -729,8 +729,10 @@
     color: theme(colors.ink.soft);
   }
   .ruler__meta--right { text-align: right; }
+  .ruler__meta--cached { color: theme(colors.saffron.deep); }
 
   .ruler__ticks {
+    position: relative;
     height: 10px;
     background-image: repeating-linear-gradient(
       to right,
@@ -740,6 +742,23 @@
     background-position: left center;
     background-repeat: no-repeat;
     background-size: 100% 8px;
+  }
+
+  /* --scroll-progress is set on an ancestor (Topbar) by useScrollProgress.
+     Under prefers-reduced-motion the hook holds the value at 0, so the
+     cursor parks at the start; the transition is collapsed below too. */
+  .ruler__tick-cursor {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--scroll-progress, 0) * 100%);
+    width: 2px;
+    height: 10px;
+    background: theme(colors.cinnabar.DEFAULT);
+    transform: translate(-1px, -50%);
+    transition: left theme(transitionDuration.fast) linear;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ruler__tick-cursor { transition: none; }
   }
 
   .ruler__issue {
@@ -757,6 +776,7 @@
     border: 1px solid transparent;
     cursor: pointer;
     min-height: 44px;
+    min-width: 44px;
     transition:
       color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
       border-color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
@@ -767,7 +787,6 @@
     color: theme(colors.ink.DEFAULT);
     border-color: theme(colors.ink.DEFAULT);
     background: theme(colors.ivory.soft);
-    outline: none;
   }
   .ruler__issue[aria-expanded="true"] {
     color: theme(colors.ivory.DEFAULT);
@@ -776,7 +795,9 @@
   }
   .ruler__issue__caret {
     display: inline-block;
-    font-size: 0.6rem;
+    font-size: 0.85rem;
+    line-height: 1;
+    color: theme(colors.cinnabar.deep);
     transform: translateY(1px);
     transition: transform theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
   }
@@ -857,6 +878,67 @@
     transition: color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint);
   }
   .colophon-pop__link:hover { color: theme(colors.cinnabar.deep); border-color: theme(colors.cinnabar.deep); }
+
+  .colophon-pop__stat {
+    font-family: theme(fontFamily.serif);
+    font-weight: 500;
+    font-size: theme(fontSize.step-1);
+    line-height: 1.1;
+    color: theme(colors.ink.DEFAULT);
+  }
+  .colophon-pop__stat strong {
+    font-weight: 400;
+    color: theme(colors.cinnabar.DEFAULT);
+    font-size: theme(fontSize.step-3);
+    font-style: italic;
+    margin-right: 0.3rem;
+  }
+  .colophon-pop__meta--dim {
+    color: theme(colors.ink.mute);
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .colophon-pop__feat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .colophon-pop__feat li {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: baseline;
+    gap: 0.6rem;
+    font-family: theme(fontFamily.serif);
+    font-weight: 500;
+    color: theme(colors.ink.DEFAULT);
+  }
+  .colophon-pop__feat li .num {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    color: theme(colors.cinnabar.DEFAULT);
+  }
+  .colophon-pop__feat li .where {
+    font-style: italic;
+    letter-spacing: -0.005em;
+  }
+  .colophon-pop__feat li .count {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: theme(colors.ink.soft);
+  }
+
+  .colophon-pop__col--end {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
 
   @media (max-width: 860px) {
     .colophon-pop__inner {

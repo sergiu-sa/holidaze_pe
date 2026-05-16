@@ -12,6 +12,8 @@ export interface UseVenuesState {
   error: ApiError | Error | null
   isLoading: boolean
   isFallback: boolean
+  /** Wall-clock ms when the most recent successful fetch resolved (null until first success). */
+  lastFetchedAt: number | null
   refetch: () => void
 }
 
@@ -30,6 +32,7 @@ export function useVenues(options: UseVenuesOptions = {}): UseVenuesState {
   const [source, setSource] = useState<VenueListSource | null>(null)
   const [error, setError] = useState<ApiError | Error | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(enabled)
+  const [lastFetchedAt, setLastFetchedAt] = useState<number | null>(null)
   const [refetchCounter, setRefetchCounter] = useState(0)
 
   const refetch = useCallback(() => {
@@ -57,6 +60,7 @@ export function useVenues(options: UseVenuesOptions = {}): UseVenuesState {
         setData(result.venues)
         setMeta(result.meta ?? null)
         setSource(result.source)
+        setLastFetchedAt(Date.now())
         setIsLoading(false)
       })
       .catch((err: unknown) => {
@@ -80,6 +84,7 @@ export function useVenues(options: UseVenuesOptions = {}): UseVenuesState {
     error,
     isLoading,
     isFallback: source === 'fallback',
+    lastFetchedAt,
     refetch,
   }
 }
