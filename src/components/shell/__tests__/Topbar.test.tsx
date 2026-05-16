@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
@@ -60,9 +61,51 @@ describe('Topbar', () => {
     ).toBeInTheDocument()
   })
 
-  it('renders the ruler hairline band', () => {
+  it('renders the ruler hairline band with the issue chip', () => {
     renderTopbar()
-    expect(screen.getByText(/ISSUE/i)).toBeInTheDocument()
+    expect(
+      screen.getByRole('button', { name: /colophon — about this issue/i }),
+    ).toHaveTextContent(/ISSUE N°04/i)
+  })
+})
+
+describe('Topbar — colophon disclosure', () => {
+  it('renders the issue chip as a button collapsed by default', () => {
+    renderTopbar()
+    const chip = screen.getByRole('button', { name: /colophon — about this issue/i })
+    expect(chip).toHaveAttribute('aria-expanded', 'false')
+    expect(chip).toHaveAttribute('aria-controls', 'colophon-pop')
+  })
+
+  it('toggles the colophon panel open and closed when the chip is clicked', async () => {
+    const user = userEvent.setup()
+    renderTopbar()
+    const chip = screen.getByRole('button', { name: /colophon — about this issue/i })
+    const panel = screen.getByTestId('colophon-popover')
+
+    expect(panel).toHaveAttribute('hidden')
+    expect(chip).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(chip)
+    expect(panel).not.toHaveAttribute('hidden')
+    expect(chip).toHaveAttribute('aria-expanded', 'true')
+
+    await user.click(chip)
+    expect(panel).toHaveAttribute('hidden')
+    expect(chip).toHaveAttribute('aria-expanded', 'false')
+  })
+
+  it('closes the panel and restores focus to the chip when Escape is pressed', async () => {
+    const user = userEvent.setup()
+    renderTopbar()
+    const chip = screen.getByRole('button', { name: /colophon — about this issue/i })
+
+    await user.click(chip)
+    expect(screen.getByTestId('colophon-popover')).not.toHaveAttribute('hidden')
+
+    await user.keyboard('{Escape}')
+    expect(screen.getByTestId('colophon-popover')).toHaveAttribute('hidden')
+    expect(chip).toHaveFocus()
   })
 })
 
