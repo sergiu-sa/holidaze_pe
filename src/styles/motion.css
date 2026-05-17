@@ -1,0 +1,44 @@
+@keyframes atlasIn {
+  from { opacity: 0; transform: translate(0, -50%) scale(0.7); filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+@keyframes atlasInFlipX {
+  from { opacity: 0; transform: translate(-100%, -50%) scale(0.7); filter: blur(2px); }
+  to   { opacity: 1; filter: blur(0); }
+}
+
+@keyframes pulse-beat {
+  0%, 100% { transform: scale(1);    }
+  50%      { transform: scale(1.18); }
+}
+@keyframes pulse-halo {
+  0%   { transform: scale(0.45); opacity: 0;   }
+  20%  {                         opacity: 0.6; }
+  100% { transform: scale(2.6);  opacity: 0;   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .h-easter::after {
+    opacity: 0.25;
+    transform: scale(0.9);
+    transition: none;
+  }
+  .atlas__city {
+    opacity: 1;
+    animation: none;
+    filter: none;
+  }
+  .atlas__city.is-hovered-ext .atlas__dot { animation: none; }
+  .atlas__land { transition: none; }
+  .atp__selection__card { transition: none; }
+  .atp__selection__card:hover { transform: none; }
+  .atp__reading__card { transition: none; }
+  .atp__reading__card.is-hovered-ext { transform: none; }
+  .atp__reading__track { scroll-behavior: auto; }
+}
