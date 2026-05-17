@@ -1,0 +1,128 @@
+@layer components {
+  /* ── Status blocks (loading / empty / error) ── */
+  .atp__status {
+    display: grid;
+    gap: 0.7rem;
+    padding: clamp(1.25rem, 1rem + 1vw, 2rem);
+    margin-top: clamp(1.25rem, 1rem + 1vw, 2rem);
+    background: var(--bone-soft);
+    border: 1px solid var(--rule-strong);
+    border-left: 4px solid var(--terracotta);
+  }
+  .atp__status__title {
+    font-family: theme(fontFamily.serif);
+    font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .atp__status__title em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+  .atp__status__actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Loading variant — pulses while the plate renders. */
+  .atp__status--loading {
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    background: var(--ink);
+    color: var(--bone);
+    border-color: var(--ink);
+    border-left-color: var(--terracotta);
+  }
+  .atp__status__pill {
+    font-family: theme(fontFamily.mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--bone);
+    padding: 0.35rem 0.55rem;
+    background: var(--terracotta);
+  }
+  .atp__status__cursor {
+    width: 0.55rem;
+    height: 1.05rem;
+    background: var(--bone);
+    animation: atpCaret 900ms steps(1, end) infinite;
+  }
+  @keyframes atpCaret {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  .atp__status__meta {
+    font-family: theme(fontFamily.serif);
+    font-style: italic;
+    font-size: 0.95rem;
+    color: color-mix(in oklab, var(--bone) 75%, transparent);
+  }
+
+  @media (max-width: 640px) {
+    .atp__status--loading { grid-template-columns: auto 1fr; }
+    .atp__status__cursor { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .atp__status__cursor { animation: none; opacity: 1; }
+  }
+
+  /* Typographic scale bar — bottom-right of the plate. */
+  .atp__scale {
+    position: absolute;
+    bottom: 0.85rem;
+    right: 0.85rem;
+    z-index: 6;
+    display: grid;
+    gap: 0.25rem;
+    pointer-events: none;
+    color: var(--ink);
+  }
+  .atp__scale__rule {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    height: 7px;
+    border-top: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    background:
+      linear-gradient(to right, var(--ink) 0 50%, transparent 50% 100%),
+      linear-gradient(to right, transparent 0 50%, var(--ink) 50% 100%);
+    background-size: 50% 100%, 50% 100%;
+    background-position: 0 0, 100% 0;
+    background-repeat: no-repeat;
+    width: 7rem;
+  }
+  .atp__scale__tick {
+    height: 100%;
+    border-left: 1px solid var(--ink);
+  }
+  .atp__scale__labels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) auto;
+    align-items: baseline;
+    gap: 0.4rem;
+    font-family: theme(fontFamily.mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .atp__scale__label { font-variant-numeric: tabular-nums; }
+  .atp__scale__label:nth-child(2) { justify-self: center; }
+  .atp__scale__label:nth-child(3) { justify-self: end; }
+  .atp__scale__unit { color: var(--terracotta); }
+  @media (max-width: 640px) {
+    .atp__scale { display: none; }
+  }
+
+  .atp__stage {
+    position: relative;
+    background: var(--bone);
+    border: 1px solid var(--rule-strong);
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+}
