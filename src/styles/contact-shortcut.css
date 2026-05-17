@@ -1,0 +1,48 @@
+/* ─── ContactShortcut — utility strip on stress-prone surfaces (receipt, 404).
+   Sibling of <HelpRail> on /hosts; reads as ornament, not a CTA. ─── */
+.contact-shortcut {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 0.7rem var(--gutter) 0.8rem;
+  border-top: 1px dotted var(--rule-strong);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.contact-shortcut__eyebrow {
+  font-family: var(--ff-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+.contact-shortcut__link {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ink);
+  padding-bottom: 2px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: baseline;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+.contact-shortcut__link:hover,
+.contact-shortcut__link:focus-visible {
+  color: var(--terracotta);
+  border-color: var(--terracotta);
+}
+@media (max-width: 540px) {
+  .contact-shortcut {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+}
