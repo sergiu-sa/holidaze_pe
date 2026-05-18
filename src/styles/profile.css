@@ -1,6 +1,4 @@
-/* ─────────────────────────────────────────────
- * Slice 5.3 · Profile shell + sidebar
- * ──────────────────────────────────────────── */
+/* ─── Profile shell + sidebar ─── */
 
 .profile {
   display: grid;
@@ -174,9 +172,7 @@
   outline-offset: 3px;
 }
 
-/* ─────────────────────────────────────────────
- * Profile header / stats / bookings list
- * ──────────────────────────────────────────── */
+/* ─── Profile header / stats / bookings list ─── */
 
 .profile-header__title {
   font-family: 'Fraunces', serif;
@@ -254,12 +250,32 @@
 }
 @media (max-width: 539px) {
   .rec {
-    grid-template-columns: 1fr;
-    grid-template-areas: 'img' 'body' 'actions';
+    grid-template-columns: 80px 1fr;
+    grid-template-areas:
+      'img body'
+      'actions actions';
+    column-gap: 0.75rem;
+    row-gap: 0.5rem;
+    align-items: start;
   }
-  .rec__img { grid-area: img; aspect-ratio: 16/9; width: 100%; height: auto; }
+  .rec__img {
+    grid-area: img;
+    width: 80px;
+    height: 80px;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+  }
   .rec__body { grid-area: body; }
-  .rec__actions { grid-area: actions; }
+  .rec__actions {
+    grid-area: actions;
+    justify-content: flex-end;
+  }
+  .rec__btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    /* 44px tap target preserved via min-height on the base rule */
+  }
 }
 .rec__img {
   width: 96px;
@@ -330,7 +346,6 @@
   color: var(--ivory);
 }
 
-/* Thin contextual action bar above the rec-list. */
 .manager-toolbar {
   display: flex;
   justify-content: flex-end;
@@ -401,9 +416,7 @@
 }
 .crumbs__list a:hover { color: var(--cinnabar); }
 
-/* ─────────────────────────────────────────────
- * Tabs primitive
- * ──────────────────────────────────────────── */
+/* ─── Tabs primitive ─── */
 
 .tabs__list {
   display: inline-flex;
@@ -450,9 +463,7 @@
   color: var(--ivory);
 }
 
-/* ─────────────────────────────────────────────
- * ConfirmDialog
- * ──────────────────────────────────────────── */
+/* ─── ConfirmDialog ─── */
 
 .confirm-dialog {
   border: 1px solid var(--ink);
@@ -509,9 +520,7 @@
   border-color: var(--cinnabar);
 }
 
-/* ─────────────────────────────────────────────
- * Avatar editor — identity masthead
- * ──────────────────────────────────────────── */
+/* ─── Avatar editor — identity masthead ─── */
 
 .av-byline {
   padding-block: 1.5rem;
@@ -658,9 +667,7 @@
   .av-plate__frame { transition: none; }
 }
 
-/* Functional ground colour — when user picks a swatch (sets body[data-mono]),
-   the empty/non-image plate frame fills with that colour and the monogram
-   letter flips to the contrast colour. */
+/* Swatch pick (body[data-mono]) fills the empty plate; monogram flips to contrast. */
 body[data-mono='ink'] .av-plate:not([data-state='ready']) .av-plate__frame {
   background: #0F0E0B;
   border-color: #0F0E0B;
@@ -780,8 +787,7 @@ body[data-mono='saffron'] .av-plate:not([data-state='ready']) .av-plate__mono {
   justify-content: center;
 }
 
-/* T15's MonogramGround puts <input type="radio"> as a sibling of the <label>;
-   the input is visually hidden but stays focusable for keyboard users. */
+/* Radio is sibling of label, visually hidden but keyboard-focusable. */
 .av-sw {
   position: relative;
   display: block;
@@ -858,7 +864,7 @@ body[data-mono='saffron'] .av-plate:not([data-state='ready']) .av-plate__mono {
   .av-sw__body { transition: none; }
 }
 
-/* §02 numbered specimen fields — 01 display name (read-only), 02 url, 03 alt. */
+/* Numbered fields — 01 name (readonly), 02 url, 03 alt. */
 .av-fields {
   display: grid;
   gap: 0;
@@ -1172,7 +1178,7 @@ body[data-mono='saffron']  .av-ctx-stamp__av { background: #D4A130; color: var(-
   font-size: 0.875rem;
 }
 
-/* Venue editor — manager create / edit form. */
+/* ─── Venue editor — manager create / edit form ─── */
 .v-editor {
   display: grid;
   gap: 1.25rem;
@@ -1217,8 +1223,7 @@ body[data-mono='saffron']  .av-ctx-stamp__av { background: #D4A130; color: var(-
   }
 }
 
-/* Inner wrapper so the URL/Alt pair stack on narrow widths while the
-   Remove button still hugs the right on wide widths. */
+/* URL/Alt pair stacks on narrow, Remove button stays right on wide. */
 .v-editor__media-pair {
   display: grid;
   grid-template-columns: 1fr 1fr;

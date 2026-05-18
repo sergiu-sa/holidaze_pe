@@ -355,3 +355,27 @@ Three-step bootstrap — the prototype stubs this in localStorage; the real buil
 ## 8. Design tokens
 
 Ported from `css/base.css` into `tailwind.config.ts` as theme extensions + CSS variables on `:root` for runtime-only values (e.g. `--headline-bg`, `--page-hero-bg`). Hero-specific variables (`--ct`, `--cover-img`, `--cover-scale`, `--cover-y`, `--cover-entrance`) live scoped on `.hero` in `src/styles/home-cover.css` since the Act 2 hero is their only consumer.
+
+### 8.1 CSS file layout (split 2026-05-16)
+
+`src/styles/global.css` was reduced from ~5900 lines to ~117 lines by extracting per-surface partials.
+
+**Global `@import`'d in `global.css`** (ship in initial bundle, wrapped in `@layer components` except where noted):
+- `auth.css`, `booking.css`, `profile.css` — auth pages / booking receipt / profile dashboard (unlayered, pre-existing)
+- `primitives.css` — Button, Field, Chip, ornaments
+- `shell.css` — Topbar, Nav, Ruler, Colophon, Footer
+- `home.css` — Hero, Search-wrap, Bento, Venue card, Marquee, Stats bar, Recently-viewed, Editorial note (also covers `.hero__*` and `.venue__*` shared across other pages — see note below)
+- `venues.css` — Pager, Breadcrumbs, Filters, Peek modal, Hero plate, Gallery, Lightbox, Title plate, Spread, Calendar, Booking panel, Host strip, 404 card
+- `atlas.css` — typographic world map, compass dial, atlas hero, standalone `/atlas` page
+- `status.css` — atlas-page loading / empty / error blocks + typographic scale bar
+- `motion.css` — `@keyframes` + global `prefers-reduced-motion` guard (unlayered)
+- `toast.css` — toast queue (unlayered)
+- `contact-shortcut.css` — quiet utility strip (booking receipt, 404; `HelpRail` sibling on `/hosts`; unlayered)
+
+**Route-scoped — imported from page TSX** (lazy chunks, unlayered to bypass Tailwind's `@tailwind components` constraint for separate compilation units):
+- `intro.css` — first-visit cover (`components/intro/IntroCover.tsx`)
+- `home-cover.css` — Act 2 hero (`Home.tsx`)
+- `hosts.css` — `/hosts` editorial spread (`Hosts.tsx`)
+- `reading-list.css` — venue carousel (`VenueDetail.tsx` + `Atlas.tsx`)
+
+**Why home/venues/atlas are global, not route-scoped:** the original section banners ("Hero (Home)", "Pager (Venues)", "Atlas — typographic world map") implied page-locality, but the actual class consumers are wider. `.hero__*` and `.venue__*` from home.css are used by HeroPlate (shared component) and VenueCard (rendered on Home + Venues + Profile + BookingReceipt). `.crumbs`, `.calendar`, `.filter` from venues.css are used on Profile, Hosts, BookingReceipt, Atlas. `.atlas` from atlas.css is used on ProfileOverview + Venues. Splitting on these section boundaries was good for file readability but not for route bundling — moving them to global `@import` matches the runtime requirement and preserves Tailwind's `@layer components` purging context. The split's primary win is maintainability (sub-1000-line files; section-scoped edits), not bundle size.
