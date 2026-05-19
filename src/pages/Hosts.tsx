@@ -12,14 +12,10 @@ import {
   SignedOff,
   StrikeMoves,
 } from '../components/hosts'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export default function Hosts() {
-  useEffect(() => {
-    document.title = 'Holidaze — On Hosting · A Specimen'
-    return () => {
-      document.title = 'Holidaze'
-    }
-  }, [])
+  useDocumentTitle('On Hosting')
 
   useEffect(() => {
     let mounted = true

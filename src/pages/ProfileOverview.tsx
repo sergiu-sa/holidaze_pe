@@ -7,10 +7,12 @@ import {
   ProfileStats,
 } from '../components/profile'
 import { useAuth } from '../hooks/useAuth'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useProfile } from '../hooks/useProfile'
 import { useProfileBookings } from '../hooks/useProfileBookings'
 
 export default function ProfileOverview() {
+  useDocumentTitle('Profile')
   const { user } = useAuth()
   const profile = useProfile()
   const bookings = useProfileBookings()

@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom'
 
 import { BookingList, ProfileHeader } from '../components/profile'
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '../components/ui'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useProfileBookings } from '../hooks/useProfileBookings'
 
 type BookingTab = 'upcoming' | 'past'
 
 export default function ProfileBookings() {
+  useDocumentTitle('Your bookings')
   const [tab, setTab] = useState<BookingTab>('upcoming')
   const bookings = useProfileBookings()
 
