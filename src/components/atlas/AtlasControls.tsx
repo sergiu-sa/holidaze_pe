@@ -47,7 +47,6 @@ export function AtlasControls({
           type="search"
           name="atlas-search"
           placeholder="Filter cities, countries…"
-          aria-label="Filter cities and countries"
           autoComplete="off"
           value={search}
           onChange={(e) => {
