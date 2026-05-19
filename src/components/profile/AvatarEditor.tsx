@@ -168,8 +168,10 @@ export function AvatarEditor() {
                 onChange={(e) => {
                   setUrl(e.target.value)
                 }}
+                aria-describedby="av-url-hint"
+                aria-invalid={probe.state === 'invalid' || probe.state === 'broken'}
               />
-              <span className="av-spec__hint">
+              <span className="av-spec__hint" id="av-url-hint">
                 {probe.state === 'invalid'
                   ? 'URL must start with http:// or https://'
                   : probe.state === 'broken'
