@@ -107,7 +107,7 @@ export function AtlasReadingList({
           const rating = Number.isFinite(item.venue.rating) ? item.venue.rating.toFixed(1) : null
 
           return (
-            <article
+            <div
               key={key}
               className={classes.join(' ')}
               data-city-key={key}
@@ -183,7 +183,7 @@ export function AtlasReadingList({
                   {rating ? <span>★ {rating}</span> : null}
                 </p>
               </div>
-            </article>
+            </div>
           )
         })}
 

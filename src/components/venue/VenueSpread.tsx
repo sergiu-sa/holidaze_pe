@@ -47,7 +47,7 @@ export function VenueSpread({ venue }: VenueSpreadProps) {
   })
 
   return (
-    <article className="v-mag__spread">
+    <div className="v-mag__spread">
       <div
         className={`v-mag__body${isLong && !expanded ? ' v-mag__body--collapsed' : ''}`}
         id="v-body"
@@ -135,6 +135,6 @@ export function VenueSpread({ venue }: VenueSpreadProps) {
           <p className="mono">{addressFields.join(', ') || where}</p>
         </section>
       </aside>
-    </article>
+    </div>
   )
 }

@@ -52,7 +52,7 @@ export function VenuePeekModal({ venue, index, onClose }: VenuePeekModalProps) {
     <dialog
       ref={dialogRef}
       className="venue-modal"
-      aria-labelledby="venue-modal-name"
+      aria-labelledby={venue ? 'venue-modal-name' : undefined}
       onClick={(event) => {
         // A click on the dialog itself (the backdrop) closes the modal.
         if (event.target === dialogRef.current) {

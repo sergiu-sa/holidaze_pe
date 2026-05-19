@@ -18,7 +18,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="footer" role="contentinfo">
+    <footer className="footer">
       <div className="footer__grid">
         <div className="footer__col footer__col--brand">
           <p className="footer__mark">
@@ -38,7 +38,7 @@ export function Footer() {
         </div>
 
         <div className="footer__col">
-          <h4 className="footer__h">Explore</h4>
+          <h3 className="footer__h">Explore</h3>
           <ul className="footer__list">
             <li>
               <Link to="/">Home</Link>
@@ -56,7 +56,7 @@ export function Footer() {
         </div>
 
         <div className="footer__col" data-footer-account-col>
-          <h4 className="footer__h">Account</h4>
+          <h3 className="footer__h">Account</h3>
           <ul className="footer__list">
             {state.status === 'authenticated' ? (
               <>
@@ -93,7 +93,7 @@ export function Footer() {
         </div>
 
         <div className="footer__col">
-          <h4 className="footer__h">Colophon</h4>
+          <h3 className="footer__h">Colophon</h3>
           <ul className="footer__list">
             <li>
               <span className="mono">Fraunces</span>

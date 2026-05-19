@@ -98,14 +98,14 @@ export function AvatarMenu() {
         className="avatar-menu__pop"
         hidden={!open}
       >
-        <header className="avatar-menu__header">
+        <div className="avatar-menu__header">
           <p className="avatar-menu__rubric">§ Signed in</p>
           <p className="avatar-menu__name">{user.name}</p>
           <p className="avatar-menu__email mono">{user.email}</p>
           <span className={`avatar-menu__role-chip avatar-menu__role-chip--${role}`}>
             {user.venueManager ? 'Host' : 'Guest'}
           </span>
-        </header>
+        </div>
 
         <hr className="avatar-menu__rule" aria-hidden="true" />
 

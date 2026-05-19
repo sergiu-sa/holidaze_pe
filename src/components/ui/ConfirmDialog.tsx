@@ -81,7 +81,7 @@ export function ConfirmDialogProvider({ children }: { children: ReactNode }) {
         ref={dialogRef}
         className="confirm-dialog"
         data-variant={open?.opts.danger ? 'danger' : 'default'}
-        aria-labelledby="confirm-dialog-title"
+        aria-labelledby={open ? 'confirm-dialog-title' : undefined}
         aria-describedby={open?.opts.body ? 'confirm-dialog-body' : undefined}
         onClose={() => {
           // Dispatched by Esc and any close path. Resolve false if still pending.

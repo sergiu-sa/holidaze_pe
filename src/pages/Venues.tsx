@@ -405,6 +405,7 @@ export default function Venues() {
       </div>
 
       <section className="venues-list" aria-labelledby="v-title">
+        <h2 className="visually-hidden">All venues</h2>
         <section
           className="venues-grid"
           aria-busy={isLoading}

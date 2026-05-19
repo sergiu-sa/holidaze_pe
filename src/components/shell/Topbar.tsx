@@ -94,7 +94,7 @@ export function Topbar() {
   }, [colophonOpen])
 
   return (
-    <header className="topbar" role="banner" style={headerStyle}>
+    <header className="topbar" style={headerStyle}>
       <div className="topbar__inner">
         <Link to="/" className="wordmark" aria-label="Holidaze home">
           <img
