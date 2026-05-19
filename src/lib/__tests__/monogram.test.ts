@@ -10,12 +10,12 @@ describe('monogramAvatarUrl', () => {
 
   it('embeds the uppercased initial', () => {
     const url = monogramAvatarUrl('o', 'ink')
-    expect(url).toContain('>O</text>')
+    expect(url).toContain('%3EO%3C/text%3E')
   })
 
   it('uppercases a lowercase letter', () => {
     const url = monogramAvatarUrl('s', 'cinnabar')
-    expect(url).toContain('>S</text>')
+    expect(url).toContain('%3ES%3C/text%3E')
   })
 
   it('renders the letter in Fraunces italic', () => {
@@ -38,7 +38,7 @@ describe('monogramAvatarUrl', () => {
 
   it('falls back to "?" for an empty initial', () => {
     const url = monogramAvatarUrl('', 'ink')
-    expect(url).toContain('>?</text>')
+    expect(url).toContain('%3E?%3C/text%3E')
   })
 
   it("stays under Noroff's 300-character avatar URL limit", () => {
