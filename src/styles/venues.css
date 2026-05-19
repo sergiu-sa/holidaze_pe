@@ -32,9 +32,10 @@
     color: var(--ink);
     border: 1px solid var(--ink);
     padding: 0 0.85rem;
-    /* Uniform height across all pager controls — Prev/Next/Numbers/Gap all align. */
-    min-height: 2.4rem;
-    min-width: 2.4rem;
+    /* Uniform height across all pager controls — Prev/Next/Numbers/Gap all align.
+       WCAG 2.5.5 tap target floor: 44 px = 2.75 rem at 16 px base. */
+    min-height: 2.75rem;
+    min-width: 2.75rem;
     cursor: pointer;
     transition: background theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
                 color theme(transitionDuration.fast) theme(transitionTimingFunction.out-quint),
@@ -49,7 +50,6 @@
   .pager__btn:focus-visible:not(:disabled) {
     background: var(--ink);
     color: var(--bone);
-    outline: none;
   }
   .pager__num.is-active {
     background: var(--terracotta);
@@ -241,7 +241,6 @@
     padding: 0.65rem 0 0.65rem 1.6rem;
   }
   .v-search input:focus-visible {
-    outline: 0;
     border-color: var(--terracotta);
     background: color-mix(in oklab, var(--terracotta) 6%, transparent);
   }
@@ -294,7 +293,7 @@
     padding: 0.2rem 0.4rem;
     cursor: pointer;
   }
-  .v-dates__clear:hover, .v-dates__clear:focus-visible { color: var(--terracotta); outline: 0; }
+  .v-dates__clear:hover, .v-dates__clear:focus-visible { color: var(--terracotta); }
   @media (max-width: 560px) {
     .v-dates__clear { margin-left: 0; }
   }
@@ -561,9 +560,7 @@
   .venue-modal::backdrop {
     background: color-mix(in oklab, var(--ink) 72%, transparent);
     backdrop-filter: blur(6px) saturate(0.9);
-    animation: backdrop-in 260ms cubic-bezier(0.19, 1, 0.22, 1);
   }
-  @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
 
   .venue-modal__frame {
     position: relative;
@@ -574,11 +571,20 @@
     overflow: hidden;
     display: grid;
     grid-template-columns: 1.2fr 1fr;
-    transform: translateY(24px) scale(0.98);
-    opacity: 0;
-    animation: modal-in 380ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
-    animation-delay: 80ms;
   }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .venue-modal::backdrop {
+      animation: backdrop-in 260ms cubic-bezier(0.19, 1, 0.22, 1);
+    }
+    .venue-modal__frame {
+      transform: translateY(24px) scale(0.98);
+      opacity: 0;
+      animation: modal-in 380ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
+      animation-delay: 80ms;
+    }
+  }
+  @keyframes backdrop-in { from { opacity: 0; } to { opacity: 1; } }
   @keyframes modal-in { to { transform: none; opacity: 1; } }
 
   .venue-modal__close {
@@ -600,7 +606,11 @@
                 color 180ms cubic-bezier(0.19, 1, 0.22, 1);
   }
   .venue-modal__close:hover, .venue-modal__close:focus-visible {
-    background: var(--ink); color: var(--bone); outline: none;
+    background: var(--ink); color: var(--bone);
+  }
+  .venue-modal__close:focus-visible {
+    outline: 2px solid var(--terracotta);
+    outline-offset: 2px;
   }
   .venue-modal__plate {
     position: relative;
@@ -737,7 +747,6 @@
     background: var(--terracotta);
     border-color: var(--terracotta);
     transform: translateY(-2px);
-    outline: none;
   }
   @media (max-width: 860px) {
     .venue-modal__frame {
@@ -839,7 +848,6 @@
   .v-gal__arrow:hover, .v-gal__arrow:focus-visible {
     background: var(--terracotta);
     border-color: var(--terracotta);
-    outline: none;
   }
   .v-gal__arrow--prev:hover { transform: translateY(-50%) translateX(-3px); }
   .v-gal__arrow--next:hover { transform: translateY(-50%) translateX(3px); }
@@ -939,7 +947,6 @@
   .v-lightbox__close:hover, .v-lightbox__close:focus-visible {
     background: var(--terracotta);
     border-color: var(--terracotta);
-    outline: none;
   }
   .v-lightbox__fig {
     grid-row: 1 / -1;
@@ -981,7 +988,6 @@
   .v-lightbox__arrow:hover, .v-lightbox__arrow:focus-visible {
     background: var(--terracotta);
     border-color: var(--terracotta);
-    outline: none;
   }
 
   /* ── Title plate ────────────────────────────────────────────────────── */
@@ -1225,7 +1231,7 @@
     transition: background 180ms, color 180ms;
   }
   .v-mag__more:hover, .v-mag__more:focus-visible {
-    background: var(--ink); color: var(--bone); outline: none;
+    background: var(--ink); color: var(--bone);
   }
   .v-mag__body-p--dropcap::first-letter {
     font-family: theme(fontFamily.serif);

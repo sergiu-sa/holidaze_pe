@@ -1,6 +1,6 @@
 import '../styles/reading-list.css'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { AuthRequiredModal } from '../components/auth/AuthRequiredModal'
@@ -15,6 +15,7 @@ import {
 } from '../components/venue'
 import { useAuth } from '../hooks/useAuth'
 import { useDateRange } from '../hooks/useDateRange'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useVenue } from '../hooks/useVenue'
 import { buildBookedSet } from '../lib/dates'
 import { formatCoord, formatLocation } from '../lib/venue-format'
@@ -40,14 +41,7 @@ export default function VenueDetail() {
   )
   const range = useDateRange({ bookedSet })
 
-  useEffect(() => {
-    if (!venue) return
-    const previous = document.title
-    document.title = `${venue.name} · Holidaze`
-    return () => {
-      document.title = previous
-    }
-  }, [venue])
+  useDocumentTitle(venue?.name ?? 'Venue')
 
   if (isLoading) return <VenueDetailSkeleton />
 
