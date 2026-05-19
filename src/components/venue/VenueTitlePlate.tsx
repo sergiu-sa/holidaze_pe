@@ -42,7 +42,7 @@ export function VenueTitlePlate({ venue }: VenueTitlePlateProps) {
         </span>
       </div>
 
-      <h1 className="v-title__name" id="v-name">
+      <h1 className="v-title__name" id="v-name" data-route-anchor tabIndex={-1}>
         {venue.name}
       </h1>
       <p className="v-title__deck">{deriveDeck(venue)}</p>

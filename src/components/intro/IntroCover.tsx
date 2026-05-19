@@ -17,6 +17,7 @@ export default function IntroCover({ onDismissed }: IntroCoverProps) {
   const [isDismissing, setIsDismissing] = useState(false)
   const dismissedRef = useRef(false)
   const onDismissedRef = useRef(onDismissed)
+  const rootRef = useRef<HTMLDivElement>(null)
 
   // Latest-callback ref pattern: keeps the dismiss effect's deps array empty
   // so listeners + timer don't get torn down and rebuilt on every parent render.
@@ -26,6 +27,8 @@ export default function IntroCover({ onDismissed }: IntroCoverProps) {
 
   useEffect(() => {
     document.body.style.overflow = 'hidden'
+    // Capture focus into the cover so AT users land in the modal context.
+    rootRef.current?.focus()
 
     const dismiss = (): void => {
       if (dismissedRef.current) return
@@ -55,9 +58,12 @@ export default function IntroCover({ onDismissed }: IntroCoverProps) {
 
   return (
     <div
+      ref={rootRef}
       className={`intro-cover${isDismissing ? ' intro-cover--out' : ''}`}
       role="dialog"
+      aria-modal="true"
       aria-label="Welcome to Holidaze — press any key to continue"
+      tabIndex={-1}
     >
       <div className="intro-cover__paper" aria-hidden="true" />
       <div className="intro-cover__frame">

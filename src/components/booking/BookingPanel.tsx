@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useState } from 'react'
+import { type FormEvent, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useCreateBooking } from '../../hooks/useCreateBooking'
@@ -53,6 +53,15 @@ export function BookingPanel({
   const { mutate, isPending, reset } = useCreateBooking(venue.id)
   const toast = useToast()
   const navigate = useNavigate()
+  const reviewHeadingRef = useRef<HTMLParagraphElement>(null)
+
+  // Move focus to the review heading when the panel transitions into review;
+  // without this, focus drops to <body> because the submit button unmounts.
+  useEffect(() => {
+    if (state.kind === 'review') {
+      reviewHeadingRef.current?.focus()
+    }
+  }, [state.kind])
 
   const fromValue = range.from ? formatDay(range.from) : ''
   const toValue = range.to ? formatDay(range.to) : ''
@@ -295,6 +304,7 @@ export function BookingPanel({
                     onChange={(e) => {
                       setGuests(clampGuests(Number(e.target.value) || 1))
                     }}
+                    aria-labelledby="book-guests-lbl"
                     aria-describedby="book-guests-max"
                   />
                   <button
@@ -332,7 +342,7 @@ export function BookingPanel({
                 <Icon name="arrow-right" size="sm" />
               </button>
 
-              <p className="book__note" role="status" aria-live="polite">
+              <p className="book__note">
                 Direct with the host. No commission.
               </p>
             </>
@@ -341,7 +351,12 @@ export function BookingPanel({
           {(state.kind === 'review' || state.kind === 'confirm') && (
             <>
               <div className="book__review" aria-labelledby="book-review-title">
-                <p id="book-review-title" className="sr-only">
+                <p
+                  ref={reviewHeadingRef}
+                  id="book-review-title"
+                  className="sr-only"
+                  tabIndex={-1}
+                >
                   Review your booking
                 </p>
                 <div className="book__review-row">

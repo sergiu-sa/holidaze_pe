@@ -5,8 +5,10 @@ import { createVenue } from '../api/venues'
 import { VenueForm } from '../components/manager'
 import { ProfileHeader } from '../components/profile'
 import { useToast } from '../components/ui/ToastProvider'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export default function ProfileVenuesNew() {
+  useDocumentTitle('New venue')
   const navigate = useNavigate()
   const toast = useToast()
 

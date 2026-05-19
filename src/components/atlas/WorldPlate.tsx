@@ -102,7 +102,7 @@ export const WorldPlate = forwardRef<HTMLDivElement, WorldPlateProps>(function W
   }, [viewBox])
 
   return (
-    <div ref={plateRef} className="atlas__plate" role="img" aria-label={ariaLabel}>
+    <div ref={plateRef} className="atlas__plate" role="group" aria-label={ariaLabel}>
       <svg
         ref={svgRef}
         className="atlas__world"

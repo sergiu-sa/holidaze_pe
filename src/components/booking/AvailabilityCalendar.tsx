@@ -126,7 +126,7 @@ function CalendarMonth({ firstDay, range }: CalendarMonthProps) {
         </em>
         <span>{firstDay.getFullYear()}</span>
       </header>
-      <div className="cal__days" role="grid" aria-label={formatMonthTitle(firstDay)}>
+      <div className="cal__days" role="group" aria-label={formatMonthTitle(firstDay)}>
         {WEEKDAYS.map((d) => (
           <span key={d} className="cal__dow" aria-hidden="true">
             {d}

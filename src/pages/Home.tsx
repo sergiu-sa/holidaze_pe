@@ -10,6 +10,7 @@ import { VenueCardSkeleton } from '../components/browse/VenueCardSkeleton'
 import { VenuePeekModal } from '../components/browse/VenuePeekModal'
 import { Icon } from '../components/ui/Icon'
 import { useAtlasCities } from '../hooks/useAtlasCities'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useHomeCoverVisits } from '../hooks/useHomeCoverVisits'
 import { useIntroSeen } from '../hooks/useIntroSeen'
 import { useMarqueeDuration } from '../hooks/useMarqueeDuration'
@@ -34,7 +35,18 @@ function easeCt(t: number): number {
 const COVER_SCROLL_RANGE_VH = 0.75
 
 export default function Home() {
+  useDocumentTitle('Home')
   const { seen, markSeen } = useIntroSeen()
+  const peekTriggerRef = useRef<HTMLElement | null>(null)
+  function handleIntroDismissed() {
+    markSeen()
+    // Restore focus to the page heading once the cover unmounts so AT users
+    // don't lose their place in the document.
+    window.setTimeout(() => {
+      const anchor = document.querySelector<HTMLElement>('[data-route-anchor]')
+      anchor?.focus()
+    }, 0)
+  }
   const { shouldShow: showCover } = useHomeCoverVisits()
   const navigate = useNavigate()
   const heroRef = useRef<HTMLElement>(null)
@@ -152,7 +164,7 @@ export default function Home() {
     <main id="main">
       {!seen && (
         <Suspense fallback={null}>
-          <IntroCover onDismissed={markSeen} />
+          <IntroCover onDismissed={handleIntroDismissed} />
         </Suspense>
       )}
       <section
@@ -186,7 +198,7 @@ export default function Home() {
             <span className="eyebrow__num">§ 01</span>
             <span className="eyebrow__label">The Opening</span>
           </p>
-          <h1 id="hero-title" className="hero__title">
+          <h1 id="hero-title" className="hero__title" data-route-anchor tabIndex={-1}>
             Stay somewhere <em className="hero__emph">particular.</em>
           </h1>
         </div>
@@ -315,32 +327,32 @@ export default function Home() {
 
         <dl className="stats" aria-label="Atlas statistics">
           <div className="stats__cell">
+            <dt className="stats__label">Venues indexed</dt>
             <dd className="stats__num">
               <em>{stats.venues || '—'}</em>
             </dd>
-            <dt className="stats__label">Venues indexed</dt>
           </div>
           <div className="stats__cell">
+            <dt className="stats__label">Cities</dt>
             <dd className="stats__num">
               <em>{stats.cities || '—'}</em>
             </dd>
-            <dt className="stats__label">Cities</dt>
           </div>
           <div className="stats__cell">
+            <dt className="stats__label">Countries</dt>
             <dd className="stats__num">
               <em>{stats.countries || '—'}</em>
             </dd>
-            <dt className="stats__label">Countries</dt>
           </div>
           <div className="stats__cell">
+            <dt className="stats__label">Continents</dt>
             <dd className="stats__num">
               <em>{stats.continents || '—'}</em>
             </dd>
-            <dt className="stats__label">Continents</dt>
           </div>
         </dl>
 
-        <div className="bento" role="list" aria-busy={featured.isLoading} aria-label="Featured venues">
+        <section className="bento" aria-busy={featured.isLoading} aria-label="Featured venues">
           {featured.isLoading
             ? BENTO_CELLS.map((cell, i) => <VenueCardSkeleton key={i} className={cell} />)
             : featuredVenues.map((venue, i) => (
@@ -350,12 +362,15 @@ export default function Home() {
                   index={i + 1}
                   className={BENTO_CELLS[i] ?? ''}
                   onPeek={(v) => {
+                    // Capture the card link so focus returns there on close.
+                    peekTriggerRef.current =
+                      document.activeElement instanceof HTMLElement ? document.activeElement : null
                     setPeekVenue(v)
                     setPeekIndex(i)
                   }}
                 />
               ))}
-        </div>
+        </section>
       </section>
 
       {/* §03 — embedded Atlas. Replaces the "Your Atlas" strip — the editorial
@@ -436,6 +451,7 @@ export default function Home() {
         onClose={() => {
           setPeekVenue(null)
           setPeekIndex(undefined)
+          peekTriggerRef.current?.focus()
         }}
       />
     </main>

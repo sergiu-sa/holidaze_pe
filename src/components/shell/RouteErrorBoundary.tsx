@@ -34,7 +34,8 @@ export class RouteErrorBoundary extends Component<Props, State> {
 
     if (error) {
       return (
-        <div
+        <main
+          id="main"
           role="alert"
           className="flex flex-col items-start gap-6 px-gutter py-shelf"
         >
@@ -60,7 +61,6 @@ export class RouteErrorBoundary extends Component<Props, State> {
                 border border-cinnabar
                 transition-colors duration-fast ease-out-quint
                 hover:bg-cinnabar-deep hover:border-cinnabar-deep
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cinnabar focus-visible:ring-offset-2
               "
             >
               Try again
@@ -73,7 +73,6 @@ export class RouteErrorBoundary extends Component<Props, State> {
                 border border-ink text-ink
                 transition-colors duration-fast ease-out-quint
                 hover:bg-ink hover:text-ivory
-                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cinnabar focus-visible:ring-offset-2
               "
             >
               Return home
@@ -91,7 +90,7 @@ export class RouteErrorBoundary extends Component<Props, State> {
               </pre>
             </details>
           )}
-        </div>
+        </main>
       )
     }
 

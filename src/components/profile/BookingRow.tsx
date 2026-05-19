@@ -34,7 +34,7 @@ export function BookingRow({ booking, variant, onCancel }: BookingRowProps) {
   const cancelLabel = `Cancel booking at ${venueName}, ${fmt(booking.dateFrom)} to ${fmt(booking.dateTo)}`
 
   return (
-    <article className="rec" data-id={booking.id}>
+    <article className="rec" data-id={booking.id} aria-label={venueName}>
       {thumb ? (
         <img
           className="rec__img"

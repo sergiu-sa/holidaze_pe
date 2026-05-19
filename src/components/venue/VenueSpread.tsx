@@ -76,7 +76,7 @@ export function VenueSpread({ venue }: VenueSpreadProps) {
 
       <aside className="v-mag__margin" aria-label="Venue particulars">
         <section className="v-mag__specs">
-          <h3>The particulars</h3>
+          <h2>The particulars</h2>
           <dl>
             <dt>
               <Icon name="bed" size="xs" />
@@ -119,7 +119,7 @@ export function VenueSpread({ venue }: VenueSpreadProps) {
         </section>
 
         <section className="v-mag__amen">
-          <h3>Kept on hand</h3>
+          <h2>Kept on hand</h2>
           <ul>
             {amenities.map((a) => (
               <li key={a.key} className={a.on ? undefined : 'is-off'}>
@@ -131,7 +131,7 @@ export function VenueSpread({ venue }: VenueSpreadProps) {
         </section>
 
         <section className="v-mag__addr">
-          <h3>The door</h3>
+          <h2>The door</h2>
           <p className="mono">{addressFields.join(', ') || where}</p>
         </section>
       </aside>

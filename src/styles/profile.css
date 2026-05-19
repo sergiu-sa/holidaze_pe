@@ -214,11 +214,15 @@
 .profile-stats__cell {
   background: var(--ivory);
   padding: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 .profile-stats__num {
   font-family: 'Fraunces', serif;
   font-size: clamp(2rem, 3.5vw + 1rem, 3rem);
   margin: 0;
+  /* Source order is <dt><dd> for valid HTML; visual order is number on top. */
+  order: 1;
 }
 .profile-stats__num em {
   font-style: italic;
@@ -231,6 +235,7 @@
   letter-spacing: 0.04em;
   color: var(--ink-soft);
   margin: 0;
+  order: 2;
 }
 
 .rec-list {
@@ -741,10 +746,6 @@ body[data-mono='saffron'] .av-plate:not([data-state='ready']) .av-plate__mono {
   margin: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .av-plate__mono { transition: none; }
-}
-
 /* ─── Monogram ground swatches ─── */
 
 .av-ground {
@@ -832,10 +833,6 @@ body[data-mono='saffron'] .av-plate:not([data-state='ready']) .av-plate__mono {
 .av-sw__dot[data-mono='cobalt']   { background: #1E3358; }
 .av-sw__dot[data-mono='saffron']  { background: #D4A130; color: var(--ink); }
 
-.av-sw input:focus-visible + .av-sw__dot {
-  outline: 2px solid var(--cinnabar);
-  outline-offset: 3px;
-}
 .av-sw input:checked + .av-sw__dot {
   box-shadow: 0 0 0 2px var(--ivory), 0 0 0 4px var(--ink);
 }
@@ -925,7 +922,6 @@ body[data-mono='saffron'] .av-plate:not([data-state='ready']) .av-plate__mono {
   border-bottom-color: var(--ink);
 }
 .av-spec__input:focus-visible {
-  outline: 0;
   border-bottom-color: var(--cinnabar);
 }
 .av-spec__input[readonly] {

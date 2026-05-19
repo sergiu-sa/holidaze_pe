@@ -6,7 +6,7 @@ test.describe('Browse — slice 4.1 (V1 + V2)', () => {
     await expect(
       page.getByRole('heading', { level: 1, name: /stay somewhere particular/i }),
     ).toBeVisible()
-    await expect(page.getByRole('list', { name: /featured venues/i })).toBeVisible()
+    await expect(page.getByRole('region', { name: /featured venues/i })).toBeVisible()
   })
 
   test('Home structured search → /venues?q=norway', async ({ page }) => {

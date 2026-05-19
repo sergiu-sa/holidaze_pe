@@ -1,18 +1,15 @@
-import { useEffect } from 'react'
 import { Navigate, useSearchParams } from 'react-router-dom'
 
 import { AuthCard } from '../components/auth/AuthCard'
 import { LoginForm } from '../components/auth/LoginForm'
 import { MarginaliaNote } from '../components/auth/MarginaliaNote'
 import { useAuth } from '../hooks/useAuth'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export default function Login() {
+  useDocumentTitle('Check in')
   const { state } = useAuth()
   const [params] = useSearchParams()
-
-  useEffect(() => {
-    document.title = 'Holidaze — Check in'
-  }, [])
 
   if (state.status === 'authenticated') {
     const next = params.get('next') ?? '/profile'
@@ -30,7 +27,7 @@ export default function Login() {
             <em>Return</em>
             <span className="auth-page__rubric-rule" aria-hidden="true" />
           </p>
-          <h1 className="auth-page__title">
+          <h1 className="auth-page__title" data-route-anchor tabIndex={-1}>
             Welcome,
             <br />
             <span className="accent">again</span>.

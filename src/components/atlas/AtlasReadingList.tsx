@@ -144,6 +144,12 @@ export function AtlasReadingList({
                 to={`/venues/${item.venue.id}`}
                 className="atp__reading__media"
                 aria-label={`Open ${item.venue.name}`}
+                onFocus={() => {
+                  onCityHover?.(item.city)
+                }}
+                onBlur={() => {
+                  onCityHover?.(null)
+                }}
               >
                 {img ? (
                   <img src={img} alt={alt} loading="lazy" referrerPolicy="no-referrer" />
@@ -160,7 +166,17 @@ export function AtlasReadingList({
 
               <div className="atp__reading__body">
                 <p className="atp__reading__name">
-                  <Link to={`/venues/${item.venue.id}`}>{item.venue.name}</Link>
+                  <Link
+                    to={`/venues/${item.venue.id}`}
+                    onFocus={() => {
+                      onCityHover?.(item.city)
+                    }}
+                    onBlur={() => {
+                      onCityHover?.(null)
+                    }}
+                  >
+                    {item.venue.name}
+                  </Link>
                 </p>
                 <p className="atp__reading__row">
                   <span>{item.city.country || '—'}</span>

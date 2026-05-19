@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom'
 
 import { AvatarEditor } from '../components/profile'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
 export default function ProfileAvatar() {
+  useDocumentTitle('Edit avatar')
   return (
     <>
       <nav className="crumbs" aria-label="Breadcrumb">

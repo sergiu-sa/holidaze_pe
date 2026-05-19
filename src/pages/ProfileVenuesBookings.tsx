@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { ProfileHeader } from '../components/profile'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useOwnerGate } from '../hooks/useOwnerGate'
 import { useVenue } from '../hooks/useVenue'
 import { formatLongDate, nightsBetween, parseToLocalDay } from '../lib/dates'
@@ -25,6 +26,7 @@ function sortBookings(bookings: Booking[] | undefined): SortedBooking[] {
 }
 
 export default function ProfileVenuesBookings() {
+  useDocumentTitle('Venue bookings')
   const { id } = useParams<{ id: string }>()
   const { data: venue, isLoading, error } = useVenue(id)
 
@@ -75,7 +77,7 @@ export default function ProfileVenuesBookings() {
         </Link>
       </nav>
 
-      {isLoading && <p className="mono">Loading…</p>}
+      {isLoading && <p className="mono" role="status">Loading…</p>}
 
       {!isLoading && error && (
         <div className="empty-state">

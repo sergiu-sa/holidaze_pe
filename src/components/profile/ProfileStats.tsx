@@ -12,10 +12,10 @@ export function ProfileStats({ cells }: ProfileStatsProps) {
     <dl className="profile-stats">
       {cells.map((cell) => (
         <div key={cell.label} className="profile-stats__cell">
+          <dt className="profile-stats__label mono">{cell.label}</dt>
           <dd className="profile-stats__num">
             <em>{cell.value}</em>
           </dd>
-          <dt className="profile-stats__label mono">{cell.label}</dt>
         </div>
       ))}
     </dl>

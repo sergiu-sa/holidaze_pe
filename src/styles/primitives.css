@@ -129,7 +129,7 @@
     color: theme(colors.cobalt.DEFAULT);
     margin-right: 0.5em;
   }
-  .pulse--fallback { color: theme(colors.saffron.deep); }
+  .pulse--fallback { color: theme(colors.saffron.contrast); }
 
   .pulse__mark,
   .pulse__halo {

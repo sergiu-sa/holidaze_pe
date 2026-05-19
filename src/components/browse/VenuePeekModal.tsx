@@ -98,12 +98,12 @@ function PeekFrame({ venue, index, onClose }: PeekFrameProps) {
         type="button"
         className="venue-modal__close"
         onClick={onClose}
-        aria-label="Close"
+        aria-label="Close venue preview"
       >
         Close ✕
       </button>
 
-      <div className="venue-modal__plate">
+      <figure className="venue-modal__plate">
         {cover ? (
           <img
             className="venue-modal__img"
@@ -116,7 +116,7 @@ function PeekFrame({ venue, index, onClose }: PeekFrameProps) {
           <span>{coords}</span>
           <span>{continent || country || '—'}</span>
         </figcaption>
-      </div>
+      </figure>
 
       <div className="venue-modal__body">
         <p className="venue-modal__eyebrow">{eyebrowText}</p>

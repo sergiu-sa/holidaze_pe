@@ -7,6 +7,7 @@ import { Receipt } from '../components/booking/Receipt'
 import { NotFoundCard } from '../components/shell/NotFoundCard'
 import { ContactShortcut } from '../components/ui/ContactShortcut'
 import { useAuth } from '../hooks/useAuth'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { ApiError } from '../types/api'
 import { type Venue } from '../types/venue'
 
@@ -56,13 +57,13 @@ export default function BookingReceipt() {
     }
   }, [id, user])
 
-  useEffect(() => {
-    if (state.kind === 'ok') {
-      document.title = `Holidaze — Booked: ${state.booking.venue.name}`
-    } else if (state.kind === 'not-found' || state.kind === 'forbidden') {
-      document.title = 'Holidaze — Booking not found'
-    }
-  }, [state])
+  useDocumentTitle(
+    state.kind === 'ok'
+      ? `Booked: ${state.booking.venue.name}`
+      : state.kind === 'not-found' || state.kind === 'forbidden'
+        ? 'Booking not found'
+        : 'Booking receipt',
+  )
 
   return (
     <main id="main" className="receipt">
@@ -127,7 +128,7 @@ export default function BookingReceipt() {
               <span className="eyebrow__num">§ 09</span>
               <span className="eyebrow__label">Booking receipt</span>
             </p>
-            <h1 className="receipt__title">A <em>place</em> is held<br />in your name.</h1>
+            <h1 className="receipt__title" data-route-anchor tabIndex={-1}>A <em>place</em> is held<br />in your name.</h1>
             <p className="receipt__lede">
               The host has been notified. Your nights are locked — no one else can
               book them. Keep this page, or find it later under your bookings.

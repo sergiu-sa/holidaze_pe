@@ -72,6 +72,7 @@ export function AtlasGazetteer({
                 onClick={() => {
                   onSelect?.(city)
                 }}
+                aria-label={`${city.city}${city.continent || city.country ? ', ' + (city.continent || city.country) : ''} — ${String(city.venues.length)} ${city.venues.length === 1 ? 'venue' : 'venues'}`}
               >
                 {city.city}
               </button>

@@ -45,6 +45,7 @@ export function VenueGallery({ media, venueName, indexLabel, coords }: VenueGall
   const list = dedupe(media)
   const [idx, setIdx] = useState(0)
   const dialogRef = useRef<HTMLDialogElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
 
   const safeIdx = Math.min(idx, Math.max(0, list.length - 1))
   const active = list[safeIdx]
@@ -63,6 +64,9 @@ export function VenueGallery({ media, venueName, indexLabel, coords }: VenueGall
   }
   function closeLightbox() {
     dialogRef.current?.close()
+    // Native <dialog> returns focus to the opener only when it had focus at
+    // showModal() time. Pointer clicks don't always set focus first.
+    triggerRef.current?.focus()
   }
 
   if (list.length === 0) {
@@ -79,6 +83,7 @@ export function VenueGallery({ media, venueName, indexLabel, coords }: VenueGall
     <>
       <section className="v-hero" aria-label="Venue photograph">
         <button
+          ref={triggerRef}
           type="button"
           onClick={openLightbox}
           onKeyDown={(event) => {
@@ -160,7 +165,7 @@ export function VenueGallery({ media, venueName, indexLabel, coords }: VenueGall
                 className={`v-gal__thumb${i === safeIdx ? ' is-active' : ''}`}
                 role="tab"
                 aria-selected={i === safeIdx}
-                aria-label={`Show photograph ${pad2(i)} of ${pad2(list.length - 1)}`}
+                aria-label={`Show photograph ${String(i + 1)} of ${String(list.length)}`}
                 tabIndex={i === safeIdx ? 0 : -1}
                 onClick={() => { setIdx(i); }}
               >

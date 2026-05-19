@@ -72,10 +72,14 @@ export default {
         saffron: {
           DEFAULT: "#D4A130",
           deep: "#A67C1F",
+          /* AA-compliant variant on ivory.deep (~5.57:1). Scoped to status
+             indicators where the saffron-on-ivory pair must hit WCAG AA. */
+          contrast: "#6B5012",
         },
         ochre: {
           DEFAULT: "#D4A130",
           deep: "#A67C1F",
+          contrast: "#6B5012",
         },
 
         /* Operational-only — live pulse */
