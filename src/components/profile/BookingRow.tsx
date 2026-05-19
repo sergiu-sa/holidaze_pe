@@ -40,7 +40,6 @@ export function BookingRow({ booking, variant, onCancel }: BookingRowProps) {
           className="rec__img"
           src={thumb}
           alt=""
-          role="presentation"
           loading="lazy"
           referrerPolicy="no-referrer"
         />
