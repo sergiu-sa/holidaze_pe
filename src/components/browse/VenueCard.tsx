@@ -100,7 +100,7 @@ export function VenueCard({ venue, index, className, onPeek }: VenueCardProps) {
           <span className="venue__price">
             <strong>{formatPrice(venue.price)}</strong> /night
           </span>
-          <span className="venue__rating" aria-label={`Rating ${venue.rating.toFixed(1)} of 5`}>
+          <span className="venue__rating" role="img" aria-label={`Rating ${venue.rating.toFixed(1)} of 5`}>
             <span className="venue__dots" aria-hidden="true">
               {ratingDots(venue.rating)}
             </span>

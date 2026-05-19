@@ -75,9 +75,11 @@ describe('VenueCard (prototype port)', () => {
     expect(link).toHaveClass('venue', 'bento__cell--1')
   })
 
-  it('does not render an <img> when media is empty', () => {
+  it('does not render the cover <img> when media is empty', () => {
     renderInRouter(<VenueCard venue={makeVenue({ media: [] })} index={1} />)
-    expect(screen.queryByRole('img')).not.toBeInTheDocument()
+    // Look up the cover specifically by its alt text — the rating span also
+    // carries role="img" but with a different accessible name ("Rating X.X of 5").
+    expect(screen.queryByRole('img', { name: /Cliffside cover/i })).not.toBeInTheDocument()
   })
 
   it('falls back to default link navigation when onPeek is omitted', async () => {
