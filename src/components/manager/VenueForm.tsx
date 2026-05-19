@@ -309,6 +309,7 @@ export function VenueForm({
               void handleDelete()
             }}
             disabled={deleting || pending}
+            aria-label={initial?.name ? `Delete ${initial.name}` : 'Delete venue'}
           >
             {deleting ? 'Deleting…' : 'Delete'}
           </button>

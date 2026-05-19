@@ -6,10 +6,12 @@ import { useDeleteVenueConfirm, VenueRow } from '../components/manager'
 import { ProfileHeader } from '../components/profile'
 import { Icon } from '../components/ui'
 import { useToast } from '../components/ui/ToastProvider'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useProfileVenues } from '../hooks/useProfileVenues'
 import type { Venue } from '../types/venue'
 
 export default function ProfileVenues() {
+  useDocumentTitle('Your venues')
   const { data, error, isLoading, refetch } = useProfileVenues()
   const confirmDelete = useDeleteVenueConfirm()
   const toast = useToast()
@@ -64,7 +66,7 @@ export default function ProfileVenues() {
         }
       />
 
-      {isLoading && <p className="mono">Loading…</p>}
+      {isLoading && <p className="mono" role="status">Loading…</p>}
 
       {!isLoading && error && (
         <div className="empty-state">

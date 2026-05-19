@@ -5,10 +5,12 @@ import { deleteVenue, updateVenue } from '../api/venues'
 import { useDeleteVenueConfirm, VenueForm } from '../components/manager'
 import { ProfileHeader } from '../components/profile'
 import { useToast } from '../components/ui/ToastProvider'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useOwnerGate } from '../hooks/useOwnerGate'
 import { useVenue } from '../hooks/useVenue'
 
 export default function ProfileVenuesEdit() {
+  useDocumentTitle('Edit venue')
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const toast = useToast()
@@ -69,7 +71,7 @@ export default function ProfileVenuesEdit() {
         sub={venue ? 'Changes go live immediately.' : undefined}
       />
 
-      {isLoading && <p className="mono">Loading…</p>}
+      {isLoading && <p className="mono" role="status">Loading…</p>}
 
       {!isLoading && error && (
         <div className="empty-state">
