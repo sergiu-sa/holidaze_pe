@@ -6,6 +6,7 @@ import { Pager } from '../components/browse/Pager'
 import { VenueCard } from '../components/browse/VenueCard'
 import { VenueCardSkeleton } from '../components/browse/VenueCardSkeleton'
 import { VenuePeekModal } from '../components/browse/VenuePeekModal'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useVenues } from '../hooks/useVenues'
 import { useVenueSearch } from '../hooks/useVenueSearch'
 import type { Venue } from '../types/venue'
@@ -87,6 +88,7 @@ function variantClassFor(i: number): string {
 }
 
 export default function Venues() {
+  useDocumentTitle('Venues')
   const [searchParams, setSearchParams] = useSearchParams()
 
   const q = searchParams.get('q') ?? ''
@@ -193,7 +195,7 @@ export default function Venues() {
           <span className="eyebrow__num">§ 02</span>
           <span className="eyebrow__label">The Atlas</span>
         </p>
-        <h1 className="page-hero__title" id="v-title">
+        <h1 className="page-hero__title" id="v-title" data-route-anchor tabIndex={-1}>
           Every <em>place</em>
           <br />
           in the atlas.
@@ -390,7 +392,7 @@ export default function Venues() {
       )}
 
       <div className="venues-head">
-        <span>
+        <span role="status" aria-live="polite" aria-atomic="true">
           {isLoading
             ? 'Loading…'
             : error
@@ -403,9 +405,8 @@ export default function Venues() {
       </div>
 
       <section className="venues-list" aria-labelledby="v-title">
-        <div
+        <section
           className="venues-grid"
-          role="list"
           aria-busy={isLoading}
           aria-label="All venues"
         >
@@ -431,7 +432,7 @@ export default function Venues() {
                 />
               )
             })}
-        </div>
+        </section>
 
         {showEmpty && (
           <div className="v-empty">
