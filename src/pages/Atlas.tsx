@@ -14,6 +14,7 @@ import { RunningNote } from '../components/atlas/RunningNote'
 import { ScopeRail } from '../components/atlas/ScopeRail'
 import { SelectionDock } from '../components/atlas/SelectionDock'
 import { useAtlasCities } from '../hooks/useAtlasCities'
+import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { centroid } from '../lib/atlas/centroid'
 import type { Continent } from '../lib/atlas/cityCoords'
 import type { CityEntry } from '../lib/atlas/groupByCity'
@@ -37,6 +38,7 @@ function isContinent(value: string): value is Continent {
 }
 
 export default function Atlas() {
+  useDocumentTitle('Atlas')
   const { cities, isLoading, isFallback, error, totalVenues } = useAtlasCities()
   const [params, setParams] = useSearchParams()
 
@@ -189,7 +191,7 @@ export default function Atlas() {
             <span className="eyebrow__num">§ 05</span>
             <span className="eyebrow__label">The Atlas, to scale</span>
           </p>
-          <h1 className="atlas-hero__title" id="atlas-page-title">
+          <h1 className="atlas-hero__title" id="atlas-page-title" data-route-anchor tabIndex={-1}>
             Every <em>place</em>,<br />
             plotted.
           </h1>
@@ -226,6 +228,15 @@ export default function Atlas() {
       </section>
 
       <section className="atp" aria-label="Interactive atlas">
+        <p className="visually-hidden" role="status" aria-live="polite" aria-atomic="true">
+          {isLoading
+            ? 'Loading the atlas.'
+            : error && !isFallback
+              ? "The atlas couldn't be reached. Showing the curated set."
+              : visibleCities.length === 0
+                ? `No cities match the current filter${continent !== 'All' ? ` in ${continent}` : ''}.`
+                : `${String(visibleCities.length)} ${visibleCities.length === 1 ? 'city' : 'cities'} visible.`}
+        </p>
         <div className="atp__bar">
           <AtlasControls
             search={search}

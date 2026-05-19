@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 
 import type { CityEntry } from '../../lib/atlas/groupByCity'
@@ -13,9 +14,24 @@ const PREVIEW_LIMIT = 6
 export function SelectionDock({ city, onClose }: SelectionDockProps) {
   const previews = city.venues.slice(0, PREVIEW_LIMIT)
   const venueLabel = city.venues.length === 1 ? 'venue' : 'venues'
+  const closeRef = useRef<HTMLButtonElement | null>(null)
+  const returnFocusRef = useRef<HTMLElement | null>(null)
+
+  // Move focus into the dock on mount so AT announces the heading; return
+  // focus to the element that triggered the dock on unmount.
+  useEffect(() => {
+    returnFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    closeRef.current?.focus()
+    return () => {
+      returnFocusRef.current?.focus()
+    }
+  }, [])
 
   return (
-    <section className="atp__selection" aria-labelledby="selection-title">
+    <section
+      className="atp__selection"
+      aria-labelledby="selection-title"
+    >
       <div className="atp__selection__head">
         <div>
           <p className="atp__selection__eyebrow">
@@ -30,6 +46,7 @@ export function SelectionDock({ city, onClose }: SelectionDockProps) {
           </p>
         </div>
         <button
+          ref={closeRef}
           type="button"
           className="atp__selection__close"
           onClick={onClose}

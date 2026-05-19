@@ -7,7 +7,7 @@ import { IntroPlate } from '../IntroPlate'
 describe('IntroPlate', () => {
   it('renders a WorldPlate with an accessible label', () => {
     render(<IntroPlate cities={INTRO_CITIES} />)
-    expect(screen.getByRole('img', { name: /eight holidaze cities/i })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: /eight holidaze cities/i })).toBeInTheDocument()
   })
 
   it('renders one pin element per city with a data-city attribute', () => {
@@ -29,7 +29,7 @@ describe('IntroPlate', () => {
     }
   })
 
-  it("marks the pin marker layer aria-hidden so the plate's role=img owns the description", () => {
+  it("marks the pin marker layer aria-hidden so the plate's role=group owns the description", () => {
     render(<IntroPlate cities={INTRO_CITIES} />)
     // eslint-disable-next-line testing-library/no-node-access -- BEM class has no semantic role to query by
     const markers = document.querySelector('.intro-cover__markers')
