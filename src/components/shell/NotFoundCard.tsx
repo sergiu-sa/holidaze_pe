@@ -33,7 +33,7 @@ export function NotFoundCard({
         {code}
         <span className="slash">/</span>
       </p>
-      <h1 className="notfound__title" id="nf-title">
+      <h1 className="notfound__title" id="nf-title" data-route-anchor tabIndex={-1}>
         {title}
       </h1>
       <p className="notfound__body mono">{body}</p>

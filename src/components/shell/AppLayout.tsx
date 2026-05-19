@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { SkipLink } from '../ui'
 import { Footer } from './Footer'
 import { RouteErrorBoundary } from './RouteErrorBoundary'
+import { RouteFocusManager } from './RouteFocusManager'
 import { Topbar } from './Topbar'
 
 // AppLayout — composition root for layout-wrapped pages. The Outlet is wrapped
@@ -10,6 +11,7 @@ import { Topbar } from './Topbar'
 export function AppLayout() {
   return (
     <>
+      <RouteFocusManager />
       <SkipLink />
       <Topbar />
       <RouteErrorBoundary>

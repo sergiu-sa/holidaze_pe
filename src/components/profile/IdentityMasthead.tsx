@@ -21,7 +21,7 @@ export function IdentityMasthead({ name, role, indexLabel }: IdentityMastheadPro
           <span className="av-byline__val">{indexLabel}</span>
         </span>
       </div>
-      <h1 className="av-byline__name">{name}</h1>
+      <h1 className="av-byline__name" data-route-anchor tabIndex={-1}>{name}</h1>
       <p className="av-byline__deck">
         <em>Your face in the atlas.</em> Paste a URL to a square image, or pick a ground and we&apos;ll stamp your initial.
       </p>

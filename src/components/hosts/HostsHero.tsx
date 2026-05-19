@@ -20,7 +20,7 @@ export function HostsHero() {
         <span className="regmark regmark--bl" aria-hidden="true" />
         <span className="regmark regmark--br" aria-hidden="true" />
 
-        <h1 className="h2-hero__num">
+        <h1 className="h2-hero__num" data-route-anchor tabIndex={-1}>
           <span className="visually-hidden">Holidaze takes zero commission. </span>
           0<em>%</em>
         </h1>
