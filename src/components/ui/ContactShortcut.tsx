@@ -1,3 +1,4 @@
+import { useId } from 'react'
 import { Link } from 'react-router-dom'
 
 export interface ContactShortcutProps {
@@ -17,9 +18,12 @@ export function ContactShortcut({
   label,
   arrow = '→',
 }: ContactShortcutProps) {
+  const eyebrowId = useId()
   return (
-    <aside className="contact-shortcut" aria-label={eyebrow}>
-      <span className="contact-shortcut__eyebrow">{eyebrow}</span>
+    <aside className="contact-shortcut" aria-labelledby={eyebrowId}>
+      <span className="contact-shortcut__eyebrow" id={eyebrowId}>
+        {eyebrow}
+      </span>
       <Link className="contact-shortcut__link" to={to}>
         {label} <span aria-hidden="true">{arrow}</span>
       </Link>
