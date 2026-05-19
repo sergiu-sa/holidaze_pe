@@ -352,7 +352,8 @@ export default function Home() {
           </div>
         </dl>
 
-        <section className="bento" aria-busy={featured.isLoading} aria-label="Featured venues">
+        <section className="bento" aria-busy={featured.isLoading} aria-labelledby="bento-title">
+          <h2 id="bento-title" className="visually-hidden">Featured venues</h2>
           {featured.isLoading
             ? BENTO_CELLS.map((cell, i) => <VenueCardSkeleton key={i} className={cell} />)
             : featuredVenues.map((venue, i) => (
@@ -435,7 +436,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="marquee" aria-hidden="true">
+      <div className="marquee" aria-hidden="true">
         <div className="marquee__track" ref={marqueeTrackRef}>
           {[...marqueeCities, ...marqueeCities].map((city, i) => (
             <span className="marquee__item" key={`${city}-${String(i)}`}>
@@ -443,7 +444,7 @@ export default function Home() {
             </span>
           ))}
         </div>
-      </section>
+      </div>
 
       <VenuePeekModal
         venue={peekVenue}

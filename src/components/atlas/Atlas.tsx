@@ -141,7 +141,7 @@ export function Atlas({
           <h2 className="atlas__title" id="atlas-title">
             {String(cities.length)} <em>places</em>, plotted.
           </h2>
-          <p className="atlas__bounds mono" aria-label="Geographic bounds of the atlas">
+          <p className="atlas__bounds mono">
             {isLoading ? '…' : bounds}
           </p>
         </div>
