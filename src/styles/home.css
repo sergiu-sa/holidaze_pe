@@ -579,6 +579,8 @@
     line-height: 0.95;
     color: var(--ink);
     letter-spacing: -0.02em;
+    /* Source order is <dt><dd> for valid HTML; visual order is number on top. */
+    order: 1;
   }
   .stats__num em { color: var(--terracotta); font-style: italic; }
   .stats__label {
@@ -587,6 +589,7 @@
     letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--ink-mute);
+    order: 2;
   }
   @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 480px) {
