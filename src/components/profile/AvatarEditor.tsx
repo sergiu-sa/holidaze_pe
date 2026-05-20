@@ -150,8 +150,9 @@ export function AvatarEditor() {
                 value={user.name}
                 readOnly
                 autoComplete="off"
+                aria-describedby="av-display-hint"
               />
-              <span className="av-spec__hint">
+              <span id="av-display-hint" className="av-spec__hint">
                 Set when you registered — can&apos;t be changed.
               </span>
             </label>
