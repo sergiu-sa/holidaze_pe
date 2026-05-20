@@ -27,7 +27,6 @@ export function PrimaryNav({ isOpen, onLinkClick }: PrimaryNavProps) {
           to={to}
           end={end}
           className="nav__link"
-          aria-current={undefined}
           onClick={onLinkClick}
         >
           {label}

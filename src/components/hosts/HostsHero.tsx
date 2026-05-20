@@ -63,9 +63,9 @@ export function HostsHero() {
             data-testid="hero-pin"
           >
             <svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="14" cy="14" r="11" fill="#2A2720" />
-              <circle cx="14" cy="14" r="11" fill="none" stroke="#0F0E0B" strokeWidth="1" />
-              <circle cx="11" cy="10" r="3" fill="#D4A130" opacity="0.5" />
+              <circle cx="14" cy="14" r="11" fill="var(--ink-soft)" />
+              <circle cx="14" cy="14" r="11" fill="none" stroke="var(--ink)" strokeWidth="1" />
+              <circle cx="11" cy="10" r="3" fill="var(--saffron)" opacity="0.5" />
             </svg>
           </span>
           <div className="h2-hero__note-body">
@@ -81,7 +81,7 @@ export function HostsHero() {
             <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="M 22 64 L 16 10 L 38 30 L 60 4 L 80 32 L 104 12 L 98 64 Q 60 70 22 64 Z"
-                stroke="#0F0E0B"
+                stroke="var(--ink)"
                 strokeWidth="7"
                 fill="none"
                 strokeLinecap="round"

@@ -116,13 +116,4 @@
   @media (max-width: 640px) {
     .atp__scale { display: none; }
   }
-
-  .atp__stage {
-    position: relative;
-    background: var(--bone);
-    border: 1px solid var(--rule-strong);
-    isolation: isolate;
-    overflow: hidden;
-  }
-
 }

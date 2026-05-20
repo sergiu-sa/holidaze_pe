@@ -74,7 +74,15 @@ export function ToastProvider({ children }: { children: ReactNode }) {
         <ol className="toast-list">
           {toasts.map((t) => (
             <li key={t.id} className={`toast toast--${t.kind}`}>
-              {t.message}
+              <span className="toast__message">{t.message}</span>
+              <button
+                type="button"
+                className="toast__dismiss"
+                aria-label="Dismiss notification"
+                onClick={() => { dismiss(t.id) }}
+              >
+                ×
+              </button>
             </li>
           ))}
         </ol>

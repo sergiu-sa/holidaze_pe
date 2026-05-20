@@ -2,7 +2,7 @@ import type { Media } from './schemas'
 
 // Per-user credentials live here at runtime — `.env` would inline them into
 // the production bundle, where every visitor could read them.
-const STORAGE_KEY = 'holidaze:v1:session'
+export const STORAGE_KEY = 'holidaze:v1:session'
 
 export interface Session {
   accessToken: string

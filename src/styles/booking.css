@@ -108,20 +108,6 @@
   border: 1px solid var(--rule);
   pointer-events: none;
 }
-/* Letterhead — the Holidaze wordmark at the top of the receipt document.
-   Sits above the booking code + issued-on row, centred, with a hairline under. */
-.receipt__doc-letterhead {
-  display: grid;
-  place-items: center;
-  padding: 0.5rem 0 1.25rem;
-  border-bottom: 1px solid var(--rule);
-  margin-bottom: 1rem;
-}
-.receipt__doc-letterhead .wordmark__svg {
-  width: clamp(9rem, 7rem + 3vw, 13rem);
-  height: auto;
-  display: block;
-}
 .receipt__doc-head {
   display: flex; justify-content: space-between; gap: 1rem;
   padding-bottom: 1rem;
@@ -296,11 +282,11 @@
 .book__error {
   margin: 8px 0 0;
   padding: 10px 12px;
-  border: 1px solid var(--cinnabar, #C7392F);
+  border: 1px solid var(--cinnabar);
   background: rgba(199, 57, 47, 0.06);
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  color: var(--cinnabar, #C7392F);
+  color: var(--cinnabar);
   letter-spacing: 0.05em;
 }
 
@@ -311,15 +297,15 @@
   border: 0;
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
-  color: var(--ink-mute, #6B6759);
+  color: var(--ink-mute);
   text-transform: uppercase;
   letter-spacing: 0.16em;
   cursor: pointer;
   padding: 4px 0;
 }
-.book__back:hover { color: var(--ink, #0F0E0B); }
+.book__back:hover { color: var(--ink); }
 .book__back:focus-visible {
-  outline: 2px solid var(--cinnabar, #C7392F);
+  outline: 2px solid var(--cinnabar);
   outline-offset: 2px;
 }
 
@@ -329,8 +315,8 @@
   flex-direction: column;
   gap: 14px;
   padding: 18px;
-  border: 1px solid var(--ink, #0F0E0B);
-  background: var(--bone, #FAF7EE);
+  border: 1px solid var(--ink);
+  background: var(--bone);
   margin-bottom: 12px;
 }
 .book__review-row {
@@ -340,14 +326,14 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 11px;
   letter-spacing: 0.06em;
-  color: var(--ink-mute, #6B6759);
+  color: var(--ink-mute);
 }
 .book__review-row strong {
   font-family: 'Fraunces', serif;
   font-style: italic;
   font-weight: 400;
   font-size: 18px;
-  color: var(--ink, #0F0E0B);
+  color: var(--ink);
 }
 
 /* Success state — brief confirmation with a hairline progress bar */
@@ -359,12 +345,12 @@
   font-family: 'Fraunces', serif;
   font-style: italic;
   font-size: 16px;
-  color: var(--ink, #0F0E0B);
+  color: var(--ink);
   text-align: center;
 }
 .book__success-bar {
   height: 2px;
-  background: var(--ink, #0F0E0B);
+  background: var(--ink);
   width: 0%;
   animation: book-success-grow 700ms linear forwards;
 }

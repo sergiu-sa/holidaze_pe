@@ -46,6 +46,7 @@ export function VenueGallery({ media, venueName, indexLabel, coords }: VenueGall
   const [idx, setIdx] = useState(0)
   const dialogRef = useRef<HTMLDialogElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const thumbRefs = useRef<(HTMLButtonElement | null)[]>([])
 
   const safeIdx = Math.min(idx, Math.max(0, list.length - 1))
   const active = list[safeIdx]
@@ -161,6 +162,7 @@ export function VenueGallery({ media, venueName, indexLabel, coords }: VenueGall
           {list.map((m, i) => (
             <li key={m.url} className="v-gal__thumb-wrap">
               <button
+                ref={(el) => { thumbRefs.current[i] = el }}
                 type="button"
                 className={`v-gal__thumb${i === safeIdx ? ' is-active' : ''}`}
                 role="tab"
@@ -168,6 +170,18 @@ export function VenueGallery({ media, venueName, indexLabel, coords }: VenueGall
                 aria-label={`Show photograph ${String(i + 1)} of ${String(list.length)}`}
                 tabIndex={i === safeIdx ? 0 : -1}
                 onClick={() => { setIdx(i); }}
+                onKeyDown={(event) => {
+                  let nextIdx = -1
+                  if (event.key === 'ArrowRight') nextIdx = (i + 1) % list.length
+                  else if (event.key === 'ArrowLeft') nextIdx = (i - 1 + list.length) % list.length
+                  else if (event.key === 'Home') nextIdx = 0
+                  else if (event.key === 'End') nextIdx = list.length - 1
+                  if (nextIdx !== -1) {
+                    event.preventDefault()
+                    setIdx(nextIdx)
+                    thumbRefs.current[nextIdx]?.focus()
+                  }
+                }}
               >
                 <img src={m.url} alt="" referrerPolicy="no-referrer" loading="lazy" />
                 <span className="v-gal__thumb-num">{pad2(i)}</span>

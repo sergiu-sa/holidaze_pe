@@ -24,11 +24,6 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .h-easter::after {
-    opacity: 0.25;
-    transform: scale(0.9);
-    transition: none;
-  }
   .atlas__city {
     opacity: 1;
     animation: none;

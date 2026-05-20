@@ -14,11 +14,7 @@ export function VenueDetailSkeleton() {
         </ol>
       </nav>
 
-      <section
-        className="v-hero"
-        aria-hidden="true"
-        style={{ background: 'var(--bone-deep)' }}
-      />
+      <section className="v-hero v-hero--skeleton" aria-hidden="true" />
 
       <header className="v-title" aria-hidden="true">
         <span className="regmark regmark--tl" />

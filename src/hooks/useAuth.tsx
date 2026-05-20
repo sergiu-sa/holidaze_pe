@@ -9,7 +9,7 @@ import {
 } from 'react'
 
 import { createApiKey, login as apiLogin, register as apiRegister } from '../api/auth'
-import { clearSession, getSession, type Session, setSession } from '../api/session'
+import { clearSession, getSession, type Session, setSession, STORAGE_KEY } from '../api/session'
 import { ApiError } from '../types/api'
 
 export interface AuthenticatedUser {
@@ -46,8 +46,6 @@ export interface AuthApi {
 }
 
 const AuthContext = createContext<AuthApi | null>(null)
-
-const STORAGE_KEY = 'holidaze:v1:session'
 
 function sessionToUser(session: Session): AuthenticatedUser | null {
   if (!session.accessToken || !session.apiKey || !session.name || !session.email) {

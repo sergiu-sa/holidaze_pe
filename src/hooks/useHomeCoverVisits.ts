@@ -7,9 +7,6 @@ const COUNT_KEY = 'holidaze:v1:home-cover-visits'
 // One Act 2 play per cover — adding or removing covers auto-rebalances.
 const CAP = HERO_COVERS.length
 
-// Flip to true to bypass the cap during dev review.
-const DEV_BYPASS_GATES = false
-
 function prefersReducedMotion(): boolean {
   try {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -44,12 +41,6 @@ function decideAndCommit(): boolean {
   if (count < 0) {
     cachedShouldShow = false
     return false
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- dev flag, hardcoded.
-  if (DEV_BYPASS_GATES) {
-    cachedShouldShow = true
-    return true
   }
 
   if (count >= CAP) {

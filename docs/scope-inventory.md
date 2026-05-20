@@ -216,7 +216,7 @@ Every graded story maps to a file + component in the build.
 - **Skeleton** — card and line skeletons for loading states.
 - **FormError** — terracotta band above submit.
 - **Spinner** — if used; small motion element for pending actions.
-- **ContactShortcut** ✓ — quiet utility strip with mono eyebrow + italic Fraunces link, rendered at the bottom of stress-prone surfaces (booking receipt, 404). Default `→` arrow, optional `↓` for same-page hash links. Visual sibling on `/hosts` is `<HelpRail>` (above-fold variant). *(slice 4.4, shipped 2026-05-10)*
+- **ContactShortcut** ✓ — utility strip with mono eyebrow + italic Fraunces link. `variant: "quiet" | "prominent"` (default `quiet`). Quiet variant: dotted-top page-foot ornament — used on 404. Prominent variant: hairline-framed bone-soft panel with button-tier link — used on the booking receipt between the receipt action row and §10 What's Next (in-flow stress-moment affordance). Default `→` arrow, optional `↓` for same-page hash links. Visual sibling on `/hosts` is `<HelpRail>` (above-fold variant). *(slice 4.4, shipped 2026-05-10; `variant` prop added 2026-05-20 in `polish/visual-pass`)*
 
 ### 5.10 Base primitives
 

@@ -44,13 +44,14 @@ export function AuthRequiredModal({
     <dialog
       ref={ref}
       className="auth-modal"
+      aria-labelledby="auth-modal-title"
       onClose={handleClose}
       onCancel={(event) => {
         event.preventDefault()
         handleClose()
       }}
     >
-      <h2 className="auth-modal__title">Sign in to {verb}</h2>
+      <h2 id="auth-modal-title" className="auth-modal__title">Sign in to {verb}</h2>
       <p className="auth-modal__body">
         You need an account to {verb} on Holidaze. We&apos;ll bring you back here after.
       </p>

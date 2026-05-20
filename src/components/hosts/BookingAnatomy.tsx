@@ -134,7 +134,7 @@ export function BookingAnatomy() {
 
               <line
                 className="stroke stroke--accent"
-                style={{ strokeWidth: 2.6 }}
+                strokeWidth={2.6}
                 x1="705"
                 y1="288"
                 x2="908"
@@ -142,7 +142,7 @@ export function BookingAnatomy() {
               />
               <polyline
                 className="stroke stroke--accent"
-                style={{ strokeWidth: 2.6 }}
+                strokeWidth={2.6}
                 points="898,278 910,288 898,298"
               />
               <line className="stroke stroke--accent" x1="800" y1="282" x2="814" y2="282" />
