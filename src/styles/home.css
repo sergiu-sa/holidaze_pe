@@ -644,60 +644,8 @@
     .strip__empty { flex-direction: column; align-items: flex-start; text-align: left; }
   }
 
-  /* ── Editorial note (Home) ── */
   .ed-note {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--cobalt);
-    border: 1px solid var(--cobalt);
-  }
-  .ed-note__statement {
-    position: relative;
-    background: var(--cobalt);
-    color: var(--bone);
-    padding: clamp(2rem, 1.25rem + 2.75vw, 3.5rem) clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
-    display: grid;
-    gap: 1.25rem;
-    align-content: start;
-    border-top: 4px solid var(--terracotta);
-  }
-  .ed-note__mark {
-    position: absolute;
-    top: 0.5rem; right: 0.9rem;
-    font-family: theme(fontFamily.serif);
-    font-style: italic;
-    font-size: 1.25rem;
-    color: var(--terracotta);
-    line-height: 1;
-  }
-  .ed-note__title {
-    font-family: theme(fontFamily.serif);
-    font-style: italic;
-    font-weight: 400;
-    font-size: clamp(1.6rem, 1.2rem + 1.5vw, 2.5rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    color: var(--bone);
-  }
-  .ed-note__title em { font-style: normal; color: var(--terracotta); }
-  .ed-note__body {
-    font-family: theme(fontFamily.serif);
-    font-weight: 300;
-    font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.1rem);
-    line-height: 1.55;
-    color: var(--bone-soft);
-    max-width: 38ch;
-  }
-  .ed-note__tag {
-    font-family: theme(fontFamily.mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--bone-soft);
-    opacity: 0.6;
-    margin-top: auto;
-    padding-top: 1rem;
+    border: 1px solid var(--rule);
   }
   .ed-note__specs {
     background: var(--bone-soft);
@@ -736,9 +684,6 @@
     text-align: right;
   }
   .ed-note__val--accent { color: var(--terracotta); }
-  @media (max-width: 880px) {
-    .ed-note { grid-template-columns: 1fr; }
-  }
 
   /* ── Marquee (cities ticker) ──
      Edges dissolve into cobalt (not transparent) so ivory text doesn't bleed
