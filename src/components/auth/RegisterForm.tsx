@@ -86,7 +86,7 @@ export function RegisterForm() {
         <legend className="auth-field__label">
           <span className="auth-field__num">01</span>
           <span className="auth-field__name">Role</span>
-          <span className="auth-field__hint">switchable later</span>
+          <span className="auth-field__hint">pick one</span>
         </legend>
         <RoleBento value={role} onChange={setRole} />
       </fieldset>

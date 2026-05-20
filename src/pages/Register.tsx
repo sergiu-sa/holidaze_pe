@@ -31,7 +31,7 @@ export default function Register() {
             <span className="accent">here</span>.
           </h1>
           <MarginaliaNote eyebrow="Marginalia">
-            Two roles, <strong>one door.</strong> Switchable later — no rebuild.
+            Two roles, <strong>one door.</strong> Pick yours.
           </MarginaliaNote>
         </header>
 
