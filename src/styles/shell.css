@@ -43,10 +43,10 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 0.65rem;
+    gap: 1.1rem;
   }
   @media (min-width: 960px) {
-    .topbar__account { gap: 1rem; }
+    .topbar__account { gap: 1.75rem; }
   }
 
   .account__link {
