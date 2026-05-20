@@ -178,14 +178,6 @@ export default function Atlas() {
           {HERO_WORDMARK}
         </span>
 
-        <p className="atlas-hero__stamp" aria-hidden="true">
-          <span>Holidaze Press</span>
-          <span className="atlas-hero__stamp__bullet">·</span>
-          <span>N°04</span>
-          <span className="atlas-hero__stamp__bullet">·</span>
-          <span>Spring 2026</span>
-        </p>
-
         <div className="atlas-hero__lead">
           <p className="eyebrow atlas-hero__eyebrow">
             <span className="eyebrow__num">§ 05</span>

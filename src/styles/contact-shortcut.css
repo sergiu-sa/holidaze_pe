@@ -46,3 +46,51 @@
     gap: 0.35rem;
   }
 }
+
+/*  Prominent variant for in-flow stress moments.
+   Hairline-framed bone-soft panel; link reads as a peer button to surrounding CTAs,
+   not a footnote. */
+.contact-shortcut--prominent {
+  max-width: 60rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1.1rem 1.4rem;
+  border-top: none;
+  border: 1px solid var(--rule-strong);
+  background: var(--bone-soft);
+  align-items: center;
+  gap: 1.25rem;
+}
+.contact-shortcut--prominent .contact-shortcut__eyebrow {
+  font-size: 0.7rem;
+  color: var(--ink-soft);
+}
+.contact-shortcut--prominent .contact-shortcut__link {
+  padding: 0.7em 1.1em;
+  border: 1px solid var(--ink);
+  font-size: 1.05rem;
+  align-items: center;
+  background: transparent;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.contact-shortcut--prominent .contact-shortcut__link:hover,
+.contact-shortcut--prominent .contact-shortcut__link:focus-visible {
+  background: var(--ink);
+  color: var(--bone);
+  border-color: var(--ink);
+}
+@media (max-width: 540px) {
+  .contact-shortcut--prominent {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+  }
+  .contact-shortcut--prominent .contact-shortcut__link {
+    justify-content: center;
+  }
+}
+@media print {
+  .contact-shortcut { display: none !important; }
+}

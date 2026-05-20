@@ -233,12 +233,12 @@
     width: 100%;
     font: inherit;
     font-family: theme(fontFamily.serif);
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--ink);
     background: transparent;
     border: 0;
     border-bottom: 1px solid var(--ink);
-    padding: 0.65rem 0 0.65rem 1.6rem;
+    padding: 0.8rem 0 0.8rem 2.2rem;
   }
   .v-search input:focus-visible {
     border-color: var(--terracotta);
@@ -246,11 +246,12 @@
   }
   .v-search::before {
     content: "⌕";
-    position: absolute; left: 0.1rem; top: 50%;
+    position: absolute; left: 0.15rem; top: 50%;
     transform: translateY(-50%);
     font-family: theme(fontFamily.mono);
-    font-size: 1.15rem;
-    color: var(--ink-mute);
+    font-size: 1.55rem;
+    line-height: 1;
+    color: var(--ink);
   }
   .v-sort, .v-filter-toggle {
     font-family: theme(fontFamily.mono);
@@ -802,14 +803,20 @@
     letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--bone);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
     pointer-events: none;
     z-index: 2;
   }
-  .v-hero__rail--top { top: 0; }
+  /* Top + bottom rails carry mono caps over photo covers whose tonal range we
+     can't predict (bright skies, dark interiors). Mirrored gradient scrims
+     darken the band edges so bone text stays readable across the whole set. */
+  .v-hero__rail--top {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
+  }
   .v-hero__rail--bottom {
     bottom: 0;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
   }
   .v-hero__cell--right { text-align: right; }
   .v-mag__counter {

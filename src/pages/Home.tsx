@@ -389,20 +389,6 @@ export default function Home() {
           </h2>
         </div>
         <div className="ed-note">
-          <div className="ed-note__statement">
-            <span className="ed-note__mark" aria-hidden="true">§</span>
-            <h3 className="ed-note__title">
-              Every listing is read,
-              <br />
-              not <em>scraped.</em>
-            </h3>
-            <p className="ed-note__body">
-              Holidaze is a curated index. We decline venues that don&apos;t meet the standard —
-              no placeholder photos, no fictional pricing, no commission theatre. What you book
-              is what the host charges. Direct.
-            </p>
-            <span className="ed-note__tag">— Editor, Issue N°04</span>
-          </div>
           <div className="ed-note__specs">
             <div className="section-mark">
               <span className="section-mark__num">§</span> Specs

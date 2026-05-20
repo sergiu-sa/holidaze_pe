@@ -799,34 +799,6 @@
     .atlas-hero__wordmark { display: none; }
   }
 
-  .atlas-hero__stamp {
-    position: absolute;
-    z-index: 4;
-    top: clamp(1.1rem, 0.75rem + 1.25vw, 2rem);
-    right: clamp(0.85rem, 0.5rem + 1.5vw, 2.5rem);
-    transform: rotate(-3deg);
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.45rem;
-    padding: 0.4rem 0.7rem;
-    border: 1px solid var(--saffron);
-    color: var(--saffron);
-    font-family: theme(fontFamily.mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    background: color-mix(in oklab, var(--cobalt-deep) 65%, transparent);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    pointer-events: none;
-    animation: atlasHeroStamp 700ms cubic-bezier(0.19, 1, 0.22, 1) 600ms both;
-  }
-  .atlas-hero__stamp__bullet { color: var(--ochre-deep); }
-  /* Drop stamp on mobile — eyebrow already marks the issue; stamp clashes with topbar. */
-  @media (max-width: 640px) {
-    .atlas-hero__stamp { display: none; }
-  }
-
   /* Capped short so the lead doesn't run under the TERRA wordmark. */
   .atlas-hero__lead {
     grid-area: lead;
@@ -955,14 +927,8 @@
       100% { opacity: 1; transform: translate(0, 0); }
     }
   }
-  @keyframes atlasHeroStamp {
-    0% { opacity: 0; transform: rotate(2deg) translateY(-0.8rem); }
-    100% { opacity: 1; transform: rotate(-3deg) translateY(0); }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .atlas-hero__wordmark,
-    .atlas-hero__stamp { animation: none; }
+    .atlas-hero__wordmark { animation: none; }
   }
 
   /* ─── Standalone /atlas page — `.atp__*` ─── */

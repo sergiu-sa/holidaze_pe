@@ -69,7 +69,6 @@ export function HostsHero() {
             </svg>
           </span>
           <div className="h2-hero__note-body">
-            <span className="h2-hero__note-eyebrow">— Holidaze takes</span>
             <p className="h2-hero__note-line">
               None of your <strong>rate.</strong> <em>Ever.</em>
             </p>

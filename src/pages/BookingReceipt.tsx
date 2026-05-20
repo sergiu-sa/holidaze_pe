@@ -137,6 +137,13 @@ export default function BookingReceipt() {
 
           <Receipt booking={state.booking} />
 
+          <ContactShortcut
+            to="/hosts#contact"
+            eyebrow="Need to talk to a human?"
+            label="Write to the editor"
+            variant="prominent"
+          />
+
           <aside className="receipt__next" aria-label="What's next">
             <p className="eyebrow"><span className="eyebrow__num">§ 10</span><span className="eyebrow__label">What&rsquo;s next</span></p>
             <ol className="receipt__steps">
@@ -145,12 +152,6 @@ export default function BookingReceipt() {
               <li><span className="mono">03</span> Arrive. Be a good guest. Leave a rating in italic afterwards.</li>
             </ol>
           </aside>
-
-          <ContactShortcut
-            to="/hosts#contact"
-            eyebrow="Need to talk to a human?"
-            label="Write to the editor"
-          />
         </>
       )}
     </main>
