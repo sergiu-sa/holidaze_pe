@@ -10,6 +10,8 @@ export interface ContactShortcutProps {
   label: string
   /** Trailing arrow glyph. Default '→'. Use '↓' on /hosts where the link points down to a section on the same page. */
   arrow?: '→' | '↓'
+  /** 'quiet' for page foot ornament; 'prominent' for in-flow stress moments. */
+  variant?: 'quiet' | 'prominent'
 }
 
 export function ContactShortcut({
@@ -17,10 +19,15 @@ export function ContactShortcut({
   eyebrow,
   label,
   arrow = '→',
+  variant = 'quiet',
 }: ContactShortcutProps) {
   const eyebrowId = useId()
+  const className =
+    variant === 'prominent'
+      ? 'contact-shortcut contact-shortcut--prominent'
+      : 'contact-shortcut'
   return (
-    <aside className="contact-shortcut" aria-labelledby={eyebrowId}>
+    <aside className={className} aria-labelledby={eyebrowId}>
       <span className="contact-shortcut__eyebrow" id={eyebrowId}>
         {eyebrow}
       </span>
