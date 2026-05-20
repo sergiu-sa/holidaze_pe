@@ -112,7 +112,7 @@ export function AvatarMenu() {
         <nav aria-label="Account">
           <NavLink to="/profile" end onClick={close} className="avatar-menu__item">
             <Icon name="guest" size="sm" />
-            <span>Overview</span>
+            <span>Profile</span>
           </NavLink>
           <NavLink to="/profile/bookings" onClick={close} className="avatar-menu__item">
             <Icon name="ticket" size="sm" />
