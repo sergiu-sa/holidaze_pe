@@ -112,7 +112,7 @@ export function Footer() {
 
       <div className="footer__foot">
         <p className="mono">
-          © {year} Holidaze — N°04, Spring {year}
+          © {year} Holidaze — N°04 · Spring {year}
         </p>
         <p className="mono">
           <Pulse />

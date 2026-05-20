@@ -39,9 +39,9 @@ describe('rulerForRoute', () => {
   })
 
   it('uses editorial copy on non-data routes', () => {
-    expect(rulerForRoute('/hosts').right).toBe('Charter · Spring · 2026')
+    expect(rulerForRoute('/hosts').right).toBe('Charter · Spring 2026')
     expect(rulerForRoute('/login').right).toBe('Plate · N 60.39° E 5.32°')
-    expect(rulerForRoute('/register').right).toBe('New reader · Spring · 2026')
+    expect(rulerForRoute('/register').right).toBe('New reader · Spring 2026')
     expect(rulerForRoute('/profile').right).toBe('Your atlas')
     expect(rulerForRoute('/profile/bookings').right).toBe('Your trips')
     expect(rulerForRoute('/profile/avatar').right).toBe('Your face')
