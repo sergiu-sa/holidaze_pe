@@ -15,8 +15,8 @@ export function MarginaliaNote({ eyebrow, children }: MarginaliaNoteProps) {
     <div className="auth-marginalia">
       <span className="auth-marginalia__pin" aria-hidden="true">
         <svg viewBox="0 0 18 18" aria-hidden="true">
-          <circle cx="9" cy="9" r="6" fill="#D4A22E" stroke="#0F0E0B" strokeWidth="1" />
-          <circle cx="9" cy="9" r="2" fill="#0F0E0B" />
+          <circle cx="9" cy="9" r="6" fill="var(--saffron)" stroke="var(--ink)" strokeWidth="1" />
+          <circle cx="9" cy="9" r="2" fill="var(--ink)" />
         </svg>
       </span>
       <span className="auth-marginalia__eyebrow">{eyebrow}</span>

@@ -30,7 +30,7 @@ export function SignedOff() {
                 <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M 22 64 L 16 10 L 38 30 L 60 4 L 80 32 L 104 12 L 98 64 Q 60 70 22 64 Z"
-                    stroke="#0F0E0B"
+                    stroke="var(--ink)"
                     strokeWidth="5"
                     fill="none"
                     strokeLinecap="round"
