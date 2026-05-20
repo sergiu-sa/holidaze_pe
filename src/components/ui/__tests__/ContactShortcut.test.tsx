@@ -59,4 +59,31 @@ describe('<ContactShortcut>', () => {
     const link = screen.getByRole('link', { name: /write/i })
     expect(link).toHaveTextContent(/↓/)
   })
+
+  it('omits the prominent modifier class by default', () => {
+    render(
+      withRouter(
+        <ContactShortcut to="#contact" eyebrow="x" label="Write" />,
+      ),
+    )
+    const aside = screen.getByRole('complementary')
+    expect(aside).toHaveClass('contact-shortcut')
+    expect(aside).not.toHaveClass('contact-shortcut--prominent')
+  })
+
+  it('applies the prominent modifier class when variant="prominent"', () => {
+    render(
+      withRouter(
+        <ContactShortcut
+          to="#contact"
+          eyebrow="x"
+          label="Write"
+          variant="prominent"
+        />,
+      ),
+    )
+    const aside = screen.getByRole('complementary')
+    expect(aside).toHaveClass('contact-shortcut')
+    expect(aside).toHaveClass('contact-shortcut--prominent')
+  })
 })
