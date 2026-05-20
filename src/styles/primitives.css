@@ -19,10 +19,6 @@
   .eyebrow__num {
     @apply text-cinnabar font-medium;
   }
-  /* Legacy alias — keep `.eyebrow-num` until prototype port is done. */
-  .eyebrow-num {
-    @apply text-cinnabar font-medium;
-  }
   .eyebrow__label::before {
     content: "";
     display: inline-block;
@@ -50,56 +46,11 @@
     @apply text-cinnabar font-medium;
   }
 
-  /* Pull label — small annotation above editorial elements */
-  .pull-label {
-    @apply font-mono text-[0.6rem] tracking-runhead uppercase text-lapis;
-  }
-
   /* Folio mark — page/section indicator at section bottom */
   .folio {
     @apply flex justify-between items-center pt-4 mt-auto
            font-mono text-[0.58rem] tracking-[0.2em] uppercase text-ink-mute
            border-t border-rule;
-  }
-  .folio__mark {
-    @apply text-cinnabar;
-  }
-
-  /* Data pair — key:value editorial style (venue marginalia specs) */
-  .data-pair {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: baseline;
-    gap: 0.5rem;
-    padding: 0.35rem 0;
-    border-bottom: 1px dotted theme(colors.rule);
-  }
-  .data-pair__key {
-    @apply font-mono text-[0.68rem] tracking-eyebrow uppercase text-ink-mute;
-  }
-  .data-pair__dots {
-    border-bottom: 1px dotted theme(colors.rule-strong);
-    align-self: end;
-    margin-bottom: 0.35em;
-  }
-  .data-pair__val {
-    @apply font-serif text-[0.95rem] text-ink text-right;
-  }
-
-  /* Hairline grid hint — subtle structural overlay */
-  .hairline-grid {
-    position: relative;
-  }
-  .hairline-grid::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: linear-gradient(to right, theme(colors.rule) 0 1px, transparent 1px);
-    background-size: 50% 100%;
-    background-position: 25% 0;
-    background-repeat: no-repeat;
-    opacity: 0.3;
-    pointer-events: none;
   }
 
   /* Reveal — scroll-triggered fade-up. Toggle `.is-in` from IntersectionObserver. */
@@ -259,7 +210,6 @@
     text-transform: uppercase;
     color: theme(colors.lapis.DEFAULT);
   }
-  .field__control,
   .field input,
   .field textarea,
   .field select {
@@ -281,7 +231,8 @@
   .field select:focus-visible {
     border-color: theme(colors.cinnabar.DEFAULT);
     background: color-mix(in oklab, theme(colors.cinnabar.DEFAULT) 8%, transparent);
-    outline: 0;
+    outline: 2px solid theme(colors.cinnabar.DEFAULT);
+    outline-offset: 3px;
   }
   .field__hint {
     font-family: theme(fontFamily.mono);
@@ -331,42 +282,6 @@
   .chip--amenity:where(:hover) {
     color: theme(colors.cinnabar.DEFAULT);
     border-color: theme(colors.cinnabar.DEFAULT);
-  }
-
-  /* H° easter egg — cinnabar ° ghosts at upper-right of select capital H letters.
-     Brand signature; planted on hosts hero, venue bylines, profile greeting. */
-  .h-easter {
-    position: relative;
-    display: inline-block;
-    padding-right: 0.08em;
-  }
-  .h-easter::after {
-    content: "";
-    position: absolute;
-    top: 0.08em;
-    right: -0.08em;
-    width: 0.28em;
-    height: 0.28em;
-    border: 0.08em solid theme(colors.cinnabar.DEFAULT);
-    border-radius: 50%;
-    opacity: 0.16;
-    transform: scale(0.78);
-    transform-origin: center;
-    transition:
-      opacity 500ms theme(transitionTimingFunction.out-quint),
-      transform 500ms theme(transitionTimingFunction.out-quint);
-    pointer-events: none;
-  }
-  .h-easter:hover::after,
-  .h-easter:focus-visible::after,
-  h1:hover > .h-easter::after,
-  h2:hover > .h-easter::after,
-  h3:hover > .h-easter::after,
-  p:hover > .h-easter::after,
-  span:hover > .h-easter::after,
-  em:hover > .h-easter::after {
-    opacity: 0.95;
-    transform: scale(1);
   }
 
   /* Registration marks — printer crosshair corner ticks. Drop four spans inside any

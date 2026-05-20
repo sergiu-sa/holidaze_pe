@@ -134,7 +134,10 @@
   .crumbs a:focus-visible {
     color: var(--ink);
     border-bottom-color: var(--terracotta);
-    outline: none;
+  }
+  .crumbs a:focus-visible {
+    outline: 2px solid var(--cinnabar);
+    outline-offset: 3px;
   }
   .crumbs [aria-current="page"] {
     color: var(--ink);
@@ -422,15 +425,6 @@
     overflow: hidden;
   }
   .venues-grid .venue--feature .venue__index { background: var(--cobalt); }
-  .venues-grid .venue--quote .venue__name {
-    font-family: theme(fontFamily.serif);
-    font-style: italic;
-    font-size: clamp(1.5rem, 1.1rem + 1.5vw, 2.4rem);
-  }
-  .venues-grid .venue--quote .venue__index {
-    background: var(--ink);
-    border: 1px solid var(--bone);
-  }
   @media (max-width: 900px) {
     .venues-grid .venue--feature { grid-column: span 2; }
   }
@@ -785,13 +779,13 @@
     background: var(--ink);
     border-bottom: 1px solid var(--rule);
   }
+  .v-hero--skeleton { background: var(--bone-deep); }
   .v-hero img {
     width: 100%; height: 100%;
     object-fit: cover;
     filter: saturate(0.92) contrast(1.02);
     transition: opacity 260ms cubic-bezier(0.19, 1, 0.22, 1);
   }
-  .v-hero img.is-swapping { opacity: 0.15; }
   .v-hero__rail {
     position: absolute;
     left: 0; right: 0;
@@ -1075,29 +1069,6 @@
     max-width: 52ch;
     margin: 0;
   }
-  .v-title__sheet { display: grid; gap: 0.85rem; }
-  .v-title__sheet-head {
-    display: flex; justify-content: space-between; align-items: baseline;
-    gap: 1rem;
-    padding-bottom: 0.65rem;
-    border-bottom: 1px solid var(--rule);
-  }
-  .v-title__sheet-lbl {
-    display: inline-flex; align-items: baseline; gap: 0.65rem;
-    font-family: theme(fontFamily.mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--ink-mute);
-  }
-  .v-title__sheet-num { color: var(--terracotta); font-weight: 500; }
-  .v-gal__counter {
-    font-family: theme(fontFamily.mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    color: var(--terracotta);
-  }
-
   .v-title__facts {
     margin: clamp(0.5rem, 1vw, 1rem) 0 0;
     display: grid;
@@ -1172,7 +1143,11 @@
     transition: width 180ms cubic-bezier(0.19, 1, 0.22, 1);
   }
   .v-title__toc-link:hover, .v-title__toc-link:focus-visible {
-    outline: 0; color: var(--terracotta);
+    color: var(--terracotta);
+  }
+  .v-title__toc-link:focus-visible {
+    outline: 2px solid var(--cinnabar);
+    outline-offset: 3px;
   }
   .v-title__toc-link:hover::after, .v-title__toc-link:focus-visible::after { width: 100%; }
   .v-title__toc-num { color: var(--terracotta); font-weight: 500; letter-spacing: 0.14em; }
@@ -1186,7 +1161,6 @@
     .v-title__crown { animation-delay: 80ms; }
     .v-title__name  { animation-delay: 180ms; }
     .v-title__deck  { animation-delay: 260ms; }
-    .v-title__sheet { animation-delay: 340ms; }
     .v-title__facts { animation-delay: 420ms; }
     .v-title__toc   { animation-delay: 500ms; }
   }
@@ -1614,7 +1588,10 @@
   .guest-banner__body a:hover, .guest-banner__body a:focus-visible {
     background: var(--terracotta);
     color: var(--bone);
-    outline: none;
+  }
+  .guest-banner__body a:focus-visible {
+    outline: 2px solid var(--cinnabar);
+    outline-offset: 3px;
   }
   .stepper {
     display: grid;
@@ -1639,7 +1616,11 @@
   .stepper__btn:last-child { border-right: 0; border-left: 1px solid var(--rule-strong); }
   .stepper__btn:hover:not(:disabled),
   .stepper__btn:focus-visible:not(:disabled) {
-    background: var(--ink); color: var(--bone); outline: none;
+    background: var(--ink); color: var(--bone);
+  }
+  .stepper__btn:focus-visible:not(:disabled) {
+    outline: 2px solid var(--cinnabar);
+    outline-offset: 3px;
   }
   .stepper__btn:disabled { opacity: 0.3; cursor: not-allowed; }
   .stepper input[type="number"] {
@@ -1710,8 +1691,6 @@
     padding-top: 0.5rem;
     margin: 0;
   }
-  .book__note--ok { color: var(--sage); }
-  .book__note--err { color: var(--terracotta); }
   .v-mag__book-pitch { align-self: start; }
   .v-mag__book-pitch h3 {
     font-family: theme(fontFamily.serif);
@@ -1805,7 +1784,10 @@
     background: var(--terracotta);
     border-color: var(--terracotta);
     color: var(--bone);
-    outline: none;
+  }
+  .host-strip__cta:focus-visible {
+    outline: 2px solid var(--cinnabar);
+    outline-offset: 3px;
   }
 
   /* ── Mobile safety overrides ────────────────────────────────────────── */
