@@ -33,7 +33,7 @@ export default function Login() {
             <span className="accent">again</span>.
           </h1>
           <MarginaliaNote eyebrow="Marginalia">
-            Two fields. <strong>Fifteen seconds.</strong> No marketing email — promise.
+            Two fields. <strong>Fifteen seconds.</strong> No marketing.
           </MarginaliaNote>
         </header>
 
