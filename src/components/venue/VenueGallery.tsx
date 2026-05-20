@@ -160,7 +160,7 @@ export function VenueGallery({ media, venueName, indexLabel, coords }: VenueGall
       {list.length > 1 ? (
         <ol className="v-gal__strip" role="tablist" aria-label="Photograph thumbnails">
           {list.map((m, i) => (
-            <li key={m.url} className="v-gal__thumb-wrap">
+            <li key={m.url} role="presentation" className="v-gal__thumb-wrap">
               <button
                 ref={(el) => { thumbRefs.current[i] = el }}
                 type="button"

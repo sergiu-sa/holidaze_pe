@@ -492,7 +492,7 @@
     flex-wrap: wrap;
     gap: 1rem;
   }
-  .footer__status { color: theme(colors.bistre.DEFAULT); }
+  .footer__status { color: theme(colors.cobalt.DEFAULT); }
 
   @media (max-width: 760px) {
     .footer__grid { grid-template-columns: 1fr 1fr; }

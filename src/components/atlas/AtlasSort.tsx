@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 import { ATLAS_SORT_LABELS, ATLAS_SORTS, type AtlasSort } from '../../lib/atlas/sortCities'
 
 export interface AtlasSortProps {
@@ -6,10 +8,12 @@ export interface AtlasSortProps {
 }
 
 export function AtlasSortSelect({ value, onChange }: AtlasSortProps) {
+  const selectId = useId()
   return (
-    <label className="atp__sort">
+    <label htmlFor={selectId} className="atp__sort">
       <span className="atp__sort__label">Sort</span>
       <select
+        id={selectId}
         className="atp__sort__select"
         value={value}
         onChange={(e) => {

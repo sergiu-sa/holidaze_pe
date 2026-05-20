@@ -180,8 +180,12 @@
     z-index: 0;
   }
   .page-hero > * { position: relative; z-index: 1; }
-  .page-hero__eyebrow { margin-bottom: 1.5rem; }
-  .page-hero .eyebrow { color: var(--bone); opacity: 0.5; }
+  .page-hero__eyebrow {
+    color: color-mix(in oklab, var(--bone) 70%, transparent);
+    margin-bottom: 1.5rem;
+  }
+  .page-hero__eyebrow .eyebrow__num { color: var(--terracotta-soft); }
+  .page-hero__eyebrow .eyebrow__label { color: color-mix(in oklab, var(--bone) 78%, transparent); }
   .page-hero__title {
     font-family: theme(fontFamily.serif);
     font-weight: 400;
