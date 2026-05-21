@@ -21,8 +21,7 @@ export interface CityMarkerProps {
   isHoveredExternally?: boolean
   /** When true, marker carries a "from €X" price chip in addition to the count. */
   showPricePill?: boolean
-  /** Active SVG viewBox — marker positions are computed relative to this so
-   *  the dot/label sits over the right country when the plate is zoomed. */
+  /** Active SVG viewBox — marker positions are computed relative to this so the dot/label sits over the right country when zoomed. */
   viewBox?: ViewBox
   onActivate?: (city: CityEntry) => void
   onHoverStart?: (city: CityEntry, el: HTMLButtonElement) => void

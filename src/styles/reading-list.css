@@ -1,4 +1,4 @@
-  /* ─── Reading list — venue carousel below the plate, synced with markers. ─── */
+  /*  Reading list  */
   .atp__reading {
     margin-top: clamp(1.5rem, 1rem + 1.5vw, 2.5rem);
     padding-top: 1.5rem;
@@ -213,7 +213,7 @@
     border-color: var(--ink);
   }
 
-  /* Selection dock — appears below the plate when a marker is clicked. */
+  /* Selection dock  */
   .atp__selection {
     display: grid;
     gap: 1rem;

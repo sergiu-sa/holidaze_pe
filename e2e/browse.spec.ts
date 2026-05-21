@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-test.describe('Browse — slice 4.1 (V1 + V2)', () => {
+test.describe('Browse (V1 + V2)', () => {
   test('Home renders hero + featured bento', async ({ page }) => {
     await page.goto('/')
     await expect(
@@ -12,7 +12,7 @@ test.describe('Browse — slice 4.1 (V1 + V2)', () => {
   test('Home structured search → /venues?q=norway', async ({ page }) => {
     await page.goto('/')
     // `<input type="text" list="…">` is exposed as role="combobox", not textbox —
-    // the datalist autocomplete shipped in Order 03 flipped the role.
+    // the datalist autocomplete flips the role.
     const destination = page.getByRole('combobox', { name: /destination/i })
     await destination.fill('norway')
     await page.getByRole('button', { name: /inquire/i }).click()

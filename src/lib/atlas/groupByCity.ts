@@ -20,15 +20,7 @@ function entryKey(city: string, lat: number, lng: number): string {
   return `${city.toLowerCase()}|${String(Math.round(lat * 10))}|${String(Math.round(lng * 10))}`
 }
 
-/**
- * Aggregate venues by city. When a venue ships placeholder coords (0,0) or
- * empty country/continent (common in the Noroff dataset), the curated
- * `CITY_COORDS` gazetteer fills in. Cities with no usable coords AND no
- * gazetteer hit are dropped — they can't be plotted.
- *
- * Returns one entry per (city, rounded-coord-bucket) pair. Sort order is the
- * caller's responsibility.
- */
+/** Aggregate venues by city, falling back to the curated `CITY_COORDS` gazetteer when the venue ships placeholder coords or empty country/continent. Drops cities without a gazetteer hit. Returns one entry per (city, rounded-coord-bucket); caller sorts. */
 export function groupByCity(venues: readonly Venue[]): CityEntry[] {
   const map = new Map<string, CityEntry>()
 

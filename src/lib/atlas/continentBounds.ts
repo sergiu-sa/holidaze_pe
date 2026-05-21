@@ -10,15 +10,7 @@ export interface ViewBox {
 /** World plate viewBox (equirectangular). */
 export const WORLD_VIEWBOX: ViewBox = { x: 0, y: 0, w: 360, h: 180 }
 
-/**
- * Pre-computed bounding boxes for each continent on the equirectangular plate.
- * Coordinates are in SVG space (x = lng + 180, y = 90 − lat). Padded slightly
- * so country labels and coastline don't touch the plate edge.
- */
-/**
- * Each entry is padded so width/height ≈ 2:1, matching the plate's
- * aspect-ratio so the SVG `slice` mode neither letterboxes nor crops.
- */
+/** Bounding boxes per continent on the equirectangular plate (SVG space: x = lng + 180, y = 90 − lat). Padded to ~2:1 aspect so `slice` mode neither letterboxes nor crops. */
 export const CONTINENT_VIEWBOXES: Readonly<Record<Continent, ViewBox>> = {
   Europe: { x: 133, y: 18, w: 120, h: 60 },
   Asia: { x: 185, y: 10, w: 200, h: 100 },
@@ -35,11 +27,7 @@ export function viewBoxFor(continent: Continent | 'All'): ViewBox {
   return CONTINENT_VIEWBOXES[continent]
 }
 
-/**
- * Convert an SVG-space point (0..360 / 0..180) into a percentage relative to
- * the *active* viewBox. Used to re-position HTML marker buttons whenever the
- * viewBox changes.
- */
+/** Convert an SVG-space point (0..360 / 0..180) into a percentage relative to the active viewBox. Used to re-position HTML marker buttons. */
 export function pctInViewBox(svgX: number, svgY: number, vb: ViewBox): { x: number; y: number } {
   return {
     x: ((svgX - vb.x) / vb.w) * 100,

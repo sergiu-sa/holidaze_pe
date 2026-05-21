@@ -1,4 +1,4 @@
-/* ── Intro Cover — scoped under .intro-cover ───────────── */
+/* Intro Cover */
 
 .intro-cover {
   position: fixed;
@@ -34,7 +34,7 @@
   }
 }
 
-/* ── Paper texture wash ─────────────────────────────────── */
+/* Paper texture wash */
 .intro-cover__paper {
   position: absolute;
   inset: 0;
@@ -53,7 +53,7 @@
   }
 }
 
-/* ── Frame: head / plate / foot ─────────────────────────── */
+/*  Frame: head / plate / foot  */
 .intro-cover__frame {
   position: absolute;
   inset: clamp(2rem, 3vw, 4rem);
@@ -97,7 +97,7 @@
   color: var(--ink-mute);
 }
 
-/* ── Plate wrap + WorldPlate scoping ────────────────────── */
+/* Plate wrap + WorldPlate scoping */
 .intro-cover__plate-wrap {
   position: relative;
   display: flex;
@@ -145,7 +145,7 @@
   }
 }
 
-/* ── Pin layer ──────────────────────────────────────────── */
+/*  Pin layer  */
 .intro-cover__markers {
   position: absolute;
   inset: 0;
@@ -212,7 +212,7 @@
 .intro-cover__pin[data-city='sydney']         .intro-cover__pin-dot  { animation-delay: 3280ms; }
 .intro-cover__pin[data-city='sydney']         .intro-cover__pin-ring { animation-delay: 3430ms; }
 
-/* ── Foot: hairline rule + gazetteer + wordmark + tagline ─ */
+/*  Foot: hairline rule + gazetteer + wordmark + tagline  */
 .intro-cover__foot {
   display: flex;
   flex-direction: column;
@@ -312,7 +312,7 @@
   color: var(--cinnabar);
 }
 
-/* ── Responsive ─────────────────────────────────────────── */
+/*  Responsive  */
 @media (max-width: 720px) {
   .intro-cover__frame {
     inset: 4rem 1rem 4rem;
@@ -339,9 +339,6 @@
   }
 }
 
-/* Narrowed from `.intro-cover *` to the explicit list of animated targets:
-   the wildcard would walk every SVG path inside the WorldPlate (~147 KB of
-   markup) on every style recalc. */
 @media (prefers-reduced-motion: reduce) {
   .intro-cover,
   .intro-cover--out,

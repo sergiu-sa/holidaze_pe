@@ -9,7 +9,14 @@ import {
 } from 'react'
 
 import { createApiKey, login as apiLogin, register as apiRegister } from '../api/auth'
-import { clearSession, getSession, type Session, setSession, STORAGE_KEY } from '../api/session'
+import {
+  clearSession,
+  getSession,
+  type Session,
+  SessionSchema,
+  setSession,
+  STORAGE_KEY,
+} from '../api/session'
 import { ApiError } from '../types/api'
 
 export interface AuthenticatedUser {
@@ -86,14 +93,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setState({ status: 'anonymous', user: null })
         return
       }
-      let parsed: Session
+      let raw: unknown
       try {
-        parsed = JSON.parse(event.newValue) as Session
+        raw = JSON.parse(event.newValue)
       } catch {
         clearSession()
         setState({ status: 'anonymous', user: null })
         return
       }
+      // Reject tampered shapes from other tabs before they hit the in-memory cache.
+      const result = SessionSchema.safeParse(raw)
+      if (!result.success) {
+        clearSession()
+        setState({ status: 'anonymous', user: null })
+        return
+      }
+      const parsed = result.data
       const user = sessionToUser(parsed)
       if (user) {
         // Sync in-memory cache so getSession() agrees with localStorage.

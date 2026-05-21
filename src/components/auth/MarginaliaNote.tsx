@@ -5,11 +5,7 @@ interface MarginaliaNoteProps {
   children: ReactNode
 }
 
-/**
- * Bone-paper note pinned at -3.5° with a saffron pin SVG.
- * Uses the Caveat font for the italic line — sanctioned brand exception
- * scoped to marginalia ornament (recorded in docs/design-concept.md).
- */
+/** Bone-paper note pinned at -3.5° with a saffron pin SVG. Uses Caveat font — sanctioned brand exception (see docs/design-concept.md). */
 export function MarginaliaNote({ eyebrow, children }: MarginaliaNoteProps) {
   return (
     <div className="auth-marginalia">

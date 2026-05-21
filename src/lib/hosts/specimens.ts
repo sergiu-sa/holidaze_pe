@@ -14,12 +14,7 @@ export interface HostSpecimen {
   photoUrl: string
   photoAlt: string
   keptEur: number
-  /**
-   * CSS `object-position` value applied to the plate's photo. Use this to
-   * pull a face into frame on landscape-shaped variants (medium / wide)
-   * where the default `center center` crop lands on the torso. Omit for
-   * specimens that frame correctly without override.
-   */
+  /** CSS `object-position` for the plate's photo. Use to pull a face into frame on landscape variants (medium / wide) where `center center` lands on the torso. */
   imageFocus?: string
 }
 

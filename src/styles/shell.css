@@ -1,5 +1,5 @@
 @layer components {
-  /* ─── Topbar shell ─── */
+  /* Topbar shell */
   .topbar {
     position: sticky;
     top: 0;
@@ -87,7 +87,7 @@
     .account__link--cta span[aria-hidden="true"] { display: none; }
   }
 
-  /* ─── Nav ─── */
+  /* Nav */
   .nav {
     display: flex;
     justify-content: center;
@@ -178,7 +178,7 @@
     .nav-toggle { padding: 0.4rem 0.5rem; letter-spacing: 0.08em; font-size: 0.6rem; }
   }
 
-  /* ─── Ruler ─── */
+  /* Ruler */
   .ruler {
     position: relative;
     display: grid;
@@ -287,7 +287,7 @@
     .ruler__issue { font-size: 0.62rem; letter-spacing: 0.12em; }
   }
 
-  /* ─── Colophon popover ─── */
+  /* Colophon popover */
   .colophon-pop {
     position: absolute;
     left: 0;

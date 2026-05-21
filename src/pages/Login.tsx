@@ -5,6 +5,7 @@ import { LoginForm } from '../components/auth/LoginForm'
 import { MarginaliaNote } from '../components/auth/MarginaliaNote'
 import { useAuth } from '../hooks/useAuth'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { safeNext } from '../lib/safe-next'
 
 export default function Login() {
   useDocumentTitle('Check in')
@@ -12,8 +13,7 @@ export default function Login() {
   const [params] = useSearchParams()
 
   if (state.status === 'authenticated') {
-    const next = params.get('next') ?? '/profile'
-    return <Navigate to={next} replace />
+    return <Navigate to={safeNext(params.get('next'))} replace />
   }
 
   const expired = params.get('reason') === 'expired'

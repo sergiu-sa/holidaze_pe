@@ -14,10 +14,7 @@ export interface PlateCursorProps {
   plateRef: React.RefObject<HTMLElement>
 }
 
-/**
- * Crosshair + live-coords HUD overlay. Inverse-projects pointermove inside
- * the plate to lat/lng for the HUD chip. Pure presentation; no zoom/pan.
- */
+/** Crosshair + live-coords HUD overlay. Inverse-projects pointermove to lat/lng. Pure presentation; no zoom/pan. */
 export function PlateCursor({ plateRef }: PlateCursorProps) {
   const [cursor, setCursor] = useState<CursorState | null>(null)
   const overlayRef = useRef<HTMLDivElement | null>(null)

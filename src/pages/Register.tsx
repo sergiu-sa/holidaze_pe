@@ -5,6 +5,7 @@ import { MarginaliaNote } from '../components/auth/MarginaliaNote'
 import { RegisterForm } from '../components/auth/RegisterForm'
 import { useAuth } from '../hooks/useAuth'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { safeNext } from '../lib/safe-next'
 
 export default function Register() {
   useDocumentTitle('Apply for access')
@@ -12,8 +13,7 @@ export default function Register() {
   const [params] = useSearchParams()
 
   if (state.status === 'authenticated') {
-    const next = params.get('next') ?? '/profile'
-    return <Navigate to={next} replace />
+    return <Navigate to={safeNext(params.get('next'))} replace />
   }
 
   return (

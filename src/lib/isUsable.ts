@@ -1,7 +1,7 @@
 import type { Venue } from '../types/venue'
 
 // Filter for the messy Noroff public dataset. Rules re-derived from
-// wip_prototype/js/api.js (CLAUDE.md §3.6 — read the rules, implement clean).
+// wip_prototype/js/api.js — read for the rules, re-implemented here.
 
 const PLACEHOLDER_IMAGE_HOSTS =
   /(example\.com|placeholder|lorempixel|via\.placeholder|test\.)/i

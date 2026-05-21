@@ -1,10 +1,6 @@
 import { useEffect } from 'react'
 
-/**
- * Sets --marquee-duration on a doubled marquee track for constant px/sec
- * velocity across viewport widths. The keyframe animates `0 → -50%`, so
- * one logical loop is `scrollWidth / 2`.
- */
+/** Sets --marquee-duration on a doubled marquee track for constant px/sec velocity (keyframe `0 → -50%`, so one loop = `scrollWidth / 2`). */
 export function useMarqueeDuration(
   trackRef: React.RefObject<HTMLElement | null>,
   velocityPxPerSec = 90,

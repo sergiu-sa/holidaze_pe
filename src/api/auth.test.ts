@@ -1,15 +1,11 @@
 import { http, HttpResponse } from 'msw'
-import { beforeEach, describe, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 
 import { server } from '../test/msw/server'
 import { ApiError } from '../types/api'
 import { createApiKey, login, register } from './auth'
 
 const NOROFF_AUTH = 'https://v2.api.noroff.dev/auth'
-
-beforeEach(() => {
-  // each test sets its own handlers
-})
 
 describe('register', () => {
   it('sends the typed payload and returns the data envelope', async () => {

@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react'
 
-/**
- * Pure progress calculation, exported for unit-testing. Returns 0..1 where
- * 0 means the page has not been scrolled (or is shorter than the viewport)
- * and 1 means the page is fully scrolled.
- */
+/** Pure 0..1 scroll progress (0 = unscrolled or page < viewport, 1 = fully scrolled). Exported for unit testing. */
 export function computeScrollProgress(
   scrollY: number,
   scrollHeight: number,
@@ -18,11 +14,7 @@ export function computeScrollProgress(
   return ratio
 }
 
-/**
- * Tracks the document's scroll position as a 0..1 ratio. Updates are
- * throttled via requestAnimationFrame. Returns 0 when the user prefers
- * reduced motion or the page is shorter than the viewport.
- */
+/** Tracks the document's scroll position as a 0..1 ratio (rAF-throttled). Returns 0 under prefers-reduced-motion or if the page is shorter than the viewport. */
 export function useScrollProgress(): number {
   const [progress, setProgress] = useState(0)
 

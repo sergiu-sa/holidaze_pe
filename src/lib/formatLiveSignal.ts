@@ -13,13 +13,7 @@ function defaultFormatTime(timestamp: number): string {
   })
 }
 
-/**
- * Composes the right-side ruler label for routes backed by the venues cache.
- *
- *  - live + count + timestamp  → "32 venues · 12:14 · live"
- *  - fallback / cached source  → "32 venues · cached"
- *  - no data yet               → "— venues indexed"
- */
+/** Composes the right-side ruler label: `"32 venues · 12:14 · live"` (live), `"32 venues · cached"` (fallback), `"— venues indexed"` (no data). */
 export function formatLiveSignal({
   totalVenues,
   isFallback,

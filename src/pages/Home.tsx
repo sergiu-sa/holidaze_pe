@@ -374,8 +374,7 @@ export default function Home() {
         </section>
       </section>
 
-      {/* §03 — embedded Atlas. Replaces the "Your Atlas" strip — the editorial
-          plate doubles as a navigation surface (slice 4.3). */}
+      {/* §03 — embedded Atlas. The editorial plate doubles as a navigation surface. */}
       <AtlasComposite variant="compact" />
 
       <section className="section" aria-labelledby="ednote-title">

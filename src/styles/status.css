@@ -1,5 +1,5 @@
 @layer components {
-  /* ── Status blocks (loading / empty / error) ── */
+  /*  Status blocks  */
   .atp__status {
     display: grid;
     gap: 0.7rem;
@@ -68,7 +68,7 @@
     .atp__status__cursor { animation: none; opacity: 1; }
   }
 
-  /* Typographic scale bar — bottom-right of the plate. */
+  /* Typographic scale bar */
   .atp__scale {
     position: absolute;
     bottom: 0.85rem;

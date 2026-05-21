@@ -45,7 +45,7 @@ describe('cache — read/write round-trip', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2026-01-01T00:00:00Z'))
     writeCache({ namespace: 'venues' }, [{ id: '1' }])
-    vi.setSystemTime(new Date('2026-01-01T00:11:00Z')) // 11 minutes later
+    vi.setSystemTime(new Date('2026-01-01T00:11:00Z'))
     expect(readCache({ namespace: 'venues' })).toBeNull()
   })
 

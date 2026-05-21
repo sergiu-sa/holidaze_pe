@@ -1,12 +1,4 @@
 @layer components {
-  /* ════════════════════════════════════════════════════════════════════════
-     Prototype port — Browse (slice 4.1)
-     Rules below are ported verbatim from wip_prototype/css/home.css and
-     wip_prototype/css/page.css. The prototype is the visual spec
-     (CLAUDE.md §2). Only --gutter / --shelf token names are remapped
-     to existing Tailwind theme references where they aren't already
-     aliased in :root — everything else is byte-for-byte.
-     ════════════════════════════════════════════════════════════════════════ */
 
   /* ── Hero (Home) ── */
   .hero {
@@ -616,10 +608,7 @@
   }
   .ed-note__val--accent { color: var(--terracotta); }
 
-  /* ── Marquee (cities ticker) ──
-     Edges dissolve into cobalt (not transparent) so ivory text doesn't bleed
-     into the cream page below. useMarqueeDuration sets --marquee-duration
-     so perceived velocity stays constant across breakpoints. */
+  /*  Marquee (cities ticker) */
   .marquee {
     position: relative;
     overflow: hidden;
