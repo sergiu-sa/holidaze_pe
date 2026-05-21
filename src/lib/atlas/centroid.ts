@@ -19,10 +19,7 @@ export function centroid(points: readonly LatLng[]): LatLng | null {
   return { lat: sumLat / count, lng: sumLng / count }
 }
 
-/**
- * Bearing (degrees from North, clockwise) from the world centre (0,0) to a
- * point. Used by the compass dial to rotate the needle.
- */
+/** Bearing in degrees clockwise from North, from world centre (0,0) to a point. Used by the compass dial. */
 export function bearingFromCentre(point: LatLng): number {
   // simple atan2 — for visual purposes we treat the projection as flat
   const angle = Math.atan2(point.lng, point.lat)
