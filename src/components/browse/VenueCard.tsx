@@ -8,10 +8,7 @@ export interface VenueCardProps {
   index?: number
   /** Variant class — `bento__cell--N` on Home, `venue--feature` on /venues. */
   className?: string
-  /**
-   * When set, a plain click opens the peek modal instead of navigating.
-   * Modifier-clicks still follow the link so open-in-new-tab works.
-   */
+  /** When set, a plain click opens the peek modal instead of navigating; modifier-clicks still follow the link (open-in-new-tab). */
   onPeek?: (venue: Venue) => void
 }
 
