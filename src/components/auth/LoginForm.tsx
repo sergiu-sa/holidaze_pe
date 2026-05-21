@@ -4,6 +4,7 @@ import { z } from 'zod'
 
 import { LoginInputSchema } from '../../api/schemas'
 import { useAuth } from '../../hooks/useAuth'
+import { safeNext } from '../../lib/safe-next'
 import { ApiError } from '../../types/api'
 import { SpecimenField } from './SpecimenField'
 import { SubmitBar } from './SubmitBar'
@@ -41,17 +42,15 @@ export function LoginForm() {
     setPending(true)
     try {
       await login(parsed.data)
-      const next = params.get('next') ?? '/profile'
-      navigate(next, { replace: true })
+      navigate(safeNext(params.get('next')), { replace: true })
     } catch (err) {
+      // 401 is the only server status that maps to a user-actionable message.
+      // Anything else falls back to a generic banner to avoid leaking server
+      // error detail (raw Zod trees, fetch URLs, etc.) into the UI.
       const status = err instanceof ApiError ? err.status : 0
-      const message =
-        status === 401
-          ? 'Wrong email or password'
-          : err instanceof Error
-            ? err.message
-            : 'Something went wrong — try again'
-      setErrors({ form: message })
+      setErrors({
+        form: status === 401 ? 'Wrong email or password' : 'Something went wrong — try again',
+      })
     } finally {
       setPending(false)
     }

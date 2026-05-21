@@ -66,9 +66,8 @@ export function RegisterForm() {
         setErrors({ email: ALREADY_REGISTERED })
         return
       }
-      const message =
-        err instanceof Error ? err.message : 'Something went wrong — try again'
-      setErrors({ form: message })
+      // Zod tree, a fetch URL, or other internal detail.
+      setErrors({ form: 'Something went wrong — try again' })
     } finally {
       setPending(false)
     }
