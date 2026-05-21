@@ -37,17 +37,13 @@ export interface AtlasProps {
   withCursor?: boolean
   /** Show the typographic scale bar overlay (full page only). */
   withScaleBar?: boolean
-  /** Suppress the internal `.atlas__head` (eyebrow + title + bounds) so the
-   *  page can render its own at full layout width — used on /atlas to align
-   *  the side-margin rail with the plate, not the title row. */
+  /** Suppress the internal `.atlas__head` so the page can render its own (used on /atlas to align the rail with the plate). */
   hideHead?: boolean
-  /** Suppress the internal gazetteer so the page can render it directly
-   *  in the layout grid (full-width below the plate row). */
+  /** Suppress the internal gazetteer so the page can render it directly in the layout grid. */
   hideGazetteer?: boolean
   /** Optional element rendered inside the plate (e.g. a compass overlay). */
   plateOverlay?: ReactNode
-  /** When the user has zoomed into a continent, fires when they press the
-   *  "↩ World" button to return to the full plate. */
+  /** Fires when the user presses "↩ World" to zoom out to the full plate. */
   onResetZoom?: () => void
 }
 

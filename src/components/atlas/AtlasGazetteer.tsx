@@ -17,8 +17,7 @@ export interface AtlasGazetteerProps {
   /** "compact" → rows are <Link>s to /venues?q=. "full" → rows emit onSelect callbacks. */
   mode?: 'compact' | 'full'
   onSelect?: (city: CityEntry) => void
-  /** When false, render in the order received instead of sorting A–Z internally.
-   *  Default true so the compact embed (Home) keeps its index-style A–Z list. */
+  /** When false, render in the order received instead of sorting A–Z. Default true so the compact embed (Home) keeps its A–Z list. */
   alphaSort?: boolean
 }
 
