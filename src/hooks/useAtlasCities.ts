@@ -18,16 +18,12 @@ export interface UseAtlasCitiesState {
   lastFetchedAt: number | null
 }
 
-/**
- * Wraps useVenues({ limit: 100 }) and aggregates the result into city entries
- * via groupByCity. Memoised against the venues array reference so consumers
- * (Home + /atlas) can mount the same data without re-grouping per render.
- */
 export interface UseAtlasCitiesOptions {
   /** Skip the fetch (e.g. when the consumer is feeding cities in via prop). */
   enabled?: boolean
 }
 
+/** Wraps useVenues({ limit: 100 }) and groups by city; memoised against the venues array. */
 export function useAtlasCities(options: UseAtlasCitiesOptions = {}): UseAtlasCitiesState {
   const venues = useVenues({ page: 1, limit: ATLAS_LIMIT, enabled: options.enabled ?? true })
 
