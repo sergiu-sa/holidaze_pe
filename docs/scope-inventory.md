@@ -244,7 +244,7 @@ Every graded story maps to a file + component in the build.
 
 ### 5.10b Notable cleanup decision (slice 4.1 post-ship, Apr 27 2026)
 
-Generic UI primitives originally built for slice 4.1 — `Pagination`, `EmptyState`, `ErrorState`, `BentoGrid`, `SearchInput` — were **deleted** after the prototype-faithful rewrite. The prototype renders these patterns inline (`.v-empty`, `.v-errstate`, `.bento` direct children, `.v-search input`, `.pager` instead of generic Pagination), so the wrappers had zero consumers. Per CLAUDE.md §3.5 (don't keep code with no caller). They can return if a future page genuinely needs the abstraction.
+Generic UI primitives originally built for slice 4.1 — `Pagination`, `EmptyState`, `ErrorState`, `BentoGrid`, `SearchInput` — were **deleted** after the prototype-faithful rewrite. The prototype renders these patterns inline (`.v-empty`, `.v-errstate`, `.bento` direct children, `.v-search input`, `.pager` instead of generic Pagination), so the wrappers had zero consumers — per the project's "no dead code" rule. They can return if a future page genuinely needs the abstraction.
 
 **Deferred (lazy — land with their first consumer):**
 
