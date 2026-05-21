@@ -12,11 +12,7 @@ export interface ApiFetchOptions {
   signal?: AbortSignal
   /** Default true. Set false on list endpoints to keep the `{ data, meta }` envelope. */
   unwrap?: boolean
-  /**
-   * When true, the `path` argument is treated as an absolute URL — the BASE prefix is NOT prepended.
-   * Used by /auth endpoints, which live on noroff.dev/auth (not /holidaze).
-   * Session-derived auth headers are skipped in this mode; pass explicit `headers` instead.
-   */
+  /** Treat `path` as absolute (skip BASE prefix and session auth headers). Used by /auth endpoints. */
   absoluteUrl?: boolean
   /** Explicit headers to merge with the default Accept/Content-Type (used by createApiKey). */
   headers?: Record<string, string>
