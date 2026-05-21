@@ -8,8 +8,7 @@ interface SidebarLink {
   label: string
   icon: IconName
   end?: boolean
-  /** Custom matcher overrides NavLink's default. Useful when one route should
-   *  cover several sub-routes while a sibling stays exact-match. */
+  /** Custom matcher overrides NavLink's default — useful when one route covers several sub-routes while a sibling stays exact-match. */
   match?: (pathname: string) => boolean
 }
 
