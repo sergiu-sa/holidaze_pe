@@ -54,7 +54,7 @@ test.describe('auth · happy path', () => {
   })
 
   test('register customer → profile → sign out → sign in', async ({ page }) => {
-    await page.route(`${NOROFF}/auth/register`, async (route) => {
+    await page.route(`${NOROFF}/auth/register*`, async (route) => {
       const body = (await route.request().postDataJSON()) as { name: string; email: string }
       await fulfillJSON(route, 200, {
         data: { name: body.name, email: body.email, venueManager: false },
@@ -166,7 +166,7 @@ test.describe('auth · manager path', () => {
   })
 
   test('register with ?role=host → My venues visible in AvatarMenu', async ({ page }) => {
-    await page.route(`${NOROFF}/auth/register`, async (route) => {
+    await page.route(`${NOROFF}/auth/register*`, async (route) => {
       const body = (await route.request().postDataJSON()) as {
         name: string
         email: string
