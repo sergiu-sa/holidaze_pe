@@ -175,8 +175,10 @@ export const LoginSuccessSchema = z.object({
   data: z.object({ ...AuthUserShape, accessToken: z.string() }),
 })
 
+// /auth/register omits `venueManager` from the response when it's `false`
+// (verified against the live API 2026-05-21). Login always returns it.
 export const RegisterSuccessSchema = z.object({
-  data: z.object(AuthUserShape),
+  data: z.object({ ...AuthUserShape, venueManager: z.boolean().optional() }),
 })
 
 export const ApiKeySuccessSchema = z.object({
