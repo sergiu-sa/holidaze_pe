@@ -1,11 +1,10 @@
 import AxeBuilder from '@axe-core/playwright'
 import { expect, test } from '@playwright/test'
 
-// Programmatic accessibility verification across the main public routes.
-// Complements the in-browser Lighthouse pass, runs the same axe-core rules
-// Lighthouse uses, but excluding color-contrast
-// italic cinnabar emphasis on cobalt panels, saffron .ruler__meta--cached).
-// Color-contrast is verified separately during the manual Lighthouse pass.
+// Programmatic a11y verification across the main public routes. Same axe-core
+// rules as Lighthouse, excluding color-contrast (italic cinnabar on cobalt
+// panels, saffron .ruler__meta--cached) — color-contrast is verified separately
+// during the manual Lighthouse pass.
 
 const ROUTES = [
   { path: '/', name: 'Home' },

@@ -76,8 +76,7 @@ test.describe('auth · happy path', () => {
     await expect(page).toHaveURL(/\/profile/)
     await expect(page.getByRole('button', { name: /account menu/i })).toBeVisible()
 
-    // Sign out via avatar menu — Sign out is a real <button>, not a menuitem
-    // (slice 5.4 dropped role="menu" from AvatarMenu in favor of native semantics).
+    // Sign out via avatar menu — Sign out is a real <button>, not a menuitem.
     // Scope to the popover because the Footer also renders a Sign out <button> when authenticated.
     await page.getByRole('button', { name: /account menu/i }).click()
     await page.locator('#avatar-menu-pop').getByRole('button', { name: /sign out/i }).click()
