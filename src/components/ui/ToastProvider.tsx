@@ -18,10 +18,7 @@ const DEFAULT_DURATION_MS = 4000
 
 const ToastContext = createContext<((message: string, opts?: ToastOptions) => void) | null>(null)
 
-/**
- * Queued toast surface — bottom-right stack, MAX_VISIBLE = 3, FIFO drop.
- * Each toast auto-dismisses after `duration` ms (default 4000); pass 0 to disable.
- */
+/** Queued toast surface — bottom-right stack, MAX_VISIBLE = 3, FIFO drop. Auto-dismisses after `duration` ms (default 4000); pass 0 to disable. */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([])
   const timeouts = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map())
