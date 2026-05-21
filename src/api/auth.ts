@@ -14,12 +14,14 @@ import {
 const NOROFF_AUTH = 'https://v2.api.noroff.dev/auth'
 
 /**
- * POST /auth/register. Does NOT return an accessToken (verified against
- * docs.noroff.dev 2026-05-01) — caller must follow up with login() + createApiKey().
+ * POST /auth/register. Does NOT return an accessToken — caller must follow up
+ * with login() + createApiKey(). `?_holidaze=true` is required so the response
+ * includes `venueManager`; without it the field is omitted and the schema parse
+ * fails (Noroff API behaviour, verified 2026-05-21).
  */
 export async function register(input: RegisterInput): Promise<RegisterSuccess['data']> {
   const body = RegisterInputSchema.parse(input)
-  const res = await apiFetch<RegisterSuccess>(`${NOROFF_AUTH}/register`, {
+  const res = await apiFetch<RegisterSuccess>(`${NOROFF_AUTH}/register?_holidaze=true`, {
     method: 'POST',
     body,
     absoluteUrl: true,
