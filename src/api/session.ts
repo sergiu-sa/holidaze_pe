@@ -1,4 +1,6 @@
-import type { Media } from './schemas'
+import { z } from 'zod'
+
+import { type Media, MediaSchema } from './schemas'
 
 // Per-user credentials live here at runtime — `.env` would inline them into
 // the production bundle, where every visitor could read them.
@@ -14,6 +16,18 @@ export interface Session {
   banner?: Media
 }
 
+// Validates the localStorage payload before we trust it as a Session. Tampered
+// can never reach an Authorization header.
+export const SessionSchema = z.object({
+  accessToken: z.string().min(1),
+  apiKey: z.string().min(1),
+  name: z.string().optional(),
+  email: z.string().optional(),
+  venueManager: z.boolean().optional(),
+  avatar: MediaSchema.optional(),
+  banner: MediaSchema.optional(),
+})
+
 // Module-level memory cache — avoids repeated localStorage reads.
 let current: Session | null = null
 
@@ -21,7 +35,13 @@ function loadFromStorage(): Session | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
     if (!raw) return null
-    return JSON.parse(raw) as Session
+    const result = SessionSchema.safeParse(JSON.parse(raw))
+    if (!result.success) {
+      // Unexpected shape — clear so the next write starts from a clean slot.
+      localStorage.removeItem(STORAGE_KEY)
+      return null
+    }
+    return result.data
   } catch {
     console.warn('[holidaze] Failed to parse session from localStorage')
     return null
