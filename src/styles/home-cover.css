@@ -1,8 +1,6 @@
 /* ── Home — Act 2: First Spread ──
    Hero opens with a curated cover backdrop + paper wash + top-right
-   editorial folio (cinnabar pin matches Act 1's world pins). On scroll
-   the layers fade with --ct (driven by Home.tsx); settle drops them via
-   [data-cover-done]. Gated by useHomeCoverVisits. */
+   editorial folio. On scroll the layers fades. */
 
 @property --cover-entrance {
   syntax: '<number>';
@@ -42,8 +40,9 @@
 }
 
 /* Paper-texture wash — same SVG noise as Act 1's .intro-cover__paper.
-   Multiply blend gives the "ink on paper" feel that carries Act 1's
-   typographic register across the seam. */
+  Mix-blend multiply and opacity let it read as a subtle filter over the
+  photo, adding texture and toning down contrast for better text legibility.
+*/
 .hero--cover::after {
   content: "";
   position: absolute;
@@ -82,8 +81,7 @@
   pointer-events: none;
 }
 
-/* Editorial folio — mono caps lines with a cinnabar pin in the middle
-   line. The pin is the seam carrier from Act 1's eight world pins. */
+/* Editorial folio  */
 .hero__cover-folio {
   position: absolute;
   top: clamp(2.5rem, 4vw, 4.5rem);
@@ -99,8 +97,6 @@
   text-transform: uppercase;
   font-weight: 500;
   color: var(--ink);
-  /* Bone-tinted halo — reads as offset-print emboss, holds legibility
-     against variable photo backdrops. */
   text-shadow:
     0 0 1px rgba(245, 238, 221, 0.55),
     0 1px 0 rgba(245, 238, 221, 0.35);

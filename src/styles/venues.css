@@ -1,5 +1,5 @@
 @layer components {
-  /* ── Pager (Venues) — editorial numbered pagination ── */
+  /*  Pager (Venues) — editorial numbered pagination  */
   .pager {
     display: flex;
     flex-wrap: wrap;
@@ -32,8 +32,6 @@
     color: var(--ink);
     border: 1px solid var(--ink);
     padding: 0 0.85rem;
-    /* Uniform height across all pager controls — Prev/Next/Numbers/Gap all align.
-       WCAG 2.5.5 tap target floor: 44 px = 2.75 rem at 16 px base. */
     min-height: 2.75rem;
     min-width: 2.75rem;
     cursor: pointer;
@@ -72,9 +70,6 @@
     color: var(--ink-mute);
     font-family: theme(fontFamily.mono);
   }
-  /* Mobile: hide the numbered list, show a clean [Prev] · [meta] · [Next] row.
-     The numbered list is heavy on a phone screen — Prev/Next + page counter is
-     the standard mobile pagination pattern. */
   @media (max-width: 640px) {
     .pager {
       gap: 0.5rem;
@@ -221,7 +216,7 @@
     opacity: 0.7;
   }
 
-  /* ── Venues controls + filters + list ── */
+  /*  Venues controls + filters + list  */
   .v-controls {
     display: grid;
     grid-template-columns: 1fr auto auto;
@@ -274,7 +269,7 @@
   .v-sort:hover, .v-filter-toggle:hover { background: var(--ink); color: var(--bone); }
   .v-sort[aria-expanded="true"], .v-filter-toggle[aria-expanded="true"] { background: var(--ink); color: var(--bone); }
 
-  /* Visual echo of the Home funnel's date range — does not filter availability yet. */
+  /* Visual echo of the Home funnel's date range  */
   .v-dates {
     display: flex;
     align-items: center;
@@ -468,9 +463,7 @@
   }
   .v-empty__reset:hover { background: var(--ink); color: var(--bone); }
 
-  /* ─── 404 / Off-the-atlas card ─── */
-  /* Ported from wip_prototype/css/page.css:966–1024. Used by route-level NotFound
-     and the venue-detail bad-id path so both speak the same vocabulary. */
+  /* 404 / Off-the-atlas card */
   .notfound {
     display: grid;
     grid-template-columns: 1fr;
@@ -541,10 +534,8 @@
     border-color: var(--terracotta);
   }
 
-  /* ─── Venue peek modal ─────────────────────────────────────────────────
-     Ported from wip_prototype/css/home.css:1411–1603. Triggered by a card
-     click on Home/Venues; native <dialog>; "Book now" CTA navigates to
-     /venues/:id for the full magazine spread. */
+  /*  Venue peek modal  */
+
   .venue-modal {
     border: 0;
     padding: 0;
@@ -759,11 +750,7 @@
     .venue-modal__body { max-height: 60vh; }
   }
 
-  /* ════════════════════════════════════════════════════════════════════════
-     VENUE DETAIL — magazine spread, gallery, calendar, booking panel.
-     Ported from wip_prototype/css/venue.css. Visual law; under-the-hood
-     React composition lives in src/components/venue/ + booking/.
-     ════════════════════════════════════════════════════════════════════════ */
+  /*  VENUE DETAIL   */
 
   .v-mag {
     padding-bottom: var(--shelf, 6rem);
@@ -774,7 +761,7 @@
     scroll-margin-top: clamp(4rem, 10vh, 6rem);
   }
 
-  /* ── Hero plate ─────────────────────────────────────────────────────── */
+  /*  Hero plate */
   .v-hero {
     position: relative;
     height: clamp(52vh, 68vh, 78vh);
@@ -834,7 +821,7 @@
     margin: 0 0.15em;
   }
 
-  /* ── Gallery (overlay arrows + thumb strip + lightbox) ──────────────── */
+  /*  Gallery (overlay arrows + thumb strip + lightbox)  */
   .v-gal__arrow {
     position: absolute;
     top: 50%; transform: translateY(-50%);
@@ -918,7 +905,7 @@
   }
   .v-gal__thumb.is-active .v-gal__thumb-num { background: var(--terracotta); }
 
-  /* ── Lightbox (native <dialog>) ─────────────────────────────────────── */
+  /*  Lightbox (native <dialog>)  */
   .v-lightbox {
     margin: 0; padding: 0;
     width: 100vw; height: 100vh;
@@ -995,7 +982,7 @@
     border-color: var(--terracotta);
   }
 
-  /* ── Title plate ────────────────────────────────────────────────────── */
+  /*  Title plate  */
   .v-title {
     position: relative;
     padding: clamp(2.75rem, 5vw, 4.5rem) var(--gutter, 1.5rem) clamp(2rem, 3.5vw, 3rem);
@@ -1170,7 +1157,7 @@
   }
   @keyframes vtRise { to { opacity: 1; transform: none; } }
 
-  /* ── Spread (body + sticky marginalia) ──────────────────────────────── */
+  /*  Spread (body + sticky marginalia)  */
   .v-mag__spread {
     display: grid;
     grid-template-columns: 1fr;
@@ -1302,7 +1289,7 @@
     margin: 0;
   }
 
-  /* ── Calendar ───────────────────────────────────────────────────────── */
+  /*  Calendar  */
   .cal {
     padding: clamp(3rem, 5vw, 4rem) var(--gutter, 1.5rem);
     border-top: 1px solid var(--rule);
@@ -1495,7 +1482,7 @@
   }
   .cal__swatch--sel { background: var(--ink); border-color: var(--ink); }
 
-  /* ── Booking panel ──────────────────────────────────────────────────── */
+  /*  Booking panel  */
   .v-mag__book { padding: clamp(3rem, 5vw, 4rem) var(--gutter, 1.5rem); }
   .v-mag__book-frame {
     display: grid; gap: clamp(2rem, 4vw, 4rem);
@@ -1723,7 +1710,7 @@
     padding-top: 0.3em;
   }
 
-  /* ── Host strip ─────────────────────────────────────────────────────── */
+  /*  Host strip  */
   .host-strip {
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -1794,7 +1781,7 @@
     outline-offset: 3px;
   }
 
-  /* ── Mobile safety overrides ────────────────────────────────────────── */
+  /*   Mobile safety overrides  */
   @media (max-width: 620px) {
     .v-hero { height: clamp(46vh, 58vh, 68vh); }
     .v-hero__rail { padding: 0.85rem var(--gutter, 1rem); font-size: 0.68rem; letter-spacing: 0.14em; }

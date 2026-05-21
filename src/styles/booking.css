@@ -1,7 +1,4 @@
-/* ────────────────────────────────────────────────
-   HOLIDAZE — booked.css
-   Booking receipt — editorial document.
-   ──────────────────────────────────────────────── */
+/* Booking receipt — editorial document. */
 
 .receipt {
   padding: clamp(2rem, 4vw, 4rem) var(--gutter) var(--shelf);
@@ -36,7 +33,7 @@
   align-self: center;
 }
 
-/* Mobile: let it wrap, shrink, drop the clip — content stays readable below ~640px. */
+/* Mobile: let it wrap, shrink, drop the clip */
 @media (max-width: 640px) {
   .receipt__stamp {
     flex-wrap: wrap;
@@ -278,7 +275,7 @@
   body { background: #fff; }
 }
 
-/* BookingPanel state additions (slice 5.2) */
+/* BookingPanel state additions */
 .book__error {
   margin: 8px 0 0;
   padding: 10px 12px;
@@ -336,7 +333,7 @@
   color: var(--ink);
 }
 
-/* Success state — brief confirmation with a hairline progress bar */
+/* Success state  */
 .book__success {
   display: flex;
   flex-direction: column;

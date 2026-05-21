@@ -12,7 +12,6 @@
   .atlas--compact {
     padding: clamp(2rem, 1.5rem + 2.5vw, 3.5rem) theme(spacing.gutter);
   }
-  /* Clip plate on mobile — far-east labels otherwise push <html> overflow. */
   @media (max-width: 880px) {
     .atlas__plate { overflow: hidden; }
   }
@@ -295,8 +294,7 @@
     outline-offset: 2px;
   }
 
-  /* Hide labels until interaction — inline labels drift off-shore on coastal
-     cities and read as misplaced; AtlasCard surfaces details on hover. */
+  /* Hide labels until interaction; AtlasCard surfaces details on hover. */
   .atlas__plate .atlas__name,
   .atlas__plate .atlas__price {
     opacity: 0;
@@ -595,7 +593,7 @@
     animation-delay: calc(var(--i, 0) * 40ms + 100ms);
   }
 
-  /* WCAG 2.5.5 — 44×44 tap target on touch (dots are otherwise sub-44px). */
+  /* WCAG 2.5.5 — 44×44 tap target on touch. */
   @media (hover: none) and (pointer: coarse) {
     .atlas__city {
       padding: 0.6rem;
@@ -661,7 +659,7 @@
     .atlas__full__meta { justify-self: start; text-align: left; max-width: none; }
   }
 
-  /* ─── Compass dial — hero (large, with caption) and overlay (small, on plate) ─── */
+  /* ─── Compass dial ─── */
   .compass {
     position: relative;
     width: clamp(11rem, 9rem + 6vw, 15rem);
@@ -797,12 +795,11 @@
       -webkit-text-stroke-width: 0.7px;
     }
   }
-  /* Drop watermark on mobile — it fights the title + stats tape. */
+  /* Drop watermark on mobile  */
   @media (max-width: 640px) {
     .atlas-hero__wordmark { display: none; }
   }
 
-  /* Capped short so the lead doesn't run under the TERRA wordmark. */
   .atlas-hero__lead {
     grid-area: lead;
     position: relative;
@@ -1384,7 +1381,7 @@
     background: var(--terracotta);
   }
 
-  /* Decoration only — coords are reported via the HUD chip below. */
+  /* Decoration only */
   .atp__crosshair {
     position: absolute;
     inset: 0;

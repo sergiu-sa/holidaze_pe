@@ -66,10 +66,7 @@
       transform 900ms theme(transitionTimingFunction.out-quint);
   }
 
-  /* Pulse — two stacked SVG rings inside a fixed em-square box, same pattern
-     as .hero__cover-folio-pin (just cobalt, not cinnabar). Mark and halo both
-     fill the box via inset:0, so they're co-centred by construction. Tempo
-     locked to 2.4s out-quint — ticks in unison with the hero pin. */
+  /* Pulse  */
   .pulse {
     position: relative;
     display: inline-block;
@@ -100,8 +97,7 @@
     animation: pulse-halo 2.4s theme(transitionTimingFunction.out-quint) infinite;
   }
 
-  /* ─── Button (primitive) ───
-     Loading state animates a 1px hairline bar across the bottom edge; reduced-motion collapses it. */
+  /*  Button (primitive) */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -195,9 +191,7 @@
     .btn--primary:hover { transform: none; }
   }
 
-  /* ─── Field (primitive) ───
-     Ported from prototype page.css §.field. Single composition: label + control + optional hint/error.
-     Underline-only border collapses to cinnabar on focus; error swaps to cinnabar permanently. */
+  /*  Field (primitive)  */
   .field {
     display: grid;
     gap: 0.35rem;
@@ -254,8 +248,7 @@
     color: theme(colors.cinnabar.DEFAULT);
   }
 
-  /* ─── Chip (primitive) ───
-     Two variants: index (cinnabar fill, ivory text — venue/issue numbers) and amenity (icon + label, hairline outline). */
+  /*  Chip (primitive)  */
   .chip {
     display: inline-flex;
     align-items: center;
@@ -284,8 +277,7 @@
     border-color: theme(colors.cinnabar.DEFAULT);
   }
 
-  /* Registration marks — printer crosshair corner ticks. Drop four spans inside any
-     positioned parent. Override `--regmark-ink` for light-on-dark uses. */
+  /* Registration marks  */
   .regmark {
     position: absolute;
     width: 14px;
@@ -307,7 +299,7 @@
   .regmark--bl { bottom: 0; left: 0; }
   .regmark--br { bottom: 0; right: 0; }
 
-  /* Full-page editorial grain. Apply to a fixed div above content. */
+  /* Full-page editorial grain */
   .grain {
     @apply pointer-events-none fixed inset-0 z-[200] opacity-[0.35]
            mix-blend-multiply;

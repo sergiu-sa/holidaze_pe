@@ -1,4 +1,4 @@
-/* ─── Profile shell + sidebar ─── */
+/*  Profile shell + sidebar  */
 
 .profile {
   display: grid;
@@ -172,7 +172,7 @@
   outline-offset: 3px;
 }
 
-/* ─── Profile header / stats / bookings list ─── */
+/*  Profile header / stats / bookings list  */
 
 .profile-header__title {
   font-family: 'Fraunces', serif;
@@ -221,7 +221,6 @@
   font-family: 'Fraunces', serif;
   font-size: clamp(2rem, 3.5vw + 1rem, 3rem);
   margin: 0;
-  /* Source order is <dt><dd> for valid HTML; visual order is number on top. */
   order: 1;
 }
 .profile-stats__num em {
@@ -279,7 +278,6 @@
     padding: 0.4rem 0.7rem;
     font-size: 0.6rem;
     letter-spacing: 0.1em;
-    /* 44px tap target preserved via min-height on the base rule */
   }
 }
 .rec__img {
@@ -325,7 +323,7 @@
   border: 1px solid var(--ink);
   background: transparent;
   padding: 0.5rem 0.75rem;
-  min-height: 44px; /* WCAG 2.5.5 — tap target */
+  min-height: 44px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.68rem;
   letter-spacing: 0.14em;
@@ -421,7 +419,7 @@
 }
 .crumbs__list a:hover { color: var(--cinnabar); }
 
-/* ─── Tabs primitive ─── */
+/*  Tabs primitive  */
 
 .tabs__list {
   display: inline-flex;
@@ -468,7 +466,7 @@
   color: var(--ivory);
 }
 
-/* ─── ConfirmDialog ─── */
+/*  ConfirmDialog  */
 
 .confirm-dialog {
   border: 1px solid var(--ink);
@@ -525,7 +523,7 @@
   border-color: var(--cinnabar);
 }
 
-/* ─── Avatar editor — identity masthead ─── */
+/*  Avatar editor — identity masthead  */
 
 .av-byline {
   padding-block: 1.5rem;
@@ -577,7 +575,7 @@
   color: var(--cinnabar);
 }
 
-/* ─── Avatar form sections ─── */
+/*  Avatar form sections  */
 
 .av-form {
   display: flex;
@@ -629,7 +627,7 @@
   margin: 0;
 }
 
-/* ─── Avatar plate ─── */
+/*  Avatar plate  */
 
 .av-plate {
   position: relative;
@@ -746,7 +744,7 @@ body[data-mono='saffron'] .av-plate:not([data-state='ready']) .av-plate__mono {
   margin: 0;
 }
 
-/* ─── Monogram ground swatches ─── */
+/*  Monogram ground swatches  */
 
 .av-ground {
   border: 0;
@@ -943,7 +941,7 @@ body[data-mono='saffron'] .av-plate:not([data-state='ready']) .av-plate__mono {
   color: var(--ink-soft);
 }
 
-/* ─── Context previews (chip / host strip / receipt stamp) ─── */
+/* Context previews (chip / host strip / receipt stamp) */
 
 .av-contexts {
   display: grid;
@@ -1115,7 +1113,7 @@ body[data-mono='saffron']  .av-ctx-chip__av,
 body[data-mono='saffron']  .av-ctx-host__av,
 body[data-mono='saffron']  .av-ctx-stamp__av { background: #D4A130; color: var(--ink); }
 
-/* ─── Avatar editor actions ─── */
+/*  Avatar editor actions  */
 
 .av-actions {
   display: flex;
@@ -1176,7 +1174,7 @@ body[data-mono='saffron']  .av-ctx-stamp__av { background: #D4A130; color: var(-
   font-size: 0.875rem;
 }
 
-/* ─── Venue editor — manager create / edit form ─── */
+/*  Venue editor — manager create / edit form  */
 .v-editor {
   display: grid;
   gap: 1.25rem;
@@ -1257,7 +1255,7 @@ body[data-mono='saffron']  .av-ctx-stamp__av { background: #D4A130; color: var(-
   font-size: 0.95rem;
   color: var(--ink-soft);
   cursor: pointer;
-  min-height: 44px; /* WCAG 2.5.5 — tap target */
+  min-height: 44px;
 }
 
 .v-editor__meta-grid input {

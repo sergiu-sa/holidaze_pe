@@ -1,18 +1,4 @@
-/* ─────────────────────────────────────────
-   HOLIDAZE — On Hosting · A Specimen, N°03
-   A magazine spread laid in editorial brutalism.
-   Three faces only (Fraunces / Bricolage / Mono).
-   Raw marks: regmark crosshairs, hand-drawn strikes,
-   plate stamps. Fun where it earns it (anatomy,
-   strike), restrained where it doesn't.
-   Section vocabulary (§ 03·α … § fin):
-     h2-hero      — 0%, with handwritten "commission" struck across
-     plates-wrap  — contact-sheet of host portraits + kept-amounts
-     anatomy-wrap — line-drawn diagram of a booking
-     strike-wrap  — three moves on one strike-line, middle dominant
-     post-wrap    — three desks + postal stamp, contact route
-     signed       — sign-off, single crown over the S
-   ───────────────────────────────────────── */
+/* Host Page */
 
 .page-wrap {
   max-width: 1480px;
@@ -88,22 +74,6 @@
 
 /* ─── §0 H2-HERO ─── */
 
-/* === Reveal cascade =====================================
-   Once `fonts-ready` lands, the hero stages itself in six
-   beats so the gag *happens* in front of the reader instead
-   of arriving as a still frame:
-
-     100ms   0% fades in  (the figure)
-     500ms   strike line draws across the % stem (~950ms)
-     700ms   "commission" fades through the line
-    1500ms   marginalia tick pen-strokes itself
-    1700ms   folio chip rises into place
-    1800ms   right-side deck arrives
-    2800ms+  strike begins a 6s idle breath, infinite
-
-   The `.signed__sig` opacity gate at the bottom of the page
-   stays — it's the page's other Caveat moment.
-   ======================================================= */
 .h2-hero__num,
 .h2-hero__strike-text,
 .h2-hero__tick,
@@ -193,8 +163,7 @@
     transform: rotate(-3.5deg);
   }
 }
-/* Deck-pin — the card drops in from above and settles at a left
-   tilt, like a piece of paper being pinned to the spread. */
+/* Deck-pin  */
 @keyframes deckPin {
   0% {
     opacity: 0;
@@ -225,9 +194,7 @@
     animation: none;
     opacity: 1;
     /* No explicit transform — inherits the base / breakpoint rule's
-       rotation (−10° on desktop, −3° on tablet+mobile). The @keyframes
-       endpoint matches the desktop base, so cancelling the animation
-       lands on the right tilt at every viewport. */
+       rotation (−10° on desktop, −3° on tablet+mobile). */
   }
   .fonts-ready .h2-hero__strike-line,
   .fonts-ready .h2-hero__tick {
@@ -279,9 +246,7 @@
   overflow: visible;
 }
 
-/* The 0% — fills the frame, edge-to-edge, magazine-cover scale.
-   Sized to the stage via container-relative units so it always
-   spans corner-to-corner regardless of viewport width. */
+/* The 0%  */
 .h2-hero__num {
   font-family: var(--ff-display);
   font-weight: 400;
@@ -302,10 +267,7 @@
   color: var(--terracotta);
 }
 
-/* Caveat "commission" — strikes straight across the % stem,
-   Basquiat-style. The strike line is a hand-drawn SVG path
-   (slightly wobbly) instead of a straight CSS bar so it reads
-   as drawn, not CAD. */
+
 .h2-hero__strike {
   position: absolute;
   top: 62%;
@@ -325,10 +287,6 @@
   color: var(--terracotta);
   letter-spacing: -0.02em;
   z-index: 1;
-  /* Bone halo so the red glyphs stay legible where they
-     cross the red %. A multi-offset text-shadow paints a
-     thin ivory outline behind every letter — paint-knife
-     cutout effect, no extra DOM. */
   text-shadow:
     -2px 0 0 var(--bone),
     2px 0 0 var(--bone),
@@ -375,11 +333,7 @@
   vector-effect: non-scaling-stroke;
 }
 
-/* Marginalia — short hand-drawn arrow tick anchored to the strike.
-   Drifts ±8/5px on cursor (set via --tx/--ty by the parallax JS at
-   the bottom of the file). The transition smooths the drift, so the
-   tick never reads as wobbly. Reduced-motion / coarse-pointer users
-   get a static tick — JS short-circuits there. */
+/* Marginalia — short hand-drawn arrow. */
 .h2-hero__tick {
   position: absolute;
   bottom: 8%;
@@ -415,14 +369,7 @@
   fill: var(--ink-soft);
 }
 
-/* The pinned deck card — paper plate with a saffron-tipped pin
-   at the top centre and the brand's three-peak crown to the
-   right of the prose. Lives inside the stage as an absolute
-   overlay at the upper-right of the figure on desktop; on phone
-   it pops out to a static block below the stage (handled in the
-   responsive overrides). The static rotation matches the deckPin
-   animation's resting transform so the cascade flows into a
-   visible tilt with no jump. */
+/* The pinned deck card  */
 .h2-hero__note {
   position: absolute;
   top: 4%;
@@ -493,11 +440,7 @@
   display: block;
 }
 
-/* Folio chip — bottom-right corner. The negative `right` pulls
-   it slightly past the stage edge into the page-wrap gutter, so
-   it reads as a printed sticker pinned past the frame instead of
-   inside it. (right: 0 inside the stage was being visually
-   pulled inward by the new grid layout — this hard-anchors it.) */
+/* Folio chip  */
 .h2-hero__folio {
   position: absolute;
   bottom: 4%;
@@ -521,7 +464,7 @@
   font-weight: 500;
 }
 
-/* Regmarks — printer's frame, balanced rectangle. */
+/* Regmarks */
 .h2-hero__stage .regmark {
   --regmark-ink: var(--ink-soft);
 }
@@ -548,9 +491,6 @@
    0% scale, c) the strike anchor, d) which marginalia stays
    in the frame.
    ─────────────────────────────────────────────────────── */
-
-/* Tablet-wide / small-laptop: tighten the figure, narrow the deck
-   card so it doesn't hug the regmark or compete with the strike. */
 @media (max-width: 1199px) {
   .h2-hero__num {
     font-size: clamp(15rem, 8rem + 32vw, 36rem);
@@ -570,9 +510,6 @@
   }
 }
 
-/* Tablet stage geometry — figure shrinks, strike repositions, note
-   stays inside the stage's top-right corner (it has room here). The
-   note's pop-out treatment fires only below 640 px (next block). */
 @media (max-width: 900px) {
   .h2-hero__stage {
     aspect-ratio: 7 / 5;
@@ -598,12 +535,6 @@
   }
 }
 
-/* Below 640 px the stage is too narrow to hold the note alongside
-   the 0% — the note pops out below the stage. The section grows
-   its padding-bottom to reserve room for the popped card; the note
-   keeps its absolute positioning so the figure's context stays
-   intact. Rotation kept gentle (-3°) so the corner doesn't poke
-   into the folio's vertical range. */
 @media (max-width: 640px) {
   .h2-hero {
     padding-bottom: clamp(7rem, 4rem + 4vw, 10rem);
@@ -620,10 +551,6 @@
     transform: rotate(-3deg);
   }
 }
-
-/* Phone: stage gets tall (5:4), figure recalibrated so the %
-   and the Caveat strike both fit one breath, marginalia tuck
-   into the corners without overlapping. */
 @media (max-width: 540px) {
   .h2-hero__stage {
     aspect-ratio: 4 / 3;
@@ -661,7 +588,7 @@
 }
 
 /* ───────────────────────────────────────────
-   §03·α PLATES — contact-sheet (kept, refined)
+   §03·α PLATES — contact-sheet 
    ─────────────────────────────────────────── */
 .plates-wrap {
   padding: clamp(3rem, 2rem + 4vw, 5rem) 0 clamp(3rem, 2rem + 4vw, 5rem);
@@ -723,8 +650,7 @@
   }
 }
 
-/* Visually-hidden utility — content available to screen readers
-   but not visible. Used for the hero h1's accessible name. */
+/* Visually-hidden utility */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -737,8 +663,6 @@
   border: 0;
 }
 
-/* Page imprint — closing chip that brackets the spread, mirroring
-   the hero's opening folio. Centered just above the sign-off. */
 .page-imprint {
   display: flex;
   justify-content: center;
@@ -839,9 +763,6 @@
   text-transform: uppercase;
   color: var(--ink-mute);
 }
-/* Kept-amount — folded in from the deleted §β Roll section so each
-   face carries its own financial proof. Dotted top rule keeps the
-   name/where row visually distinct from the figure. */
 .plate__cap-amt {
   font-family: var(--ff-display);
   font-weight: 400;
@@ -867,10 +788,6 @@
   margin-left: 0.4rem;
 }
 
-/* Spans rebalanced so every row totals 12 cleanly:
-     row band 1 (rows 1–6): lead 6 + tall 3 + quote 3 / small 3 = 12
-     row band 2 (rows 7–9): medium 5 + stamp 3 + squat 4    = 12
-     row band 3 (rows 10–12): wide 12                        = 12 */
 .plate--lead {
   grid-column: span 6;
   grid-row: span 6;
@@ -985,9 +902,7 @@
   line-height: 1.4;
 }
 
-/* ───────────────────────────────────────────
-   §03·β ANATOMY — line diagram
-   ─────────────────────────────────────────── */
+/*  ANATOMY — line diagram */
 .anatomy-wrap {
   padding: clamp(3rem, 2rem + 4vw, 5rem) 0;
   border-bottom: 1px solid var(--ink);
@@ -1042,11 +957,6 @@
   text-transform: none;
   letter-spacing: 0.02em;
 }
-/* Below 720 px the plate-no ("Anatomy of a booking") collides with
-   the plate-tag ("FIG. 01 · PLATE 12 · N°04") in opposite corners.
-   It's also redundant with the section h2 directly above the plate,
-   so hide it on phone/tablet rather than stack and push the diagram
-   down. The plate-tag carries the editorial chord on its own. */
 @media (max-width: 720px) {
   .anatomy__plate-no {
     display: none;
@@ -1060,8 +970,6 @@
   height: auto;
   display: block;
 }
-/* Strokes hold 1px so the line work survives when the diagram scales
-   down on tablet/phone — without this, hairlines fade as the SVG shrinks. */
 .anatomy svg .stroke,
 .anatomy svg .case-glyph,
 .anatomy svg .key-glyph line,
@@ -1069,8 +977,6 @@
 .anatomy svg .venue-stamp {
   vector-effect: non-scaling-stroke;
 }
-/* Below 720 px the SVG shrinks; bump label sizes so the data stays
-   readable when the 1100×540 viewBox renders into a phone column. */
 @media (max-width: 720px) {
   .anatomy svg text.lbl-tiny {
     font-size: 18px;
@@ -1143,7 +1049,7 @@
   font-size: 9.5px;
   letter-spacing: 0.18em;
 }
-/* Anatomy — polish layer (typographic venue, key/case glyphs, big 0%) */
+/* Anatomy — polish layer  */
 .anatomy svg text.lbl-coord {
   font-family: var(--ff-mono);
   font-size: 11px;
@@ -1215,11 +1121,7 @@
   font-size: 0.85rem;
 }
 
-/* ───────────────────────────────────────────
-   §03·γ STRIKE — three moves on one strike-line.
-   Middle tile dominates (saffron tint, regmarks)
-   to give the line a centre of gravity.
-   ─────────────────────────────────────────── */
+/*  STRIKE  */
 .strike-wrap {
   padding: clamp(3rem, 2rem + 4vw, 5rem) 0;
   border-bottom: 1px solid var(--ink);
@@ -1340,7 +1242,7 @@
   }
 }
 
-/* ─── §03·δ CORRESPONDENCE ─── */
+/*  CORRESPONDENCE  */
 .post-wrap {
   padding: clamp(3rem, 2rem + 4vw, 5rem) 0;
   border-bottom: 1px solid var(--ink);
@@ -1489,8 +1391,6 @@
   font-size: 0.9rem;
 }
 
-/* Middle desk dominates — saffron wash echoing the
-   Strike section's middle move. */
 .desk--dom {
   background: linear-gradient(
     180deg,
@@ -1527,9 +1427,6 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   justify-self: start;
-  /* Inset dashed perforation row — reads as a stamp's
-     inner edge. Using outline + negative offset so the
-     dashes sit fully inside the hard outer border. */
   outline: 3px dotted color-mix(in oklab, var(--ink) 45%, var(--bone));
   outline-offset: -7px;
 }
@@ -1698,9 +1595,7 @@
   }
 }
 
-/* ───────────────────────────────────────────
-   §fin SIGNED — sign-off (single crown on S)
-   ─────────────────────────────────────────── */
+/* SIGNED — sign-off  */
 .signed {
   position: relative;
   padding: clamp(3rem, 2rem + 4vw, 5rem) 0 clamp(4rem, 2.5rem + 5vw, 7rem);
@@ -1733,8 +1628,7 @@
   padding: 1.5rem 1rem 1rem;
   min-height: 11rem;
 }
-/* Decorative regmark scatter around the signed block —
-   balanced rectangle, all four corners on the same insets. */
+
 .signed__block .regmark {
   --regmark-ink: var(--ink-soft);
 }
@@ -1808,9 +1702,7 @@
   }
 }
 
-/* ───────────────────────────────────────────
-   Plates responsive
-   ─────────────────────────────────────────── */
+/*  Plates responsive  */
 @media (max-width: 1100px) {
   .plates {
     grid-template-columns: repeat(6, 1fr);
