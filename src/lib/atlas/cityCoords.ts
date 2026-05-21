@@ -1,7 +1,7 @@
 // Curated gazetteer covering the cities that appear in the Holidaze fallback +
 // the most common Noroff venue cities. Used as a fallback when a venue ships
 // `lat: 0, lng: 0` or empty `country`/`continent`. Re-derived from the
-// prototype's `wip_prototype/js/atlas.js` per CLAUDE.md §3.6.
+// prototype's `wip_prototype/js/atlas.js` (read for the rules, re-implemented).
 
 export type Continent =
   | 'Africa'

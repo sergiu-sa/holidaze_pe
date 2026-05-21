@@ -1,7 +1,8 @@
 import type { Venue } from '../types/venue'
 
 // Six curated venues. Used when the API errors or isUsable strips the result
-// below the threshold. Re-derived from wip_prototype/js/api.js per CLAUDE.md §3.6.
+// below the threshold. Rules re-derived from wip_prototype/js/api.js (the
+// prototype is a visual reference; logic was re-implemented, not copy-pasted).
 // `id` is prefixed `fb-` so consumers can detect fallback entries via isFallbackId().
 
 const SYSTEM_OWNER = {

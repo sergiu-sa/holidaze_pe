@@ -91,7 +91,7 @@ export default defineConfig([
           selector:
             "JSXAttribute[name.name='className'] Literal[value=/(?:^|\\s)rounded(?:-[a-z0-9]+)*(?:\\s|$)/]",
           message:
-            'No rounded corners — Holidaze uses hard edges (CLAUDE.md §3.2). Remove the `rounded*` utility.',
+            'No rounded corners — Holidaze uses hard edges by design. Remove the `rounded*` utility.',
         },
       ],
     },
