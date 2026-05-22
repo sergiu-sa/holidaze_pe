@@ -53,12 +53,28 @@ export function ProfileSidebar() {
         <span className="profile__regmark profile__regmark--tr" aria-hidden="true" />
         <span className="profile__regmark profile__regmark--bl" aria-hidden="true" />
         <span className="profile__regmark profile__regmark--br" aria-hidden="true" />
-        <div className="profile__avatar" aria-hidden="true">
-          {user.avatar?.url ? (
-            <img src={user.avatar.url} alt="" referrerPolicy="no-referrer" />
-          ) : (
-            <span>{initial}</span>
-          )}
+        <div className="profile__avatar-wrap">
+          <div className="profile__avatar" aria-hidden="true">
+            {user.avatar?.url ? (
+              <img src={user.avatar.url} alt="" referrerPolicy="no-referrer" />
+            ) : (
+              <span>{initial}</span>
+            )}
+          </div>
+          {user.venueManager ? (
+            <span className="profile__avatar-crown" aria-hidden="true">
+              <svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M 22 64 L 16 10 L 38 30 L 60 4 L 80 32 L 104 12 L 98 64 Q 60 70 22 64 Z"
+                  stroke="var(--ink)"
+                  strokeWidth="7"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+          ) : null}
         </div>
         <p className="profile__name">{user.name}</p>
         <p className="profile__email mono">{user.email}</p>
