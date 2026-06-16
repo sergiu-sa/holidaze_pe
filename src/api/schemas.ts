@@ -144,6 +144,8 @@ export const VenueSchema: z.ZodType<Venue> = z.object({
 // Outgoing payloads use .strict() so we never send extra fields to Noroff.
 export const LoginInputSchema = z
   .object({
+    // UX-only gate: Noroff enforces the stud.noroff.no domain server-side; this
+    // mirrors it for a fast inline error and never replaces the server check.
     email: z
       .email('Use a valid email')
       .regex(/@stud\.noroff\.no$/i, 'Email must end in stud.noroff.no'),
