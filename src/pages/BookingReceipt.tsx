@@ -8,6 +8,7 @@ import { NotFoundCard } from '../components/shell/NotFoundCard'
 import { ContactShortcut } from '../components/ui/ContactShortcut'
 import { useAuth } from '../hooks/useAuth'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { toFriendlyMessage } from '../lib/error-message'
 import { ApiError } from '../types/api'
 import { type Venue } from '../types/venue'
 
@@ -49,7 +50,7 @@ export default function BookingReceipt() {
           setState({ kind: 'not-found' })
           return
         }
-        const message = err instanceof Error ? err.message : "Couldn't load that booking. Try again."
+        const message = toFriendlyMessage(err, "Couldn't load that booking. Try again.")
         setState({ kind: 'error', message })
       })
     return () => {
