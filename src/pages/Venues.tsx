@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 
 import heroVenuesUrl from '../assets/hero/hero-venues.webp'
@@ -9,83 +9,24 @@ import { VenuePeekModal } from '../components/browse/VenuePeekModal'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useVenues } from '../hooks/useVenues'
 import { useVenueSearch } from '../hooks/useVenueSearch'
+import type { Filters, SortValue } from '../lib/venues-grid-helpers'
+import {
+  filterVenues,
+  formatShortDate,
+  initFiltersFromParams,
+  INITIAL_FILTERS,
+  isSortValue,
+  SORT_OPTIONS,
+  trimToBentoCount,
+  variantClassFor,
+} from '../lib/venues-grid-helpers'
 import type { Venue } from '../types/venue'
 
 // isUsable strips ~70% of Noroff data in practice; 50 fetched leaves enough
 // for the largest bento target (15) on most pages.
 const API_PAGE_SIZE = 50
 
-// Pattern: 1 feature (span 2) + 4 regular per row of 5. Trim to the largest
-// match so the grid never renders a half-empty trailing row.
-const BENTO_TARGETS = [15, 12, 10, 5] as const
-
-function trimToBentoCount(venues: Venue[]): Venue[] {
-  for (const target of BENTO_TARGETS) {
-    if (venues.length >= target) return venues.slice(0, target)
-  }
-  return venues
-}
-
 const PAGE_HERO_BG = `url('${heroVenuesUrl}')`
-
-const SORT_OPTIONS = [
-  { value: 'newest', label: 'Sort: Newest ↓' },
-  { value: 'price-asc', label: 'Price ↑' },
-  { value: 'price-desc', label: 'Price ↓' },
-  { value: 'rating-desc', label: 'Rating ↓' },
-  { value: 'name-asc', label: 'Name A–Z' },
-] as const
-
-type SortValue = (typeof SORT_OPTIONS)[number]['value']
-
-function isSortValue(v: string | null): v is SortValue {
-  return v != null && SORT_OPTIONS.some((opt) => opt.value === v)
-}
-
-interface Filters {
-  maxPrice: number
-  minGuests: number
-  amenities: Set<'wifi' | 'parking' | 'breakfast' | 'pets'>
-  minRating: number
-}
-
-const INITIAL_FILTERS: Filters = {
-  maxPrice: 1000,
-  minGuests: 1,
-  amenities: new Set(),
-  minRating: 0,
-}
-
-// Hydrates `minGuests` so the Home search funnel's guests count survives navigation.
-function initFiltersFromParams(params: URLSearchParams): Filters {
-  const raw = Number(params.get('guests'))
-  if (!Number.isFinite(raw) || raw <= 1) return INITIAL_FILTERS
-  return { ...INITIAL_FILTERS, minGuests: Math.min(10, Math.floor(raw)) }
-}
-
-const SHORT_DATE = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short' })
-
-function formatShortDate(iso: string): string {
-  const d = new Date(iso)
-  return Number.isNaN(d.getTime()) ? iso : SHORT_DATE.format(d)
-}
-
-function filterVenues(venues: Venue[], f: Filters): Venue[] {
-  return venues.filter((v) => {
-    if (v.price > f.maxPrice) return false
-    if (v.maxGuests < f.minGuests) return false
-    if (v.rating < f.minRating) return false
-    for (const a of f.amenities) {
-      if (!v.meta[a]) return false
-    }
-    return true
-  })
-}
-
-// Every 5th card → feature (spans 2). Aligns with BENTO_TARGETS row math.
-function variantClassFor(i: number): string {
-  return i % 5 === 0 ? 'venue--feature' : ''
-}
 
 export default function Venues() {
   useDocumentTitle('Venues')
@@ -108,19 +49,42 @@ export default function Venues() {
 
   const [peekVenue, setPeekVenue] = useState<Venue | null>(null)
   const [peekIndex, setPeekIndex] = useState<number | undefined>(undefined)
+  const peekTriggerRef = useRef<HTMLElement | null>(null)
+  const filterToggleRef = useRef<HTMLButtonElement>(null)
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- sync URL `q` into the controlled input on back/forward + deep-link load.
     setSearchInput(q)
   }, [q])
 
-  const updateParam = (key: string, value: string | null) => {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev)
-      if (value === null || value === '') next.delete(key)
-      else next.set(key, value)
-      if (key === 'q' || key === 'sort') next.delete('page')
-      return next
-    })
+  useEffect(() => {
+    if (!filtersOpen) return
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') {
+        setFiltersOpen(false)
+        filterToggleRef.current?.focus()
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [filtersOpen])
+
+  const updateParam = (
+    key: string,
+    value: string | null,
+    options?: { replace?: boolean },
+  ) => {
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        if (value === null || value === '') next.delete(key)
+        else next.set(key, value)
+        if (key === 'q' || key === 'sort') next.delete('page')
+        return next
+      },
+      options?.replace ? { replace: true } : undefined,
+    )
   }
 
   const usingSearch = Boolean(q.trim())
@@ -216,11 +180,12 @@ export default function Venues() {
             value={searchInput}
             onChange={(e) => {
               setSearchInput(e.target.value)
-              updateParam('q', e.target.value)
+              updateParam('q', e.target.value, { replace: true })
             }}
           />
         </label>
         <button
+          ref={filterToggleRef}
           type="button"
           className="v-filter-toggle"
           aria-controls="v-filters"
@@ -426,6 +391,11 @@ export default function Venues() {
                   index={runningIndex}
                   className={variantClassFor(i)}
                   onPeek={(v) => {
+                    // Capture the trigger so focus returns there on close.
+                    peekTriggerRef.current =
+                      document.activeElement instanceof HTMLElement
+                        ? document.activeElement
+                        : null
                     setPeekVenue(v)
                     // Pass 0-based index for the modal eyebrow.
                     setPeekIndex(runningIndex - 1)
@@ -480,6 +450,7 @@ export default function Venues() {
         onClose={() => {
           setPeekVenue(null)
           setPeekIndex(undefined)
+          peekTriggerRef.current?.focus()
         }}
       />
     </main>

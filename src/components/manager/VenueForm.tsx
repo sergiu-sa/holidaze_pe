@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { z } from 'zod'
 
 import { type CreateVenueInput, CreateVenueInputSchema } from '../../api/schemas'
+import { toFriendlyMessage } from '../../lib/error-message'
 import type { Media, Venue, VenueMeta } from '../../types/venue'
 import { Button } from '../ui/Button'
 import { Field } from '../ui/Field'
@@ -149,8 +150,9 @@ export function VenueForm({
     try {
       await onSubmit(parsed.data)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Could not save the venue'
-      setErrors({ form: message })
+      setErrors({
+        form: toFriendlyMessage(err, "Sorry, we couldn't save the venue. Please try again."),
+      })
     } finally {
       setPending(false)
     }
@@ -224,7 +226,7 @@ export function VenueForm({
           type="number"
           inputMode="numeric"
           min={1}
-          max={20}
+          max={100}
           required
           value={maxGuests}
           onChange={(event) => {

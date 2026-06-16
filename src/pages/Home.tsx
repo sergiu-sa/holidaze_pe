@@ -1,16 +1,17 @@
 import '../styles/home-cover.css'
 
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Atlas as AtlasComposite } from '../components/atlas/Atlas'
 import { HeroPlate } from '../components/browse/HeroPlate'
+import { HeroSearchForm } from '../components/browse/HeroSearchForm'
 import { VenueCard } from '../components/browse/VenueCard'
 import { VenueCardSkeleton } from '../components/browse/VenueCardSkeleton'
 import { VenuePeekModal } from '../components/browse/VenuePeekModal'
-import { Icon } from '../components/ui/Icon'
 import { useAtlasCities } from '../hooks/useAtlasCities'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
+import { useHomeCoverScroll } from '../hooks/useHomeCoverScroll'
 import { useHomeCoverVisits } from '../hooks/useHomeCoverVisits'
 import { useIntroSeen } from '../hooks/useIntroSeen'
 import { useMarqueeDuration } from '../hooks/useMarqueeDuration'
@@ -27,13 +28,6 @@ const BENTO_CELLS = ['bento__cell--1', 'bento__cell--2', 'bento__cell--3', 'bent
 
 const MARQUEE_FALLBACK = ['Begur', 'Bergen', 'Kyoto', 'Paris', 'Marrakech', 'Fanø']
 
-// Quadratic ease-in — backdrop holds at the start of scroll, accelerates out.
-function easeCt(t: number): number {
-  return t * t
-}
-
-const COVER_SCROLL_RANGE_VH = 0.75
-
 export default function Home() {
   useDocumentTitle('Home')
   const { seen, markSeen } = useIntroSeen()
@@ -49,7 +43,6 @@ export default function Home() {
   }
   const { shouldShow: showCover } = useHomeCoverVisits()
   const navigate = useNavigate()
-  const heroRef = useRef<HTMLElement>(null)
   const marqueeTrackRef = useRef<HTMLDivElement>(null)
   const [peekVenue, setPeekVenue] = useState<Venue | null>(null)
   const [peekIndex, setPeekIndex] = useState<number | undefined>(undefined)
@@ -57,51 +50,7 @@ export default function Home() {
   // Act 2 backdrop, and the folio coords + place.
   const cover = useMemo(() => pickHeroCover(), [])
 
-  useEffect(() => {
-    if (!showCover) return
-    const hero = heroRef.current
-    if (!hero) return
-
-    hero.style.setProperty('--cover-img', `url(${cover.src})`)
-    hero.style.setProperty('--ct', '0')
-
-    const range = window.innerHeight * COVER_SCROLL_RANGE_VH
-    let done = false
-    let ticking = false
-
-    const settle = (): void => {
-      done = true
-      hero.style.setProperty('--ct', '1')
-      hero.style.removeProperty('--cover-scale')
-      hero.style.removeProperty('--cover-y')
-      hero.dataset.coverDone = 'true'
-      window.removeEventListener('scroll', onScroll)
-    }
-
-    const onScroll = (): void => {
-      if (done || ticking) return
-      ticking = true
-      requestAnimationFrame(() => {
-        ticking = false
-        const t = Math.min(1, Math.max(0, window.scrollY / range))
-        const ct = Math.min(1, easeCt(t))
-        hero.style.setProperty('--ct', ct.toFixed(4))
-        hero.style.setProperty('--cover-scale', (1 + t * 0.04).toFixed(4))
-        hero.style.setProperty('--cover-y', `${(t * -8).toFixed(2)}px`)
-        if (ct >= 1) settle()
-      })
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      hero.style.removeProperty('--cover-img')
-      hero.style.removeProperty('--ct')
-      hero.style.removeProperty('--cover-scale')
-      hero.style.removeProperty('--cover-y')
-      delete hero.dataset.coverDone
-    }
-  }, [showCover, cover.src])
+  const heroRef = useHomeCoverScroll(showCover, cover.src)
 
   const featured = useVenues({ page: 1, limit: 50, sort: 'rating', sortOrder: 'desc' })
   // useAtlasCities applies the curated gazetteer to fill missing
@@ -213,98 +162,20 @@ export default function Home() {
           <HeroPlate cover={cover} tag="Cover · N°04" />
         </div>
 
-        <div className="search-wrap">
-          <div className="search-wrap__head">
-            <span className="search-wrap__label">Find a stay</span>
-            <span className="search-wrap__step" aria-live="polite">
-              — places in the atlas
-            </span>
-          </div>
-          <form className="search" role="search" aria-label="Find a venue" onSubmit={handleSubmit}>
-            <span className="search__prose">I&apos;m looking to stay in</span>
-            <label className="search__field" htmlFor="search-destination">
-              <span className="search__pictogram" aria-hidden="true">
-                <Icon name="pin" size="sm" />
-              </span>
-              <span className="visually-hidden">Destination</span>
-              <input
-                id="search-destination"
-                type="text"
-                name="destination"
-                list="search-cities"
-                placeholder="a quiet village"
-                autoComplete="off"
-                value={destination}
-                onChange={(e) => {
-                  setDestination(e.target.value)
-                }}
-              />
-            </label>
-            <datalist id="search-cities">
-              {cityOptions.map(({ city, country }) => (
-                <option key={city} value={city}>
-                  {country ? `${city}, ${country}` : city}
-                </option>
-              ))}
-            </datalist>
-            <span className="search__prose">from</span>
-            <label className="search__field search__field--date" htmlFor="search-from">
-              <span className="search__pictogram" aria-hidden="true">
-                <Icon name="calendar" size="sm" />
-              </span>
-              <span className="visually-hidden">Arrive</span>
-              <input
-                id="search-from"
-                type="date"
-                name="from"
-                min={todayISO}
-                value={dateFrom}
-                onChange={handleArriveChange}
-              />
-            </label>
-            <span className="search__prose">to</span>
-            <label className="search__field search__field--date" htmlFor="search-to">
-              <span className="search__pictogram" aria-hidden="true">
-                <Icon name="calendar" size="sm" />
-              </span>
-              <span className="visually-hidden">Depart</span>
-              <input
-                id="search-to"
-                type="date"
-                name="to"
-                min={minDepart}
-                value={dateTo}
-                onChange={(e) => {
-                  setDateTo(e.target.value)
-                }}
-              />
-            </label>
-            <span className="search__prose">, for</span>
-            <label className="search__field search__field--short" htmlFor="search-guests">
-              <span className="search__pictogram" aria-hidden="true">
-                <Icon name="guests" size="sm" />
-              </span>
-              <span className="visually-hidden">Guests</span>
-              <input
-                id="search-guests"
-                type="number"
-                name="guests"
-                min={1}
-                max={20}
-                value={guests}
-                onChange={(e) => {
-                  setGuests(Number(e.target.value))
-                }}
-              />
-            </label>
-            <span className="search__prose">guests.</span>
-            <button type="submit" className="search__submit">
-              <Icon name="search" size="sm" />
-              <span>Inquire</span>
-              <Icon name="arrow-right" size="sm" />
-            </button>
-          </form>
-        </div>
+        <HeroSearchForm
+          destination={destination}
+          onDestinationChange={setDestination}
+          dateFrom={dateFrom}
+          onDateFromChange={handleArriveChange}
+          dateTo={dateTo}
+          onDateToChange={setDateTo}
+          guests={guests}
+          onGuestsChange={setGuests}
+          cityOptions={cityOptions}
+          todayISO={todayISO}
+          minDepart={minDepart}
+          onSubmit={handleSubmit}
+        />
       </section>
 
       <section className="section" id="featured" aria-labelledby="featured-title">

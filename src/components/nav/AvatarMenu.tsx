@@ -14,6 +14,7 @@ export function AvatarMenu() {
   const [imgFailed, setImgFailed] = useState(false)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const popRef = useRef<HTMLDivElement>(null)
+  const firstItemRef = useRef<HTMLAnchorElement>(null)
 
   useEffect(() => {
     if (!open) return
@@ -29,12 +30,29 @@ export function AvatarMenu() {
       if (event.key === 'Escape') {
         setOpen(false)
         triggerRef.current?.focus()
+        return
+      }
+      // Trap Tab inside the open menu so focus can't slip behind it.
+      if (event.key === 'Tab' && popRef.current) {
+        const focusable = popRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled])',
+        )
+        if (focusable.length === 0) return
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault()
+          last.focus()
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault()
+          first.focus()
+        }
       }
     }
     document.addEventListener('pointerdown', onPointer)
     document.addEventListener('keydown', onKey)
     requestAnimationFrame(() => {
-      popRef.current?.querySelector<HTMLElement>('.avatar-menu__item')?.focus()
+      firstItemRef.current?.focus()
     })
     return () => {
       document.removeEventListener('pointerdown', onPointer)
@@ -110,7 +128,7 @@ export function AvatarMenu() {
         <hr className="avatar-menu__rule" aria-hidden="true" />
 
         <nav aria-label="Account">
-          <NavLink to="/profile" end onClick={close} className="avatar-menu__item">
+          <NavLink ref={firstItemRef} to="/profile" end onClick={close} className="avatar-menu__item">
             <Icon name="guest" size="sm" />
             <span>Profile</span>
           </NavLink>

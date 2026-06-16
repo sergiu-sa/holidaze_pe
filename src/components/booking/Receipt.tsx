@@ -41,7 +41,7 @@ export function Receipt({ booking }: ReceiptProps) {
 
       {cover ? (
         <figure className="receipt__plate">
-          <img src={cover.url} alt={cover.alt || venue.name} referrerPolicy="no-referrer" />
+          <img src={cover.url} alt={cover.alt || venue.name} referrerPolicy="no-referrer" loading="lazy" />
           <figcaption className="mono">Receipt · {venue.name}</figcaption>
         </figure>
       ) : null}

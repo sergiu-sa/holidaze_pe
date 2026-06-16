@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { useImageProbe } from '../../hooks/useImageProbe'
 import { useUpdateProfile } from '../../hooks/useUpdateProfile'
+import { toFriendlyMessage } from '../../lib/error-message'
 import { isMonogramUrl, monoColorFromUrl, monogramAvatarUrl } from '../../lib/monogram'
 import { applyMonoColorToBody, getMonoColor, type MonoColor, setMonoColor } from '../../lib/prefs'
 import { useConfirm } from '../ui/ConfirmDialog'
@@ -93,7 +94,9 @@ export function AvatarEditor() {
       toast('Saved.', { kind: 'success' })
       navigate('/profile')
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Could not save your avatar.')
+      setSubmitError(
+        toFriendlyMessage(err, "Sorry, we couldn't update your avatar. Please try again."),
+      )
     }
   }
 

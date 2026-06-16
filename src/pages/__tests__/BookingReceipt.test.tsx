@@ -87,4 +87,17 @@ describe('BookingReceipt page', () => {
       expect(screen.getByText(/off the atlas/i)).toBeInTheDocument()
     })
   })
+
+  it('shows a friendly message (not the raw error) on a server failure', async () => {
+    server.use(
+      http.get(`${BASE}/bookings/:id`, () =>
+        HttpResponse.json({ errors: [{ message: 'Database exploded' }] }, { status: 500 }),
+      ),
+    )
+    renderPage()
+    await waitFor(() => {
+      expect(screen.getByText(/try again/i)).toBeInTheDocument()
+    })
+    expect(screen.queryByText(/database exploded/i)).not.toBeInTheDocument()
+  })
 })

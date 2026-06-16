@@ -8,12 +8,12 @@ import {
   signIn,
 } from './helpers/auth'
 
-// Use a data: URL so the AvatarMenu <img> never hits the network — that
-// avoids cross-browser flake where Firefox's `route.fulfill` of binary
-// payloads can still trigger the `onError` handler and swap the trigger
-// back to the initial fallback.
+// 1×1 transparent GIF data URL — keeps the AvatarMenu <img> off the network and
+// decodes cleanly in every engine. A 1×1 PNG data URL here was rejected by
+// Firefox as "Image corrupt or truncated", firing the img onError → the
+// initial-letter fallback, which raced (and flaked) the src assertions below.
 const SAMPLE_AVATAR =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAAWgmWQ0AAAAASUVORK5CYII='
+  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 
 const profileBefore = {
   data: {
