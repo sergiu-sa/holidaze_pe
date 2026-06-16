@@ -39,6 +39,8 @@ export interface UseDateRangeReturn {
   today: Date
   bookedSet: Set<string>
   nights: number
+  /** Set when a second pick is rejected for crossing a booked night; null otherwise. */
+  pickNotice: string | null
   canGoPrev: boolean
   selectDate: (date: Date) => void
   setFocused: (date: Date) => void
@@ -66,6 +68,7 @@ export function useDateRange(options: UseDateRangeOptions): UseDateRangeReturn {
     options.initialFocused ?? today,
   )
   const [viewMonth, setViewMonth] = useState<Date>(todayMonth)
+  const [pickNotice, setPickNotice] = useState<string | null>(null)
 
   const canGoPrev = viewMonth.getTime() > todayMonth.getTime()
 
@@ -80,20 +83,26 @@ export function useDateRange(options: UseDateRangeOptions): UseDateRangeReturn {
       if (bookedSet.has(formatDay(day))) return
 
       if (!from || to) {
+        setPickNotice(null)
         setFrom(day)
         setTo(null)
         return
       }
       if (day.getTime() <= from.getTime()) {
+        setPickNotice(null)
         setFrom(day)
         setTo(null)
         return
       }
       if (rangeHasBookedDay(from, day, bookedSet)) {
+        setPickNotice(
+          "Those dates include a night that's already booked — pick a clear stretch.",
+        )
         setFrom(day)
         setTo(null)
         return
       }
+      setPickNotice(null)
       setTo(day)
     },
     [from, to, today, bookedSet],
@@ -165,6 +174,7 @@ export function useDateRange(options: UseDateRangeOptions): UseDateRangeReturn {
   }, [])
 
   const clear = useCallback(() => {
+    setPickNotice(null)
     setFrom(null)
     setTo(null)
   }, [])
@@ -177,6 +187,7 @@ export function useDateRange(options: UseDateRangeOptions): UseDateRangeReturn {
     today,
     bookedSet,
     nights,
+    pickNotice,
     canGoPrev,
     selectDate,
     setFocused,

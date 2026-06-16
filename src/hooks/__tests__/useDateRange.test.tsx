@@ -184,3 +184,28 @@ describe('useDateRange — focus + month nav', () => {
     expect([6, 7]).toContain(result.current.viewMonth.getMonth())
   })
 })
+
+describe('useDateRange — booked-range notice', () => {
+  it('starts with no notice', () => {
+    const { result } = setup()
+    expect(result.current.pickNotice).toBeNull()
+  })
+
+  it('flags a notice when a second pick crosses a booked night, and clears it on a clean pick', () => {
+    const { result } = setup(['2026-06-22']) // a booked night between 06-20 and 06-23
+    act(() => {
+      result.current.selectDate(new Date(2026, 5, 20)) // sets `from`
+    })
+    act(() => {
+      result.current.selectDate(new Date(2026, 5, 23)) // range crosses 06-22
+    })
+    expect(result.current.pickNotice).toMatch(/already booked/i)
+    expect(result.current.to).toBeNull() // selection restarts
+    expect(formatDay(result.current.from!)).toBe('2026-06-23')
+
+    act(() => {
+      result.current.selectDate(new Date(2026, 5, 25)) // clean range from 06-23
+    })
+    expect(result.current.pickNotice).toBeNull()
+  })
+})
