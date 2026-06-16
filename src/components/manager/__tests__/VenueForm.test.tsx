@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, expect, it, vi } from 'vitest'
 
+import { ApiError } from '../../../types/api'
 import type { Venue } from '../../../types/venue'
 import { VenueForm } from '../VenueForm'
 
@@ -108,6 +109,15 @@ describe('VenueForm', () => {
     expect(screen.getByRole('checkbox', { name: /pets ok/i })).not.toBeChecked()
   })
 
+  it('caps the max-guests input at 100 to match the schema and server', () => {
+    render(
+      <MemoryRouter>
+        <VenueForm mode="create" onSubmit={vi.fn(() => Promise.resolve())} />
+      </MemoryRouter>,
+    )
+    expect(screen.getByLabelText(/max guests/i)).toHaveAttribute('max', '100')
+  })
+
   it('renders a Delete button only in edit mode + onDelete callback', () => {
     const onDelete = vi.fn()
     const { rerender } = render(
@@ -149,7 +159,32 @@ describe('VenueForm', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /list place/i }))
 
-    expect(await screen.findByText(/boom/i)).toBeInTheDocument()
+    expect(await screen.findByText(/couldn't save the venue/i)).toBeInTheDocument()
+    expect(screen.queryByText(/boom/i)).not.toBeInTheDocument()
+  })
+
+  it('preserves a 400 validation message from the server', async () => {
+    const onSubmit = vi.fn().mockRejectedValue(new ApiError(400, 'Name already taken'))
+    render(
+      <MemoryRouter>
+        <VenueForm mode="create" onSubmit={onSubmit} />
+      </MemoryRouter>,
+    )
+
+    await userEvent.type(screen.getByLabelText(/^name$/i), 'Olive Cabin')
+    await userEvent.type(screen.getByLabelText(/description/i), 'Stone-walled bothy.')
+    const priceInput = screen.getByLabelText(/price/i)
+    await userEvent.clear(priceInput)
+    await userEvent.type(priceInput, '120')
+    const guestsInput = screen.getByLabelText(/max guests/i)
+    await userEvent.clear(guestsInput)
+    await userEvent.type(guestsInput, '4')
+    await userEvent.type(screen.getByLabelText(/city/i), 'Lisbon')
+    await userEvent.type(screen.getByLabelText(/country/i), 'Portugal')
+
+    await userEvent.click(screen.getByRole('button', { name: /list place/i }))
+
+    expect(await screen.findByText(/name already taken/i)).toBeInTheDocument()
   })
 
   it('lets the manager add and remove photo rows', async () => {
