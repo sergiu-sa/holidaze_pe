@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom'
 
 import { useCreateBooking } from '../../hooks/useCreateBooking'
 import { type UseDateRangeReturn } from '../../hooks/useDateRange'
-import { buildBookedSet, formatDay, rangeHasBooked } from '../../lib/dates'
+import { buildBookedSet, formatDay, nightsBetween, rangeHasBooked } from '../../lib/dates'
 import { formatPrice } from '../../lib/venue-format'
 import { ApiError } from '../../types/api'
 import { type Venue } from '../../types/venue'
 import { Icon } from '../ui/Icon'
 import { useToast } from '../ui/ToastProvider'
+import { BookingGuestStepper } from './BookingGuestStepper'
+import { BookingReview } from './BookingReview'
 
 type PanelState =
   | { kind: 'pick' }
@@ -25,7 +27,6 @@ interface BookingPanelProps {
 }
 
 const REDIRECT_DELAY_MS = 700
-const MS_PER_DAY = 86_400_000
 
 function pendingKey(venueId: string) {
   return `holidaze:pending:venue/${venueId}`
@@ -53,7 +54,7 @@ export function BookingPanel({
   const { mutate, isPending, reset } = useCreateBooking(venue.id)
   const toast = useToast()
   const navigate = useNavigate()
-  const reviewHeadingRef = useRef<HTMLParagraphElement>(null)
+  const reviewHeadingRef = useRef<HTMLHeadingElement>(null)
 
   // Move focus to the review heading when the panel transitions into review;
   // without this, focus drops to <body> because the submit button unmounts.
@@ -120,10 +121,6 @@ export function BookingPanel({
     } else if (range.from) {
       range.selectDate(date)
     }
-  }
-
-  function clampGuests(n: number) {
-    return Math.max(1, Math.min(maxGuests, n))
   }
 
   function handlePickSubmit(event: FormEvent<HTMLFormElement>) {
@@ -206,8 +203,7 @@ export function BookingPanel({
   const total = range.nights * (venue.price || 0)
   const reviewTotal =
     state.kind === 'review' || state.kind === 'confirm'
-      ? Math.max(0, Math.round((state.to.getTime() - state.from.getTime()) / MS_PER_DAY)) *
-        (venue.price || 0)
+      ? nightsBetween(state.from, state.to) * (venue.price || 0)
       : 0
 
   return (
@@ -281,48 +277,11 @@ export function BookingPanel({
                 </label>
               </div>
 
-              <div className="book__guests" role="group" aria-labelledby="book-guests-lbl">
-                <span id="book-guests-lbl">Guests</span>
-                <div className="stepper">
-                  <button
-                    type="button"
-                    className="stepper__btn"
-                    onClick={() => {
-                      setGuests((n) => clampGuests(n - 1))
-                    }}
-                    disabled={guests <= 1}
-                    aria-label="Decrease guests"
-                  >
-                    <Icon name="minus" size="xs" />
-                  </button>
-                  <input
-                    type="number"
-                    name="guests"
-                    min={1}
-                    max={maxGuests}
-                    value={guests}
-                    onChange={(e) => {
-                      setGuests(clampGuests(Number(e.target.value) || 1))
-                    }}
-                    aria-labelledby="book-guests-lbl"
-                    aria-describedby="book-guests-max"
-                  />
-                  <button
-                    type="button"
-                    className="stepper__btn"
-                    onClick={() => {
-                      setGuests((n) => clampGuests(n + 1))
-                    }}
-                    disabled={guests >= maxGuests}
-                    aria-label="Increase guests"
-                  >
-                    <Icon name="plus" size="xs" />
-                  </button>
-                </div>
-                <span className="book__guests-max" id="book-guests-max">
-                  max {maxGuests}
-                </span>
-              </div>
+              <BookingGuestStepper
+                guests={guests}
+                maxGuests={maxGuests}
+                onGuestsChange={setGuests}
+              />
 
               <p className="book__total">
                 <span>
@@ -331,9 +290,9 @@ export function BookingPanel({
                 <strong>{formatPrice(total)}</strong>
               </p>
 
-              {pickError ? (
+              {(pickError ?? range.pickNotice) ? (
                 <p className="book__error" role="alert">
-                  {pickError}
+                  {pickError ?? range.pickNotice}
                 </p>
               ) : null}
 
@@ -350,46 +309,14 @@ export function BookingPanel({
 
           {(state.kind === 'review' || state.kind === 'confirm') && (
             <>
-              <div className="book__review" aria-labelledby="book-review-title">
-                <p
-                  ref={reviewHeadingRef}
-                  id="book-review-title"
-                  className="sr-only"
-                  tabIndex={-1}
-                >
-                  Review your booking
-                </p>
-                <div className="book__review-row">
-                  <span>Venue</span>
-                  <strong>{venue.name}</strong>
-                </div>
-                <div className="book__review-row">
-                  <span>Dates</span>
-                  <strong>
-                    {state.from.toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
-                    })}
-                    {' → '}
-                    {state.to.toLocaleDateString('en-GB', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </strong>
-                </div>
-                <div className="book__review-row">
-                  <span>Nights / guests</span>
-                  <strong>
-                    {Math.round((state.to.getTime() - state.from.getTime()) / MS_PER_DAY)} ·{' '}
-                    {state.guests} {state.guests === 1 ? 'guest' : 'guests'}
-                  </strong>
-                </div>
-                <div className="book__review-row">
-                  <span>Total</span>
-                  <strong>{formatPrice(reviewTotal)}</strong>
-                </div>
-              </div>
+              <BookingReview
+                venue={venue}
+                from={state.from}
+                to={state.to}
+                guests={state.guests}
+                total={reviewTotal}
+                headingRef={reviewHeadingRef}
+              />
 
               {reviewError ? (
                 <p className="book__error" role="alert">
