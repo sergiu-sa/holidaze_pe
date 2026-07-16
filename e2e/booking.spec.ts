@@ -77,6 +77,11 @@ async function fulfillJSON(route: Route, status: number, body: unknown) {
 // a freshly-established session. Hop to the origin once and clear localStorage
 // from there before each test instead.
 async function clearStorageForOrigin(page: Page) {
+  // The specs below hardcode a July 2026 stay; the booking form rejects past
+  // dates, so freeze the clock before the fixtures' dates to keep them valid.
+  // setFixedTime pins Date while leaving real timers running (the receipt
+  // redirect relies on setTimeout).
+  await page.clock.setFixedTime(new Date('2026-06-15T10:00:00'))
   await page.goto('/')
   await page.evaluate(() => {
     localStorage.clear()
