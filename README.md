@@ -141,6 +141,6 @@ WAVE shows zero red errors across the five routes. The remaining WAVE contrast f
 - [Kanban board](https://github.com/users/sergiu-sa/projects/14/views/2)
 - [Roadmap (Gantt view)](https://github.com/users/sergiu-sa/projects/14/views/4)
 
-## AI usage
+### Licence
 
-All AI assistance received during this project is logged in [AI_LOG.md](AI_LOG.md), per Noroff's PE2 AI Policy. Entries follow the brief's required four-field format: tool used, date, purpose, outcome.
+The code is released under the [MIT License](LICENSE). The artworks shown are not mine to license: they reach the site through the shared Noroff Artworks API and belong to their respective owners.
