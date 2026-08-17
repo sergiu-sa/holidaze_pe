@@ -106,7 +106,8 @@ export function VenueGallery({ media, venueName, indexLabel, coords }: VenueGall
             alt={captionOf(safeIdx)}
             referrerPolicy="no-referrer"
             loading="eager"
-            fetchPriority="high"
+            // React 18 expects lowercase `fetchpriority`, spread the literal.
+            {...{ fetchpriority: 'high' }}
           />
         </button>
 
