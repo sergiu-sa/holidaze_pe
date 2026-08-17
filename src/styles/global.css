@@ -110,6 +110,11 @@
     outline-offset: 3px;
   }
 
+  /* Route anchors are tabindex="-1" headings that RouteFocusManager focuses programmatically on navigation, never reachable by Tab, so the ring would only ever mark a move the user didn't make. Focus still lands here for AT. */
+  [data-route-anchor]:focus-visible {
+    outline: none;
+  }
+
   ul, ol {
     list-style: none;
   }

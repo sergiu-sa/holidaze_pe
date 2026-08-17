@@ -843,15 +843,18 @@
   }
   .v-gal__arrow--prev:hover { transform: translateY(-50%) translateX(-3px); }
   .v-gal__arrow--next:hover { transform: translateY(-50%) translateX(3px); }
+  /* Contact strip, the register of frames below the plate. Sits on the page gutter so its left edge locks to the headline, and closes on a hairline that holds the full measure when there are fewer frames than fill it.
+     The border paints on the scroller's border box, so it stays put. */
   .v-gal__strip {
     display: flex; gap: 0.6rem;
     overflow-x: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--rule-strong) transparent;
-    padding-bottom: 0.4rem;
     scroll-snap-type: x mandatory;
     list-style: none;
-    margin: 0; padding-left: 0;
+    border-bottom: 1px solid var(--rule);
+    margin: 0 var(--gutter, 1.5rem);
+    padding: clamp(1.5rem, 3vw, 2.5rem) 0 clamp(1rem, 2vw, 1.5rem);
   }
   .v-gal__strip::-webkit-scrollbar { height: 6px; }
   .v-gal__strip::-webkit-scrollbar-thumb { background: var(--rule-strong); }
